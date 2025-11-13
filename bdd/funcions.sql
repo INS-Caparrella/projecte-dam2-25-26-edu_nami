@@ -16,7 +16,7 @@ BEGIN
         SET major = TRUE;
     END IF;
 
-    RETURN major
+    RETURN major;
 END//
 DELIMITER ;
 
@@ -77,8 +77,8 @@ CALL alumnesGrup('A1');
 
 /////////////////////////////////////////TRIGGERS/////////////////////////////////////////
 
-DELIMITER //
 DROP TRIGGER IF EXISTS generarUsuari;
+DELIMITER //
 CREATE TRIGGER generarUsuari
 AFTER INSERT ON persones
 FOR EACH ROW
