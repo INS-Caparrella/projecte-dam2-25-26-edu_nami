@@ -95,3 +95,32 @@ BEGIN
 END//
 DELIMITER ;
 
+
+DROP TRIGGER IF EXISTS estudiantHistoric;
+DELIMITER //
+CREATE TRIGGER estudiantHistoric
+AFTER UPDATE ON estudiants
+FOR EACH ROW
+BEGIN
+    DECLARE fin BOOLEAN DEFAULT FALSE;
+
+    IF OLD.actiu = TRUE AND NEW.actiu = FALSE THEN
+
+        SELECT MIN(er.nota) >= 5
+        INTO fin
+        FROM estudiants_ras er
+        WHERE er.nia = NEW.nia;
+
+        INSERT INTO historic_estudiants (nia, nom_cicle, fin, data_inici, date_fin)
+        VALUES (NEW.nia, NEW.nom_cicle, fin, NEW.data_inici, CURDATE());
+
+        DELETE FROM estudiants WHERE nia = NEW.nia;
+
+    END IF;
+END//
+DELIMITER ;
+
+
+
+
+
