@@ -84,16 +84,30 @@ AFTER INSERT ON persones
 FOR EACH ROW
 BEGIN
     DECLARE usernameN VARCHAR(50);
-    SET usernameN = CONCAT(NEW.nom, LEFT(NEW.cognom, 1));
+    DECLARE usernameFinal VARCHAR(50);
+    DECLARE cont INT DEFAULT 0;
+
+    SET usernameN = CONCAT(
+        LOWER(LEFT(NEW.nom,1)),
+        LOWER(NEW.cognom)
+    );
+
+    SET usernameFinal = usernameN;
+
+    WHILE EXISTS (SELECT 1 FROM usuaris WHERE username = usernameFinal) DO
+        SET cont = cont + 1;
+        SET usernameFinal = CONCAT(usernameN, cont);
+    END WHILE;
 
     INSERT INTO usuaris (username, dni, password)
     VALUES (
-        usernameN,
+        usernameFinal,
         NEW.dni,
         SHA2(NEW.dni, 256)
     );
 END//
 DELIMITER ;
+
 
 
 DROP TRIGGER IF EXISTS estudiantHistoric;
