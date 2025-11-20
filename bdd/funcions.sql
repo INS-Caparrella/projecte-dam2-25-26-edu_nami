@@ -1,4 +1,4 @@
-/////////////////////////////////////////FUNCIONS/////////////////////////////////////////
+--FUNCIONS
 
 DROP FUNCTION IF EXISTS majorEdat;
 DELIMITER //
@@ -39,17 +39,7 @@ DELIMITER ;
 SELECT intentsLogin(5, '2025-11-13 08:00:00', '2025-11-13 12:00:00');
 
 
-DROP FUNCTION IF EXISTS ;
-DELIMITER //
-CREATE FUNCTION ()
-RETURNS
-BEGIN
-    RETURN
-END//
-DELIMITER ;
-
-
-/////////////////////////////////////////PROCEDURES/////////////////////////////////////////
+--PROCEDURES
 
 DROP PROCEDURE IF EXISTS llistatMajorsEdatEstudiants;
 DELIMITER //
@@ -75,7 +65,7 @@ END//
 DELIMITER ;
 CALL alumnesGrup('A1');
 
-/////////////////////////////////////////TRIGGERS/////////////////////////////////////////
+--TRIGGERS
 
 DROP TRIGGER IF EXISTS generarUsuari;
 DELIMITER //
