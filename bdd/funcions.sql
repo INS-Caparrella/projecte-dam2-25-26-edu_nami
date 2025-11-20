@@ -120,6 +120,66 @@ BEGIN
 END//
 DELIMITER ;
 
+DROP TRIGGER IF EXISTS promocio_fp_update;
+DELIMITER //
+CREATE TRIGGER promocio_fp_update
+AFTER UPDATE ON estudiants_ras
+FOR EACH ROW
+BEGIN
+    DECLARE total_ras INT;
+    DECLARE aprovades INT;
+
+    SELECT COUNT(*) INTO total_ras
+    FROM estudiants_ras
+    WHERE nia = NEW.nia;
+
+    SELECT COUNT(*) INTO aprovades
+    FROM estudiants_ras
+    WHERE nia = NEW.nia
+      AND nota >= 5;
+
+    IF total_ras > 0 AND total_ras = aprovades THEN
+        UPDATE estudiants
+        SET grup = REPLACE(grup, '1', '2')
+        WHERE nia = NEW.nia
+          AND grup LIKE '%1';
+    END IF;
+END//
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS promocio_fp_insert;
+DELIMITER //
+CREATE TRIGGER promocio_fp_insert
+AFTER INSERT ON estudiants_ras
+FOR EACH ROW
+BEGIN
+    DECLARE total_ras INT;
+    DECLARE aprovades INT;
+
+    SELECT COUNT(*) INTO total_ras
+    FROM estudiants_ras
+    WHERE nia = NEW.nia;
+
+    SELECT COUNT(*) INTO aprovades
+    FROM estudiants_ras
+    WHERE nia = NEW.nia
+      AND nota >= 5;
+
+    IF total_ras > 0 AND total_ras = aprovades THEN
+        UPDATE estudiants
+        SET grup = REPLACE(grup, '1', '2')
+        WHERE nia = NEW.nia
+          AND grup LIKE '%1';
+    END IF;
+END//
+DELIMITER ;
+
+
+
+
+
+
+
 
 
 
