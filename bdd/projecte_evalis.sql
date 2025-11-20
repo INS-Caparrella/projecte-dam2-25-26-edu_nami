@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-11-2025 a las 19:32:35
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Temps de generació: 19-11-2025 a les 19:55:52
+-- Versió del servidor: 10.4.32-MariaDB
+-- Versió de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,12 +18,12 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `projecte_evalis`
+-- Base de dades: `plataforma_evalis`
 --
 
 DELIMITER $$
 --
--- Procedimientos
+-- Procediments
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `alumnesGrup` (IN `grup` VARCHAR(11))   BEGIN
     SELECT p.nom,p.cognom,p.dni, TIMESTAMPDIFF(YEAR, p.data_naix, CURDATE()) AS edat
@@ -41,7 +41,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `llistatMajorsEdatEstudiants` ()   B
 END$$
 
 --
--- Funciones
+-- Funcions
 --
 CREATE DEFINER=`root`@`localhost` FUNCTION `intentsLogin` (`userId` INT, `rang1` DATETIME, `rang2` DATETIME) RETURNS INT(11)  BEGIN
     DECLARE result INT DEFAULT 0;
@@ -74,7 +74,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `administradors`
+-- Estructura de la taula `administradors`
 --
 
 CREATE TABLE `administradors` (
@@ -88,7 +88,7 @@ CREATE TABLE `administradors` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `admin_centre`
+-- Estructura de la taula `admin_centre`
 --
 
 CREATE TABLE `admin_centre` (
@@ -101,7 +101,7 @@ CREATE TABLE `admin_centre` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `assignatures`
+-- Estructura de la taula `assignatures`
 --
 
 CREATE TABLE `assignatures` (
@@ -112,7 +112,7 @@ CREATE TABLE `assignatures` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `assignatures_cicle`
+-- Estructura de la taula `assignatures_cicle`
 --
 
 CREATE TABLE `assignatures_cicle` (
@@ -124,7 +124,7 @@ CREATE TABLE `assignatures_cicle` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `assistencia`
+-- Estructura de la taula `assistencia`
 --
 
 CREATE TABLE `assistencia` (
@@ -140,7 +140,7 @@ CREATE TABLE `assistencia` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `centres`
+-- Estructura de la taula `centres`
 --
 
 CREATE TABLE `centres` (
@@ -152,7 +152,7 @@ CREATE TABLE `centres` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cicles`
+-- Estructura de la taula `cicles`
 --
 
 CREATE TABLE `cicles` (
@@ -162,7 +162,7 @@ CREATE TABLE `cicles` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `contractes`
+-- Estructura de la taula `contractes`
 --
 
 CREATE TABLE `contractes` (
@@ -177,7 +177,7 @@ CREATE TABLE `contractes` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `directiva`
+-- Estructura de la taula `directiva`
 --
 
 CREATE TABLE `directiva` (
@@ -188,7 +188,7 @@ CREATE TABLE `directiva` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `estudiants`
+-- Estructura de la taula `estudiants`
 --
 
 CREATE TABLE `estudiants` (
@@ -205,7 +205,7 @@ CREATE TABLE `estudiants` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Disparadores `estudiants`
+-- Disparadors `estudiants`
 --
 DELIMITER $$
 CREATE TRIGGER `estudiantHistoric` AFTER UPDATE ON `estudiants` FOR EACH ROW BEGIN
@@ -231,7 +231,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `estudiants_ras`
+-- Estructura de la taula `estudiants_ras`
 --
 
 CREATE TABLE `estudiants_ras` (
@@ -244,7 +244,7 @@ CREATE TABLE `estudiants_ras` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `grup_classe`
+-- Estructura de la taula `grup_classe`
 --
 
 CREATE TABLE `grup_classe` (
@@ -255,7 +255,7 @@ CREATE TABLE `grup_classe` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `historic_estudiants`
+-- Estructura de la taula `historic_estudiants`
 --
 
 CREATE TABLE `historic_estudiants` (
@@ -271,7 +271,7 @@ CREATE TABLE `historic_estudiants` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `historic_fct`
+-- Estructura de la taula `historic_fct`
 --
 
 CREATE TABLE `historic_fct` (
@@ -287,7 +287,7 @@ CREATE TABLE `historic_fct` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `historic_professors`
+-- Estructura de la taula `historic_professors`
 --
 
 CREATE TABLE `historic_professors` (
@@ -302,7 +302,7 @@ CREATE TABLE `historic_professors` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `logs_consultes`
+-- Estructura de la taula `logs_consultes`
 --
 
 CREATE TABLE `logs_consultes` (
@@ -314,7 +314,7 @@ CREATE TABLE `logs_consultes` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `logs_login`
+-- Estructura de la taula `logs_login`
 --
 
 CREATE TABLE `logs_login` (
@@ -328,7 +328,7 @@ CREATE TABLE `logs_login` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `persones`
+-- Estructura de la taula `persones`
 --
 
 CREATE TABLE `persones` (
@@ -347,7 +347,7 @@ CREATE TABLE `persones` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Disparadores `persones`
+-- Disparadors `persones`
 --
 DELIMITER $$
 CREATE TRIGGER `generarUsuari` AFTER INSERT ON `persones` FOR EACH ROW BEGIN
@@ -364,10 +364,20 @@ END
 $$
 DELIMITER ;
 
+DELIMITER $$
+CREATE TRIGGER `valid_email` BEFORE INSERT ON `persones` FOR EACH ROW BEGIN
+	IF NEW.email NOT REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$' THEN 
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'email no vàlid';
+	END IF;
+END
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `professors`
+-- Estructura de la taula `professors`
 --
 
 CREATE TABLE `professors` (
@@ -379,7 +389,7 @@ CREATE TABLE `professors` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `prof_assignatura`
+-- Estructura de la taula `prof_assignatura`
 --
 
 CREATE TABLE `prof_assignatura` (
@@ -391,7 +401,7 @@ CREATE TABLE `prof_assignatura` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `ras`
+-- Estructura de la taula `ras`
 --
 
 CREATE TABLE `ras` (
@@ -405,7 +415,7 @@ CREATE TABLE `ras` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `sessions`
+-- Estructura de la taula `sessions`
 --
 
 CREATE TABLE `sessions` (
@@ -419,7 +429,7 @@ CREATE TABLE `sessions` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuaris`
+-- Estructura de la taula `usuaris`
 --
 
 CREATE TABLE `usuaris` (
@@ -430,11 +440,11 @@ CREATE TABLE `usuaris` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Índices para tablas volcadas
+-- Índexs per a les taules bolcades
 --
 
 --
--- Indices de la tabla `administradors`
+-- Índexs per a la taula `administradors`
 --
 ALTER TABLE `administradors`
   ADD PRIMARY KEY (`id`),
@@ -442,7 +452,7 @@ ALTER TABLE `administradors`
   ADD KEY `fk_adminuser` (`id_user`);
 
 --
--- Indices de la tabla `admin_centre`
+-- Índexs per a la taula `admin_centre`
 --
 ALTER TABLE `admin_centre`
   ADD PRIMARY KEY (`id`),
@@ -450,13 +460,13 @@ ALTER TABLE `admin_centre`
   ADD KEY `fk_codicentre` (`codi_centre`);
 
 --
--- Indices de la tabla `assignatures`
+-- Índexs per a la taula `assignatures`
 --
 ALTER TABLE `assignatures`
   ADD PRIMARY KEY (`codi`);
 
 --
--- Indices de la tabla `assignatures_cicle`
+-- Índexs per a la taula `assignatures_cicle`
 --
 ALTER TABLE `assignatures_cicle`
   ADD PRIMARY KEY (`id`),
@@ -464,7 +474,7 @@ ALTER TABLE `assignatures_cicle`
   ADD KEY `fk_cicleassignatura` (`id_assignatura`);
 
 --
--- Indices de la tabla `assistencia`
+-- Índexs per a la taula `assistencia`
 --
 ALTER TABLE `assistencia`
   ADD PRIMARY KEY (`id`),
@@ -473,19 +483,19 @@ ALTER TABLE `assistencia`
   ADD KEY `fk_nomgrup` (`nom_grup`);
 
 --
--- Indices de la tabla `centres`
+-- Índexs per a la taula `centres`
 --
 ALTER TABLE `centres`
   ADD PRIMARY KEY (`codi`);
 
 --
--- Indices de la tabla `cicles`
+-- Índexs per a la taula `cicles`
 --
 ALTER TABLE `cicles`
   ADD PRIMARY KEY (`nom`);
 
 --
--- Indices de la tabla `contractes`
+-- Índexs per a la taula `contractes`
 --
 ALTER TABLE `contractes`
   ADD PRIMARY KEY (`id`),
@@ -493,14 +503,14 @@ ALTER TABLE `contractes`
   ADD KEY `fk_codic` (`codi_centre`);
 
 --
--- Indices de la tabla `directiva`
+-- Índexs per a la taula `directiva`
 --
 ALTER TABLE `directiva`
   ADD PRIMARY KEY (`rol`),
   ADD KEY `fk_codiprof` (`codi_prof`);
 
 --
--- Indices de la tabla `estudiants`
+-- Índexs per a la taula `estudiants`
 --
 ALTER TABLE `estudiants`
   ADD PRIMARY KEY (`nia`),
@@ -509,7 +519,7 @@ ALTER TABLE `estudiants`
   ADD KEY `fk_cicles` (`nom_cicle`) USING BTREE;
 
 --
--- Indices de la tabla `estudiants_ras`
+-- Índexs per a la taula `estudiants_ras`
 --
 ALTER TABLE `estudiants_ras`
   ADD PRIMARY KEY (`id`),
@@ -517,13 +527,13 @@ ALTER TABLE `estudiants_ras`
   ADD KEY `fk_niaa` (`nia`);
 
 --
--- Indices de la tabla `grup_classe`
+-- Índexs per a la taula `grup_classe`
 --
 ALTER TABLE `grup_classe`
   ADD PRIMARY KEY (`nom`);
 
 --
--- Indices de la tabla `historic_estudiants`
+-- Índexs per a la taula `historic_estudiants`
 --
 ALTER TABLE `historic_estudiants`
   ADD PRIMARY KEY (`id`),
@@ -531,49 +541,49 @@ ALTER TABLE `historic_estudiants`
   ADD KEY `fk_nomciclee` (`nom_cicle`);
 
 --
--- Indices de la tabla `historic_fct`
+-- Índexs per a la taula `historic_fct`
 --
 ALTER TABLE `historic_fct`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_niah` (`nia`);
 
 --
--- Indices de la tabla `historic_professors`
+-- Índexs per a la taula `historic_professors`
 --
 ALTER TABLE `historic_professors`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_codipr` (`codi_prof`);
 
 --
--- Indices de la tabla `logs_consultes`
+-- Índexs per a la taula `logs_consultes`
 --
 ALTER TABLE `logs_consultes`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_token` (`token`);
 
 --
--- Indices de la tabla `logs_login`
+-- Índexs per a la taula `logs_login`
 --
 ALTER TABLE `logs_login`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_iduserl` (`id_user`);
 
 --
--- Indices de la tabla `persones`
+-- Índexs per a la taula `persones`
 --
 ALTER TABLE `persones`
   ADD PRIMARY KEY (`dni`),
   ADD KEY `dni` (`dni`);
 
 --
--- Indices de la tabla `professors`
+-- Índexs per a la taula `professors`
 --
 ALTER TABLE `professors`
   ADD PRIMARY KEY (`codi_prof`),
   ADD KEY `fk_dniprof` (`dni`);
 
 --
--- Indices de la tabla `prof_assignatura`
+-- Índexs per a la taula `prof_assignatura`
 --
 ALTER TABLE `prof_assignatura`
   ADD PRIMARY KEY (`id`),
@@ -581,21 +591,21 @@ ALTER TABLE `prof_assignatura`
   ADD KEY `fk_idassignatura` (`id_assignatura`);
 
 --
--- Indices de la tabla `ras`
+-- Índexs per a la taula `ras`
 --
 ALTER TABLE `ras`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_assignaturaid` (`codi_assignatura`);
 
 --
--- Indices de la tabla `sessions`
+-- Índexs per a la taula `sessions`
 --
 ALTER TABLE `sessions`
   ADD PRIMARY KEY (`token`),
   ADD KEY `fk_iduser` (`id_user`);
 
 --
--- Indices de la tabla `usuaris`
+-- Índexs per a la taula `usuaris`
 --
 ALTER TABLE `usuaris`
   ADD PRIMARY KEY (`id_user`),
@@ -604,120 +614,120 @@ ALTER TABLE `usuaris`
   ADD KEY `fk_usuaridni` (`dni`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- AUTO_INCREMENT per les taules bolcades
 --
 
 --
--- AUTO_INCREMENT de la tabla `administradors`
+-- AUTO_INCREMENT per la taula `administradors`
 --
 ALTER TABLE `administradors`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `admin_centre`
+-- AUTO_INCREMENT per la taula `admin_centre`
 --
 ALTER TABLE `admin_centre`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `assignatures_cicle`
+-- AUTO_INCREMENT per la taula `assignatures_cicle`
 --
 ALTER TABLE `assignatures_cicle`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `assistencia`
+-- AUTO_INCREMENT per la taula `assistencia`
 --
 ALTER TABLE `assistencia`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `contractes`
+-- AUTO_INCREMENT per la taula `contractes`
 --
 ALTER TABLE `contractes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `estudiants_ras`
+-- AUTO_INCREMENT per la taula `estudiants_ras`
 --
 ALTER TABLE `estudiants_ras`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `historic_estudiants`
+-- AUTO_INCREMENT per la taula `historic_estudiants`
 --
 ALTER TABLE `historic_estudiants`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `historic_fct`
+-- AUTO_INCREMENT per la taula `historic_fct`
 --
 ALTER TABLE `historic_fct`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `historic_professors`
+-- AUTO_INCREMENT per la taula `historic_professors`
 --
 ALTER TABLE `historic_professors`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `logs_consultes`
+-- AUTO_INCREMENT per la taula `logs_consultes`
 --
 ALTER TABLE `logs_consultes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `logs_login`
+-- AUTO_INCREMENT per la taula `logs_login`
 --
 ALTER TABLE `logs_login`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `prof_assignatura`
+-- AUTO_INCREMENT per la taula `prof_assignatura`
 --
 ALTER TABLE `prof_assignatura`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `ras`
+-- AUTO_INCREMENT per la taula `ras`
 --
 ALTER TABLE `ras`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `usuaris`
+-- AUTO_INCREMENT per la taula `usuaris`
 --
 ALTER TABLE `usuaris`
   MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Restricciones para tablas volcadas
+-- Restriccions per a les taules bolcades
 --
 
 --
--- Filtros para la tabla `administradors`
+-- Restriccions per a la taula `administradors`
 --
 ALTER TABLE `administradors`
   ADD CONSTRAINT `fk_admindni` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_adminuser` FOREIGN KEY (`id_user`) REFERENCES `usuaris` (`id_user`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `admin_centre`
+-- Restriccions per a la taula `admin_centre`
 --
 ALTER TABLE `admin_centre`
   ADD CONSTRAINT `fk_adminid` FOREIGN KEY (`admin_id`) REFERENCES `administradors` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_codicentre` FOREIGN KEY (`codi_centre`) REFERENCES `centres` (`codi`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `assignatures_cicle`
+-- Restriccions per a la taula `assignatures_cicle`
 --
 ALTER TABLE `assignatures_cicle`
   ADD CONSTRAINT `fk_cicleassignatura` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_nomcicle` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `assistencia`
+-- Restriccions per a la taula `assistencia`
 --
 ALTER TABLE `assistencia`
   ADD CONSTRAINT `fk_codiass` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE,
@@ -725,20 +735,20 @@ ALTER TABLE `assistencia`
   ADD CONSTRAINT `fk_nomgrup` FOREIGN KEY (`nom_grup`) REFERENCES `grup_classe` (`nom`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `contractes`
+-- Restriccions per a la taula `contractes`
 --
 ALTER TABLE `contractes`
   ADD CONSTRAINT `fk_codic` FOREIGN KEY (`codi_centre`) REFERENCES `centres` (`codi`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_codip` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `directiva`
+-- Restriccions per a la taula `directiva`
 --
 ALTER TABLE `directiva`
   ADD CONSTRAINT `fk_codiprof` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `estudiants`
+-- Restriccions per a la taula `estudiants`
 --
 ALTER TABLE `estudiants`
   ADD CONSTRAINT `fk_ciclees` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE,
@@ -746,70 +756,70 @@ ALTER TABLE `estudiants`
   ADD CONSTRAINT `fk_nomgrupes` FOREIGN KEY (`nom_grup`) REFERENCES `grup_classe` (`nom`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `estudiants_ras`
+-- Restriccions per a la taula `estudiants_ras`
 --
 ALTER TABLE `estudiants_ras`
   ADD CONSTRAINT `fk_idra` FOREIGN KEY (`id_ra`) REFERENCES `ras` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_niaa` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `historic_estudiants`
+-- Restriccions per a la taula `historic_estudiants`
 --
 ALTER TABLE `historic_estudiants`
   ADD CONSTRAINT `fk_niaes` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_nomciclee` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `historic_fct`
+-- Restriccions per a la taula `historic_fct`
 --
 ALTER TABLE `historic_fct`
   ADD CONSTRAINT `fk_niah` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `historic_professors`
+-- Restriccions per a la taula `historic_professors`
 --
 ALTER TABLE `historic_professors`
   ADD CONSTRAINT `fk_codipr` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `logs_consultes`
+-- Restriccions per a la taula `logs_consultes`
 --
 ALTER TABLE `logs_consultes`
   ADD CONSTRAINT `fk_token` FOREIGN KEY (`token`) REFERENCES `sessions` (`token`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `logs_login`
+-- Restriccions per a la taula `logs_login`
 --
 ALTER TABLE `logs_login`
   ADD CONSTRAINT `fk_iduserl` FOREIGN KEY (`id_user`) REFERENCES `usuaris` (`id_user`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `professors`
+-- Restriccions per a la taula `professors`
 --
 ALTER TABLE `professors`
   ADD CONSTRAINT `fk_dniprof` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `prof_assignatura`
+-- Restriccions per a la taula `prof_assignatura`
 --
 ALTER TABLE `prof_assignatura`
   ADD CONSTRAINT `fk_codiprofe` FOREIGN KEY (`id_codiprof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_idassignatura` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `ras`
+-- Restriccions per a la taula `ras`
 --
 ALTER TABLE `ras`
   ADD CONSTRAINT `fk_assignaturaid` FOREIGN KEY (`codi_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `sessions`
+-- Restriccions per a la taula `sessions`
 --
 ALTER TABLE `sessions`
   ADD CONSTRAINT `fk_iduser` FOREIGN KEY (`id_user`) REFERENCES `usuaris` (`id_user`) ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `usuaris`
+-- Restriccions per a la taula `usuaris`
 --
 ALTER TABLE `usuaris`
   ADD CONSTRAINT `fk_usuaridni` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE;
