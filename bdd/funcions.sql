@@ -30,7 +30,7 @@ BEGIN
     SELECT COUNT(*) INTO result
     FROM logs_login l
     WHERE l.id_user = userId
-      AND l.dia BETWEEN rang1 AND rang2;
+      AND l.data BETWEEN rang1 AND rang2;
 
     RETURN result;
 END//
