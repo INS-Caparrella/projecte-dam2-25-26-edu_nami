@@ -16,7 +16,7 @@ Imports System.Reflection
 <Assembly: System.Reflection.AssemblyCompanyAttribute("prototip1"),  _
  Assembly: System.Reflection.AssemblyConfigurationAttribute("Debug"),  _
  Assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0"),  _
- Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7a1678ba105552187b07b91fae030f83774d8c0f"),  _
+ Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bdfd278dcb94e62fd6f1d386fe5766e9ede1de87"),  _
  Assembly: System.Reflection.AssemblyProductAttribute("prototip1"),  _
  Assembly: System.Reflection.AssemblyTitleAttribute("prototip1"),  _
  Assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0"),  _
