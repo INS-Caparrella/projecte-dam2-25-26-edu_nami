@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZKA9Qb0Ol8c=",
+  "dgSpecHash": "NK0mI1KGvbM=",
   "success": true,
-  "projectFilePath": "C:\\Users\\namin\\Downloads\\proyecto\\projecte-dam2-25-26-edu_nami\\prototips\\prototip1\\prototip1.vbproj",
+  "projectFilePath": "C:\\Users\\namin\\Downloads\\proyecto\\projecte-dam2-25-26-edu_nami\\prototips\\app_escriptori\\prototip1\\prototip1.vbproj",
   "expectedPackageFiles": [
     "C:\\Users\\namin\\.nuget\\packages\\yamldotnet\\16.3.0\\yamldotnet.16.3.0.nupkg.sha512"
   ],
