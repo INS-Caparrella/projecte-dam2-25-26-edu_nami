@@ -47,14 +47,14 @@ class LoginActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             EvalisTheme {
-                LoginScreen(
-
-                    onSuccess = {
-                        startActivity(Intent(this, HomeActivity::class.java))
-                        is_logged = true
-                        finish()
-                    }
-                )
+//                LoginScreen(
+//
+////                    onSuccess = {
+////                        startActivity(Intent(this, HomeActivity::class.java))
+////                        is_logged = true
+////                        finish()
+////                    }
+//                )
 
             }
         }
@@ -132,7 +132,7 @@ fun LoginButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modif
     Button(
         modifier=modifier,
         onClick={
-            val baseUrl = "https://192.168.1.39"
+            val baseUrl = "https://192.168.1.39" //cambiar cada que se reinicie el pc
             val method="POST"
 
             val u= URLEncoder.encode(user, "UTF-8")
