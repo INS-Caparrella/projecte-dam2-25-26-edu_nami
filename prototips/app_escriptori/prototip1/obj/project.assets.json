@@ -54,11 +54,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\namin\\Downloads\\proyecto\\projecte-dam2-25-26-edu_nami\\prototips\\prototip1\\prototip1.vbproj",
+      "projectUniqueName": "C:\\Users\\namin\\Downloads\\proyecto\\projecte-dam2-25-26-edu_nami\\prototips\\app_escriptori\\prototip1\\prototip1.vbproj",
       "projectName": "prototip1",
-      "projectPath": "C:\\Users\\namin\\Downloads\\proyecto\\projecte-dam2-25-26-edu_nami\\prototips\\prototip1\\prototip1.vbproj",
+      "projectPath": "C:\\Users\\namin\\Downloads\\proyecto\\projecte-dam2-25-26-edu_nami\\prototips\\app_escriptori\\prototip1\\prototip1.vbproj",
       "packagesPath": "C:\\Users\\namin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\namin\\Downloads\\proyecto\\projecte-dam2-25-26-edu_nami\\prototips\\prototip1\\obj\\",
+      "outputPath": "C:\\Users\\namin\\Downloads\\proyecto\\projecte-dam2-25-26-edu_nami\\prototips\\app_escriptori\\prototip1\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

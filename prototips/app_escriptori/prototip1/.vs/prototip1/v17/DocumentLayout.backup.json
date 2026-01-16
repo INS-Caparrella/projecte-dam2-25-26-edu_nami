@@ -5,6 +5,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{AE7359A0-BFDC-44EB-988F-391D91229138}|prototip1.vbproj|c:\\users\\namin\\downloads\\proyecto\\projecte-dam2-25-26-edu_nami\\prototips\\prototip1\\form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
       "RelativeMoniker": "D:0:0:{AE7359A0-BFDC-44EB-988F-391D91229138}|prototip1.vbproj|solutionrelative:form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AE7359A0-BFDC-44EB-988F-391D91229138}|prototip1.vbproj|c:\\users\\namin\\downloads\\proyecto\\projecte-dam2-25-26-edu_nami\\prototips\\prototip1\\form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{AE7359A0-BFDC-44EB-988F-391D91229138}|prototip1.vbproj|solutionrelative:form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,8 +18,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.vb",
+              "DocumentMoniker": "C:\\Users\\namin\\Downloads\\proyecto\\projecte-dam2-25-26-edu_nami\\prototips\\prototip1\\Form1.vb",
+              "RelativeDocumentMoniker": "Form1.vb",
+              "ToolTip": "C:\\Users\\namin\\Downloads\\proyecto\\projecte-dam2-25-26-edu_nami\\prototips\\prototip1\\Form1.vb",
+              "RelativeToolTip": "Form1.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-10-21T15:36:23.523Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
