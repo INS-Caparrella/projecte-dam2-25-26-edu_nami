@@ -2,7 +2,6 @@ package com.example.evalis
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.style.URLSpan
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,10 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -47,21 +43,21 @@ class LoginActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             EvalisTheme {
-//                LoginScreen(
-//
-////                    onSuccess = {
-////                        startActivity(Intent(this, HomeActivity::class.java))
-////                        is_logged = true
-////                        finish()
-////                    }
-//                )
+                LoginScreen(
+
+                    onSuccess = {
+                        startActivity(Intent(this, HomeActivity::class.java))
+                        is_logged = true
+                        finish()
+                    }
+                )
 
             }
         }
     }
 
     @Composable
-    fun LoginScreen(hardcodeuser: String, hardcodepass: String, onSuccess: () -> Unit) {
+    fun LoginScreen(onSuccess: () -> Unit) {
         var user by remember { mutableStateOf("") }
         var pass by remember { mutableStateOf("") }
 
@@ -83,7 +79,7 @@ class LoginActivity : ComponentActivity() {
                 OutlinedTextField(
                     value = user,
                     onValueChange = { user = it },
-                    label = { Text("Usuari") },
+                    label = { Text("Usuario") },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     modifier = Modifier.fillMaxWidth()
@@ -91,7 +87,7 @@ class LoginActivity : ComponentActivity() {
                 OutlinedTextField(
                     value = pass,
                     onValueChange = { pass = it },
-                    label = { Text("Contrasenya") },
+                    label = { Text("Contraseña") },
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
@@ -108,7 +104,7 @@ class LoginActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxWidth()
 
                 )
-                    Text("Entrar")
+                    Text("Acceder")
             }
         }
     }
@@ -117,11 +113,7 @@ class LoginActivity : ComponentActivity() {
     @Composable
     fun PreviewLoginScreen() {
         EvalisTheme {
-            LoginScreen(
-                hardcodeuser = "admin",
-                hardcodepass = "1234",
-                onSuccess = {}
-            )
+            LoginScreen {}
         }
     }
 }
@@ -132,16 +124,16 @@ fun LoginButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modif
     Button(
         modifier=modifier,
         onClick={
-            val baseUrl = "https://192.168.1.39" //cambiar cada que se reinicie el pc
+            val baseUrl = "https://192.168.16.100" //cambiar cada que se reinicie el pc
             val method="POST"
 
             val u= URLEncoder.encode(user, "UTF-8")
             val p= URLEncoder.encode(pass, "UTF-8")
             var url = ""
-            val params="user=$u&pass=$p"
+            val params="username=$u&password=$p"
 
             if (method=="GET") {
-                url = "$baseUrl/login.php?user=$u&pass=$p"
+                url = "$baseUrl/login.php?username=$u&password=$p"
             }
             else if (method=="POST"){
                 url = "$baseUrl/login.php"
@@ -158,7 +150,7 @@ fun LoginButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modif
                     (context as? ComponentActivity)?.runOnUiThread {
                         if (obj==null){
                             val missatgeError=gestor.lastError
-                                ?: "sense resposta o error desconegut (revisa URL, port i JSON"
+                                ?: "sense resposta o error desconegut (revisa URL, port i JSON)"
 
                             Toast.makeText(context,
                                 "error en la connexió: $missatgeError",
