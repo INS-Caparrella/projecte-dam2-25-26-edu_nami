@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-01-2026 a las 17:24:16
+-- Tiempo de generación: 27-01-2026 a las 17:25:58
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -27,7 +27,6 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-DROP PROCEDURE IF EXISTS `alumnesGrup`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `alumnesGrup` (IN `grup` VARCHAR(11))   BEGIN
     SELECT p.nom,p.cognom,p.dni, TIMESTAMPDIFF(YEAR, p.data_naix, CURDATE()) AS edat
     FROM persones p
@@ -36,7 +35,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `alumnesGrup` (IN `grup` VARCHAR(11)
     ORDER BY p.nom,p.cognom;
 END$$
 
-DROP PROCEDURE IF EXISTS `llistatMajorsEdatEstudiants`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `llistatMajorsEdatEstudiants` ()   BEGIN
     SELECT p.nom AS nom,p.cognom AS cognom, TIMESTAMPDIFF(YEAR, p.data_naix, CURDATE()) AS edat
     FROM persones p JOIN estudiants e ON e.dni = p.dni
@@ -47,7 +45,6 @@ END$$
 --
 -- Funciones
 --
-DROP FUNCTION IF EXISTS `intentsLogin`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `intentsLogin` (`userId` INT, `rang1` DATETIME, `rang2` DATETIME) RETURNS INT(11)  BEGIN
     DECLARE result INT DEFAULT 0;
 
@@ -59,7 +56,6 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `intentsLogin` (`userId` INT, `rang1`
     RETURN result;
 END$$
 
-DROP FUNCTION IF EXISTS `majorEdat`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `majorEdat` (`dni` VARCHAR(9)) RETURNS TINYINT(1)  BEGIN
     DECLARE edat INT;
     DECLARE major BOOLEAN DEFAULT FALSE;
@@ -83,7 +79,6 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `administradors`
 --
 
-DROP TABLE IF EXISTS `administradors`;
 CREATE TABLE `administradors` (
   `id` int(11) NOT NULL,
   `dni` varchar(9) NOT NULL,
@@ -114,7 +109,6 @@ INSERT INTO `administradors` (`id`, `dni`, `id_user`, `dades`, `superadmin`) VAL
 -- Estructura de tabla para la tabla `admin_centre`
 --
 
-DROP TABLE IF EXISTS `admin_centre`;
 CREATE TABLE `admin_centre` (
   `id` int(11) NOT NULL,
   `admin_id` int(11) NOT NULL,
@@ -144,7 +138,6 @@ INSERT INTO `admin_centre` (`id`, `admin_id`, `codi_centre`, `backup`) VALUES
 -- Estructura de tabla para la tabla `assignatures`
 --
 
-DROP TABLE IF EXISTS `assignatures`;
 CREATE TABLE `assignatures` (
   `codi` varchar(25) NOT NULL,
   `nom` varchar(50) NOT NULL
@@ -172,7 +165,6 @@ INSERT INTO `assignatures` (`codi`, `nom`) VALUES
 -- Estructura de tabla para la tabla `assignatures_cicle`
 --
 
-DROP TABLE IF EXISTS `assignatures_cicle`;
 CREATE TABLE `assignatures_cicle` (
   `id` int(11) NOT NULL,
   `nom_cicle` varchar(256) NOT NULL,
@@ -201,7 +193,6 @@ INSERT INTO `assignatures_cicle` (`id`, `nom_cicle`, `id_assignatura`) VALUES
 -- Estructura de tabla para la tabla `assistencia`
 --
 
-DROP TABLE IF EXISTS `assistencia`;
 CREATE TABLE `assistencia` (
   `id` int(11) NOT NULL,
   `codi_prof` varchar(20) NOT NULL,
@@ -234,7 +225,6 @@ INSERT INTO `assistencia` (`id`, `codi_prof`, `id_assignatura`, `nom_grup`, `hor
 -- Estructura de tabla para la tabla `centres`
 --
 
-DROP TABLE IF EXISTS `centres`;
 CREATE TABLE `centres` (
   `codi` int(11) NOT NULL,
   `nom` varchar(256) NOT NULL,
@@ -263,7 +253,6 @@ INSERT INTO `centres` (`codi`, `nom`, `data_inaug`) VALUES
 -- Estructura de tabla para la tabla `cicles`
 --
 
-DROP TABLE IF EXISTS `cicles`;
 CREATE TABLE `cicles` (
   `nom` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -290,7 +279,6 @@ INSERT INTO `cicles` (`nom`) VALUES
 -- Estructura de tabla para la tabla `contractes`
 --
 
-DROP TABLE IF EXISTS `contractes`;
 CREATE TABLE `contractes` (
   `id` int(11) NOT NULL,
   `codi_prof` varchar(20) NOT NULL,
@@ -322,7 +310,6 @@ INSERT INTO `contractes` (`id`, `codi_prof`, `codi_centre`, `data_alta`, `data_b
 -- Estructura de tabla para la tabla `directiva`
 --
 
-DROP TABLE IF EXISTS `directiva`;
 CREATE TABLE `directiva` (
   `rol` varchar(25) NOT NULL,
   `codi_prof` varchar(20) NOT NULL
@@ -350,7 +337,6 @@ INSERT INTO `directiva` (`rol`, `codi_prof`) VALUES
 -- Estructura de tabla para la tabla `estudiants`
 --
 
-DROP TABLE IF EXISTS `estudiants`;
 CREATE TABLE `estudiants` (
   `nia` int(11) NOT NULL,
   `dni` varchar(9) NOT NULL,
@@ -383,7 +369,6 @@ INSERT INTO `estudiants` (`nia`, `dni`, `nom_grup`, `nom_cicle`, `cursant`, `rep
 --
 -- Disparadores `estudiants`
 --
-DROP TRIGGER IF EXISTS `estudiantHistoric`;
 DELIMITER $$
 CREATE TRIGGER `estudiantHistoric` AFTER UPDATE ON `estudiants` FOR EACH ROW BEGIN
     DECLARE fin BOOLEAN DEFAULT FALSE;
@@ -411,7 +396,6 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `estudiants_ras`
 --
 
-DROP TABLE IF EXISTS `estudiants_ras`;
 CREATE TABLE `estudiants_ras` (
   `id` int(11) NOT NULL,
   `id_ra` int(11) NOT NULL,
@@ -438,7 +422,6 @@ INSERT INTO `estudiants_ras` (`id`, `id_ra`, `nia`, `nota`) VALUES
 --
 -- Disparadores `estudiants_ras`
 --
-DROP TRIGGER IF EXISTS `promocio_fp_insert`;
 DELIMITER $$
 CREATE TRIGGER `promocio_fp_insert` AFTER INSERT ON `estudiants_ras` FOR EACH ROW BEGIN
     DECLARE total_ras INT;
@@ -462,7 +445,6 @@ CREATE TRIGGER `promocio_fp_insert` AFTER INSERT ON `estudiants_ras` FOR EACH RO
 END
 $$
 DELIMITER ;
-DROP TRIGGER IF EXISTS `promocio_fp_update`;
 DELIMITER $$
 CREATE TRIGGER `promocio_fp_update` AFTER UPDATE ON `estudiants_ras` FOR EACH ROW BEGIN
     DECLARE total_ras INT;
@@ -493,7 +475,6 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `grup_classe`
 --
 
-DROP TABLE IF EXISTS `grup_classe`;
 CREATE TABLE `grup_classe` (
   `nom` varchar(25) NOT NULL,
   `aula` varchar(20) NOT NULL
@@ -521,7 +502,6 @@ INSERT INTO `grup_classe` (`nom`, `aula`) VALUES
 -- Estructura de tabla para la tabla `historic_estudiants`
 --
 
-DROP TABLE IF EXISTS `historic_estudiants`;
 CREATE TABLE `historic_estudiants` (
   `id` int(11) NOT NULL,
   `nia` int(11) NOT NULL,
@@ -554,7 +534,6 @@ INSERT INTO `historic_estudiants` (`id`, `nia`, `nom_cicle`, `finalitzat`, `nota
 -- Estructura de tabla para la tabla `historic_fct`
 --
 
-DROP TABLE IF EXISTS `historic_fct`;
 CREATE TABLE `historic_fct` (
   `id` int(11) NOT NULL,
   `nia` int(11) NOT NULL,
@@ -587,7 +566,6 @@ INSERT INTO `historic_fct` (`id`, `nia`, `empreses`, `hores`, `finalitzat`, `obs
 -- Estructura de tabla para la tabla `historic_professors`
 --
 
-DROP TABLE IF EXISTS `historic_professors`;
 CREATE TABLE `historic_professors` (
   `id` int(11) NOT NULL,
   `codi_prof` varchar(20) NOT NULL,
@@ -619,7 +597,6 @@ INSERT INTO `historic_professors` (`id`, `codi_prof`, `tipus`, `motius`, `justif
 -- Estructura de tabla para la tabla `logs_consultes`
 --
 
-DROP TABLE IF EXISTS `logs_consultes`;
 CREATE TABLE `logs_consultes` (
   `id` int(11) NOT NULL,
   `token` int(11) NOT NULL,
@@ -663,7 +640,6 @@ INSERT INTO `logs_consultes` (`id`, `token`, `consulta`) VALUES
 -- Estructura de tabla para la tabla `logs_login`
 --
 
-DROP TABLE IF EXISTS `logs_login`;
 CREATE TABLE `logs_login` (
   `id` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
@@ -709,7 +685,6 @@ INSERT INTO `logs_login` (`id`, `id_user`, `ip`, `login`, `data`) VALUES
 -- Estructura de tabla para la tabla `persones`
 --
 
-DROP TABLE IF EXISTS `persones`;
 CREATE TABLE `persones` (
   `dni` varchar(9) NOT NULL,
   `nom` varchar(25) NOT NULL,
@@ -765,7 +740,6 @@ INSERT INTO `persones` (`dni`, `nom`, `cognom`, `data_naix`, `poblacio`, `codi_p
 --
 -- Disparadores `persones`
 --
-DROP TRIGGER IF EXISTS `generarUsuari`;
 DELIMITER $$
 CREATE TRIGGER `generarUsuari` AFTER INSERT ON `persones` FOR EACH ROW BEGIN
     DECLARE usernameBase VARCHAR(50);
@@ -794,7 +768,6 @@ CREATE TRIGGER `generarUsuari` AFTER INSERT ON `persones` FOR EACH ROW BEGIN
 END
 $$
 DELIMITER ;
-DROP TRIGGER IF EXISTS `valid_email`;
 DELIMITER $$
 CREATE TRIGGER `valid_email` BEFORE INSERT ON `persones` FOR EACH ROW BEGIN
 	IF NEW.email NOT REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}$' THEN 
@@ -811,7 +784,6 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `professors`
 --
 
-DROP TABLE IF EXISTS `professors`;
 CREATE TABLE `professors` (
   `codi_prof` varchar(20) NOT NULL,
   `dni` varchar(9) NOT NULL,
@@ -840,7 +812,6 @@ INSERT INTO `professors` (`codi_prof`, `dni`, `dedicacio`) VALUES
 -- Estructura de tabla para la tabla `prof_assignatura`
 --
 
-DROP TABLE IF EXISTS `prof_assignatura`;
 CREATE TABLE `prof_assignatura` (
   `id` int(11) NOT NULL,
   `id_codiprof` varchar(20) NOT NULL,
@@ -869,7 +840,6 @@ INSERT INTO `prof_assignatura` (`id`, `id_codiprof`, `id_assignatura`) VALUES
 -- Estructura de tabla para la tabla `ras`
 --
 
-DROP TABLE IF EXISTS `ras`;
 CREATE TABLE `ras` (
   `id` int(11) NOT NULL,
   `codi_assignatura` varchar(25) NOT NULL,
@@ -900,7 +870,6 @@ INSERT INTO `ras` (`id`, `codi_assignatura`, `data_inici`, `data_fin`, `nota`) V
 -- Estructura de tabla para la tabla `sessions`
 --
 
-DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
   `token` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
@@ -946,7 +915,6 @@ INSERT INTO `sessions` (`token`, `id_user`, `username`, `data_inici`, `data_fin`
 -- Estructura de tabla para la tabla `usuaris`
 --
 
-DROP TABLE IF EXISTS `usuaris`;
 CREATE TABLE `usuaris` (
   `id_user` int(11) NOT NULL,
   `dni` varchar(9) NOT NULL,
