@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-01-2026 a las 19:02:34
+-- Tiempo de generación: 27-01-2026 a las 17:08:47
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -20,11 +20,14 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `projecte_evalis`
 --
+CREATE DATABASE IF NOT EXISTS `projecte_evalis` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `projecte_evalis`;
 
 DELIMITER $$
 --
 -- Procedimientos
 --
+DROP PROCEDURE IF EXISTS `alumnesGrup`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `alumnesGrup` (IN `grup` VARCHAR(11))   BEGIN
     SELECT p.nom,p.cognom,p.dni, TIMESTAMPDIFF(YEAR, p.data_naix, CURDATE()) AS edat
     FROM persones p
@@ -33,6 +36,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `alumnesGrup` (IN `grup` VARCHAR(11)
     ORDER BY p.nom,p.cognom;
 END$$
 
+DROP PROCEDURE IF EXISTS `llistatMajorsEdatEstudiants`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `llistatMajorsEdatEstudiants` ()   BEGIN
     SELECT p.nom AS nom,p.cognom AS cognom, TIMESTAMPDIFF(YEAR, p.data_naix, CURDATE()) AS edat
     FROM persones p JOIN estudiant e ON e.dni = p.dni
@@ -43,6 +47,7 @@ END$$
 --
 -- Funciones
 --
+DROP FUNCTION IF EXISTS `intentsLogin`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `intentsLogin` (`userId` INT, `rang1` DATETIME, `rang2` DATETIME) RETURNS INT(11)  BEGIN
     DECLARE result INT DEFAULT 0;
 
@@ -54,6 +59,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `intentsLogin` (`userId` INT, `rang1`
     RETURN result;
 END$$
 
+DROP FUNCTION IF EXISTS `majorEdat`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `majorEdat` (`dni` VARCHAR(9)) RETURNS TINYINT(1)  BEGIN
     DECLARE edat INT;
     DECLARE major BOOLEAN DEFAULT FALSE;
@@ -77,13 +83,17 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `administradors`
 --
 
-CREATE TABLE `administradors` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `administradors`;
+CREATE TABLE IF NOT EXISTS `administradors` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `dni` varchar(9) NOT NULL,
   `id_user` int(11) NOT NULL,
   `dades` tinyint(1) NOT NULL,
-  `superadmin` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `superadmin` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_admindni` (`dni`),
+  KEY `fk_adminuser` (`id_user`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `administradors`
@@ -107,12 +117,16 @@ INSERT INTO `administradors` (`id`, `dni`, `id_user`, `dades`, `superadmin`) VAL
 -- Estructura de tabla para la tabla `admin_centre`
 --
 
-CREATE TABLE `admin_centre` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `admin_centre`;
+CREATE TABLE IF NOT EXISTS `admin_centre` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `admin_id` int(11) NOT NULL,
   `codi_centre` int(11) NOT NULL,
-  `backup` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `backup` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_adminid` (`admin_id`),
+  KEY `fk_codicentre` (`codi_centre`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `admin_centre`
@@ -136,9 +150,11 @@ INSERT INTO `admin_centre` (`id`, `admin_id`, `codi_centre`, `backup`) VALUES
 -- Estructura de tabla para la tabla `assignatures`
 --
 
-CREATE TABLE `assignatures` (
+DROP TABLE IF EXISTS `assignatures`;
+CREATE TABLE IF NOT EXISTS `assignatures` (
   `codi` varchar(25) NOT NULL,
-  `nom` varchar(50) NOT NULL
+  `nom` varchar(50) NOT NULL,
+  PRIMARY KEY (`codi`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -163,11 +179,15 @@ INSERT INTO `assignatures` (`codi`, `nom`) VALUES
 -- Estructura de tabla para la tabla `assignatures_cicle`
 --
 
-CREATE TABLE `assignatures_cicle` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `assignatures_cicle`;
+CREATE TABLE IF NOT EXISTS `assignatures_cicle` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom_cicle` varchar(256) NOT NULL,
-  `id_assignatura` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `id_assignatura` varchar(25) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_nomcicle` (`nom_cicle`),
+  KEY `fk_cicleassignatura` (`id_assignatura`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `assignatures_cicle`
@@ -191,15 +211,20 @@ INSERT INTO `assignatures_cicle` (`id`, `nom_cicle`, `id_assignatura`) VALUES
 -- Estructura de tabla para la tabla `assistencia`
 --
 
-CREATE TABLE `assistencia` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `assistencia`;
+CREATE TABLE IF NOT EXISTS `assistencia` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `codi_prof` varchar(20) NOT NULL,
   `id_assignatura` varchar(25) NOT NULL,
   `nom_grup` varchar(25) NOT NULL,
   `hora_inici` time NOT NULL,
   `hora_fin` time NOT NULL,
-  `observacio` varchar(256) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `observacio` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_codiprofeass` (`codi_prof`),
+  KEY `fk_codiass` (`id_assignatura`),
+  KEY `fk_nomgrup` (`nom_grup`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `assistencia`
@@ -223,10 +248,12 @@ INSERT INTO `assistencia` (`id`, `codi_prof`, `id_assignatura`, `nom_grup`, `hor
 -- Estructura de tabla para la tabla `centres`
 --
 
-CREATE TABLE `centres` (
+DROP TABLE IF EXISTS `centres`;
+CREATE TABLE IF NOT EXISTS `centres` (
   `codi` int(11) NOT NULL,
   `nom` varchar(256) NOT NULL,
-  `data_inaug` date NOT NULL
+  `data_inaug` date NOT NULL,
+  PRIMARY KEY (`codi`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -251,8 +278,10 @@ INSERT INTO `centres` (`codi`, `nom`, `data_inaug`) VALUES
 -- Estructura de tabla para la tabla `cicles`
 --
 
-CREATE TABLE `cicles` (
-  `nom` varchar(256) NOT NULL
+DROP TABLE IF EXISTS `cicles`;
+CREATE TABLE IF NOT EXISTS `cicles` (
+  `nom` varchar(256) NOT NULL,
+  PRIMARY KEY (`nom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -277,14 +306,18 @@ INSERT INTO `cicles` (`nom`) VALUES
 -- Estructura de tabla para la tabla `contractes`
 --
 
-CREATE TABLE `contractes` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `contractes`;
+CREATE TABLE IF NOT EXISTS `contractes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `codi_prof` varchar(20) NOT NULL,
   `codi_centre` int(11) NOT NULL,
   `data_alta` date NOT NULL,
   `data_baix` date DEFAULT NULL,
-  `vinculacio_laboral` varchar(256) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `vinculacio_laboral` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_codip` (`codi_prof`),
+  KEY `fk_codic` (`codi_centre`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `contractes`
@@ -308,9 +341,12 @@ INSERT INTO `contractes` (`id`, `codi_prof`, `codi_centre`, `data_alta`, `data_b
 -- Estructura de tabla para la tabla `directiva`
 --
 
-CREATE TABLE `directiva` (
+DROP TABLE IF EXISTS `directiva`;
+CREATE TABLE IF NOT EXISTS `directiva` (
   `rol` varchar(25) NOT NULL,
-  `codi_prof` varchar(20) NOT NULL
+  `codi_prof` varchar(20) NOT NULL,
+  PRIMARY KEY (`rol`),
+  KEY `fk_codiprof` (`codi_prof`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -335,7 +371,8 @@ INSERT INTO `directiva` (`rol`, `codi_prof`) VALUES
 -- Estructura de tabla para la tabla `estudiants`
 --
 
-CREATE TABLE `estudiants` (
+DROP TABLE IF EXISTS `estudiants`;
+CREATE TABLE IF NOT EXISTS `estudiants` (
   `nia` int(11) NOT NULL,
   `dni` varchar(9) NOT NULL,
   `nom_grup` varchar(25) NOT NULL,
@@ -345,7 +382,11 @@ CREATE TABLE `estudiants` (
   `treballant` tinyint(1) NOT NULL,
   `empresa` varchar(256) NOT NULL,
   `actiu` tinyint(1) NOT NULL DEFAULT 1,
-  `data_inici` date NOT NULL
+  `data_inici` date NOT NULL,
+  PRIMARY KEY (`nia`),
+  KEY `fk_dnies` (`dni`),
+  KEY `fk_nomgrupes` (`nom_grup`),
+  KEY `fk_cicles` (`nom_cicle`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -367,6 +408,7 @@ INSERT INTO `estudiants` (`nia`, `dni`, `nom_grup`, `nom_cicle`, `cursant`, `rep
 --
 -- Disparadores `estudiants`
 --
+DROP TRIGGER IF EXISTS `estudiantHistoric`;
 DELIMITER $$
 CREATE TRIGGER `estudiantHistoric` AFTER UPDATE ON `estudiants` FOR EACH ROW BEGIN
     DECLARE fin BOOLEAN DEFAULT FALSE;
@@ -394,12 +436,16 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `estudiants_ras`
 --
 
-CREATE TABLE `estudiants_ras` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `estudiants_ras`;
+CREATE TABLE IF NOT EXISTS `estudiants_ras` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_ra` int(11) NOT NULL,
   `nia` int(11) NOT NULL,
-  `nota` decimal(10,0) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `nota` decimal(10,0) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_idra` (`id_ra`),
+  KEY `fk_niaa` (`nia`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `estudiants_ras`
@@ -420,6 +466,7 @@ INSERT INTO `estudiants_ras` (`id`, `id_ra`, `nia`, `nota`) VALUES
 --
 -- Disparadores `estudiants_ras`
 --
+DROP TRIGGER IF EXISTS `promocio_fp_insert`;
 DELIMITER $$
 CREATE TRIGGER `promocio_fp_insert` AFTER INSERT ON `estudiants_ras` FOR EACH ROW BEGIN
     DECLARE total_ras INT;
@@ -443,6 +490,7 @@ CREATE TRIGGER `promocio_fp_insert` AFTER INSERT ON `estudiants_ras` FOR EACH RO
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `promocio_fp_update`;
 DELIMITER $$
 CREATE TRIGGER `promocio_fp_update` AFTER UPDATE ON `estudiants_ras` FOR EACH ROW BEGIN
     DECLARE total_ras INT;
@@ -473,9 +521,11 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `grup_classe`
 --
 
-CREATE TABLE `grup_classe` (
+DROP TABLE IF EXISTS `grup_classe`;
+CREATE TABLE IF NOT EXISTS `grup_classe` (
   `nom` varchar(25) NOT NULL,
-  `aula` varchar(20) NOT NULL
+  `aula` varchar(20) NOT NULL,
+  PRIMARY KEY (`nom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -500,15 +550,19 @@ INSERT INTO `grup_classe` (`nom`, `aula`) VALUES
 -- Estructura de tabla para la tabla `historic_estudiants`
 --
 
-CREATE TABLE `historic_estudiants` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `historic_estudiants`;
+CREATE TABLE IF NOT EXISTS `historic_estudiants` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nia` int(11) NOT NULL,
   `nom_cicle` varchar(256) NOT NULL,
   `finalitzat` tinyint(1) NOT NULL,
   `nota_final` decimal(10,0) DEFAULT NULL,
   `data_inici` date NOT NULL,
-  `data_fi` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `data_fi` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_niaes` (`nia`),
+  KEY `fk_nomciclee` (`nom_cicle`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `historic_estudiants`
@@ -532,15 +586,18 @@ INSERT INTO `historic_estudiants` (`id`, `nia`, `nom_cicle`, `finalitzat`, `nota
 -- Estructura de tabla para la tabla `historic_fct`
 --
 
-CREATE TABLE `historic_fct` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `historic_fct`;
+CREATE TABLE IF NOT EXISTS `historic_fct` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nia` int(11) NOT NULL,
   `empreses` varchar(256) NOT NULL,
   `hores` int(11) NOT NULL,
   `finalitzat` tinyint(1) NOT NULL,
   `observacions` varchar(256) NOT NULL,
-  `incidencies` varchar(256) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `incidencies` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_niah` (`nia`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `historic_fct`
@@ -564,14 +621,17 @@ INSERT INTO `historic_fct` (`id`, `nia`, `empreses`, `hores`, `finalitzat`, `obs
 -- Estructura de tabla para la tabla `historic_professors`
 --
 
-CREATE TABLE `historic_professors` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `historic_professors`;
+CREATE TABLE IF NOT EXISTS `historic_professors` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `codi_prof` varchar(20) NOT NULL,
   `tipus` varchar(50) NOT NULL,
   `motius` varchar(125) NOT NULL,
   `justificat` tinyint(1) NOT NULL,
-  `justificant` varchar(256) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `justificant` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_codipr` (`codi_prof`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `historic_professors`
@@ -595,11 +655,14 @@ INSERT INTO `historic_professors` (`id`, `codi_prof`, `tipus`, `motius`, `justif
 -- Estructura de tabla para la tabla `logs_consultes`
 --
 
-CREATE TABLE `logs_consultes` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `logs_consultes`;
+CREATE TABLE IF NOT EXISTS `logs_consultes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `token` int(11) NOT NULL,
-  `consulta` varchar(256) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `consulta` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_token` (`token`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `logs_consultes`
@@ -638,13 +701,16 @@ INSERT INTO `logs_consultes` (`id`, `token`, `consulta`) VALUES
 -- Estructura de tabla para la tabla `logs_login`
 --
 
-CREATE TABLE `logs_login` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `logs_login`;
+CREATE TABLE IF NOT EXISTS `logs_login` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_user` int(11) NOT NULL,
   `ip` int(12) NOT NULL,
   `login` tinyint(1) NOT NULL,
-  `data` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `data` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `fk_iduserl` (`id_user`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `logs_login`
@@ -683,7 +749,8 @@ INSERT INTO `logs_login` (`id`, `id_user`, `ip`, `login`, `data`) VALUES
 -- Estructura de tabla para la tabla `persones`
 --
 
-CREATE TABLE `persones` (
+DROP TABLE IF EXISTS `persones`;
+CREATE TABLE IF NOT EXISTS `persones` (
   `dni` varchar(9) NOT NULL,
   `nom` varchar(25) NOT NULL,
   `cognom` varchar(50) NOT NULL,
@@ -695,7 +762,9 @@ CREATE TABLE `persones` (
   `telf_mob` int(9) NOT NULL,
   `telf_fix` int(9) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `ruta_foto` varchar(125) NOT NULL
+  `ruta_foto` varchar(125) NOT NULL,
+  PRIMARY KEY (`dni`),
+  KEY `dni` (`dni`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -738,6 +807,7 @@ INSERT INTO `persones` (`dni`, `nom`, `cognom`, `data_naix`, `poblacio`, `codi_p
 --
 -- Disparadores `persones`
 --
+DROP TRIGGER IF EXISTS `generarUsuari`;
 DELIMITER $$
 CREATE TRIGGER `generarUsuari` AFTER INSERT ON `persones` FOR EACH ROW BEGIN
     DECLARE usernameBase VARCHAR(50);
@@ -766,6 +836,7 @@ CREATE TRIGGER `generarUsuari` AFTER INSERT ON `persones` FOR EACH ROW BEGIN
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `valid_email`;
 DELIMITER $$
 CREATE TRIGGER `valid_email` BEFORE INSERT ON `persones` FOR EACH ROW BEGIN
 	IF NEW.email NOT REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}$' THEN 
@@ -782,10 +853,13 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `professors`
 --
 
-CREATE TABLE `professors` (
+DROP TABLE IF EXISTS `professors`;
+CREATE TABLE IF NOT EXISTS `professors` (
   `codi_prof` varchar(20) NOT NULL,
   `dni` varchar(9) NOT NULL,
-  `dedicacio` enum('professor','tutor de grup','tutor FCT','') NOT NULL
+  `dedicacio` enum('professor','tutor de grup','tutor FCT','') NOT NULL,
+  PRIMARY KEY (`codi_prof`),
+  KEY `fk_dniprof` (`dni`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -810,11 +884,15 @@ INSERT INTO `professors` (`codi_prof`, `dni`, `dedicacio`) VALUES
 -- Estructura de tabla para la tabla `prof_assignatura`
 --
 
-CREATE TABLE `prof_assignatura` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `prof_assignatura`;
+CREATE TABLE IF NOT EXISTS `prof_assignatura` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_codiprof` varchar(20) NOT NULL,
-  `id_assignatura` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `id_assignatura` varchar(25) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_codiprofe` (`id_codiprof`),
+  KEY `fk_idassignatura` (`id_assignatura`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `prof_assignatura`
@@ -838,13 +916,16 @@ INSERT INTO `prof_assignatura` (`id`, `id_codiprof`, `id_assignatura`) VALUES
 -- Estructura de tabla para la tabla `ras`
 --
 
-CREATE TABLE `ras` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `ras`;
+CREATE TABLE IF NOT EXISTS `ras` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `codi_assignatura` varchar(25) NOT NULL,
   `data_inici` date NOT NULL,
   `data_fin` date NOT NULL,
-  `nota` decimal(10,0) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `nota` decimal(10,0) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_assignaturaid` (`codi_assignatura`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `ras`
@@ -868,12 +949,15 @@ INSERT INTO `ras` (`id`, `codi_assignatura`, `data_inici`, `data_fin`, `nota`) V
 -- Estructura de tabla para la tabla `sessions`
 --
 
-CREATE TABLE `sessions` (
+DROP TABLE IF EXISTS `sessions`;
+CREATE TABLE IF NOT EXISTS `sessions` (
   `token` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
   `username` varchar(11) NOT NULL,
   `data_inici` date NOT NULL,
-  `data_fin` date DEFAULT NULL
+  `data_fin` date DEFAULT NULL,
+  PRIMARY KEY (`token`),
+  KEY `fk_iduser` (`id_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -913,12 +997,17 @@ INSERT INTO `sessions` (`token`, `id_user`, `username`, `data_inici`, `data_fin`
 -- Estructura de tabla para la tabla `usuaris`
 --
 
-CREATE TABLE `usuaris` (
-  `id_user` int(11) NOT NULL,
+DROP TABLE IF EXISTS `usuaris`;
+CREATE TABLE IF NOT EXISTS `usuaris` (
+  `id_user` int(11) NOT NULL AUTO_INCREMENT,
   `dni` varchar(9) NOT NULL,
   `username` varchar(11) NOT NULL,
-  `password` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `password` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_user`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `dni` (`dni`),
+  KEY `fk_usuaridni` (`dni`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuaris`
@@ -956,268 +1045,6 @@ INSERT INTO `usuaris` (`id_user`, `dni`, `username`, `password`) VALUES
 (29, '21222324E', 'RicardS', 'e88794475313fbacc133'),
 (30, '22232425F', 'LluïsaP', ''),
 (31, '55548601J', 'ndiakite', '$2y$10$i2UAj45cN/0yWxg6U1z97.aNqd569lmD49wc5B6rQykDWQTb9Ky3u');
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `administradors`
---
-ALTER TABLE `administradors`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_admindni` (`dni`),
-  ADD KEY `fk_adminuser` (`id_user`);
-
---
--- Indices de la tabla `admin_centre`
---
-ALTER TABLE `admin_centre`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_adminid` (`admin_id`),
-  ADD KEY `fk_codicentre` (`codi_centre`);
-
---
--- Indices de la tabla `assignatures`
---
-ALTER TABLE `assignatures`
-  ADD PRIMARY KEY (`codi`);
-
---
--- Indices de la tabla `assignatures_cicle`
---
-ALTER TABLE `assignatures_cicle`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_nomcicle` (`nom_cicle`),
-  ADD KEY `fk_cicleassignatura` (`id_assignatura`);
-
---
--- Indices de la tabla `assistencia`
---
-ALTER TABLE `assistencia`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_codiprofeass` (`codi_prof`),
-  ADD KEY `fk_codiass` (`id_assignatura`),
-  ADD KEY `fk_nomgrup` (`nom_grup`);
-
---
--- Indices de la tabla `centres`
---
-ALTER TABLE `centres`
-  ADD PRIMARY KEY (`codi`);
-
---
--- Indices de la tabla `cicles`
---
-ALTER TABLE `cicles`
-  ADD PRIMARY KEY (`nom`);
-
---
--- Indices de la tabla `contractes`
---
-ALTER TABLE `contractes`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_codip` (`codi_prof`),
-  ADD KEY `fk_codic` (`codi_centre`);
-
---
--- Indices de la tabla `directiva`
---
-ALTER TABLE `directiva`
-  ADD PRIMARY KEY (`rol`),
-  ADD KEY `fk_codiprof` (`codi_prof`);
-
---
--- Indices de la tabla `estudiants`
---
-ALTER TABLE `estudiants`
-  ADD PRIMARY KEY (`nia`),
-  ADD KEY `fk_dnies` (`dni`),
-  ADD KEY `fk_nomgrupes` (`nom_grup`),
-  ADD KEY `fk_cicles` (`nom_cicle`) USING BTREE;
-
---
--- Indices de la tabla `estudiants_ras`
---
-ALTER TABLE `estudiants_ras`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_idra` (`id_ra`),
-  ADD KEY `fk_niaa` (`nia`);
-
---
--- Indices de la tabla `grup_classe`
---
-ALTER TABLE `grup_classe`
-  ADD PRIMARY KEY (`nom`);
-
---
--- Indices de la tabla `historic_estudiants`
---
-ALTER TABLE `historic_estudiants`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_niaes` (`nia`),
-  ADD KEY `fk_nomciclee` (`nom_cicle`);
-
---
--- Indices de la tabla `historic_fct`
---
-ALTER TABLE `historic_fct`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_niah` (`nia`);
-
---
--- Indices de la tabla `historic_professors`
---
-ALTER TABLE `historic_professors`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_codipr` (`codi_prof`);
-
---
--- Indices de la tabla `logs_consultes`
---
-ALTER TABLE `logs_consultes`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_token` (`token`);
-
---
--- Indices de la tabla `logs_login`
---
-ALTER TABLE `logs_login`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_iduserl` (`id_user`);
-
---
--- Indices de la tabla `persones`
---
-ALTER TABLE `persones`
-  ADD PRIMARY KEY (`dni`),
-  ADD KEY `dni` (`dni`);
-
---
--- Indices de la tabla `professors`
---
-ALTER TABLE `professors`
-  ADD PRIMARY KEY (`codi_prof`),
-  ADD KEY `fk_dniprof` (`dni`);
-
---
--- Indices de la tabla `prof_assignatura`
---
-ALTER TABLE `prof_assignatura`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_codiprofe` (`id_codiprof`),
-  ADD KEY `fk_idassignatura` (`id_assignatura`);
-
---
--- Indices de la tabla `ras`
---
-ALTER TABLE `ras`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_assignaturaid` (`codi_assignatura`);
-
---
--- Indices de la tabla `sessions`
---
-ALTER TABLE `sessions`
-  ADD PRIMARY KEY (`token`),
-  ADD KEY `fk_iduser` (`id_user`);
-
---
--- Indices de la tabla `usuaris`
---
-ALTER TABLE `usuaris`
-  ADD PRIMARY KEY (`id_user`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `dni` (`dni`),
-  ADD KEY `fk_usuaridni` (`dni`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `administradors`
---
-ALTER TABLE `administradors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
-
---
--- AUTO_INCREMENT de la tabla `admin_centre`
---
-ALTER TABLE `admin_centre`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
-
---
--- AUTO_INCREMENT de la tabla `assignatures_cicle`
---
-ALTER TABLE `assignatures_cicle`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `assistencia`
---
-ALTER TABLE `assistencia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `contractes`
---
-ALTER TABLE `contractes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `estudiants_ras`
---
-ALTER TABLE `estudiants_ras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `historic_estudiants`
---
-ALTER TABLE `historic_estudiants`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `historic_fct`
---
-ALTER TABLE `historic_fct`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `historic_professors`
---
-ALTER TABLE `historic_professors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `logs_consultes`
---
-ALTER TABLE `logs_consultes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
-
---
--- AUTO_INCREMENT de la tabla `logs_login`
---
-ALTER TABLE `logs_login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
-
---
--- AUTO_INCREMENT de la tabla `prof_assignatura`
---
-ALTER TABLE `prof_assignatura`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `ras`
---
-ALTER TABLE `ras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `usuaris`
---
-ALTER TABLE `usuaris`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- Restricciones para tablas volcadas
