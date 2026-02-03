@@ -73,28 +73,26 @@ CREATE TRIGGER generarUsuari
 AFTER INSERT ON persones
 FOR EACH ROW
 BEGIN
-    DECLARE usernameN VARCHAR(50);
+    DECLARE usernameBase VARCHAR(50);
     DECLARE usernameFinal VARCHAR(50);
     DECLARE cont INT DEFAULT 0;
 
-    SET usernameN = CONCAT(
-        LOWER(LEFT(NEW.nom,1)),
+    SET usernameBase = CONCAT(
+        LOWER(LEFT(NEW.nom, 1)),
         LOWER(NEW.cognom)
     );
 
-    SET usernameFinal = usernameN;
+    SET usernameFinal = usernameBase;
 
-    WHILE EXISTS (SELECT 1 FROM usuaris WHERE username = usernameFinal) DO
+    WHILE EXISTS (
+        SELECT 1 FROM usuaris WHERE username = usernameFinal
+    ) DO
         SET cont = cont + 1;
-        SET usernameFinal = CONCAT(usernameN, cont);
+        SET usernameFinal = CONCAT(usernameBase, cont);
     END WHILE;
 
-    INSERT INTO usuaris (username, dni, password)
-    VALUES (
-        usernameFinal,
-        NEW.dni,
-        SHA2(NEW.dni, 256)
-    );
+    INSERT INTO usuaris (username, dni)
+    VALUES (usernameFinal, NEW.dni);
 END//
 DELIMITER ;
 

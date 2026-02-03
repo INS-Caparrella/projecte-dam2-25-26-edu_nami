@@ -1,13 +1,11 @@
 package com.example.evalis
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -37,20 +34,20 @@ import org.json.JSONObject
 import java.net.URLEncoder
 import kotlin.concurrent.thread
 
-
-class LoginActivity : ComponentActivity() {
-    private var is_logged: Boolean = false
+//Crea usuari nou posantli contrasenya donant el dni
+class ReegisterActivity : ComponentActivity() {
+    private var user_exist: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             EvalisTheme {
-                LoginScreen(
+                RegisterScreen(
 
                     onSuccess = {
-                        startActivity(Intent(this, HomeActivity::class.java))
-                        is_logged = true
+                        startActivity(Intent(this, LoginActivity::class.java))
+                        user_exist = true
                         finish()
                     }
                 )
@@ -58,9 +55,10 @@ class LoginActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
-    fun LoginScreen(onSuccess: () -> Unit) {
-        var user by remember { mutableStateOf("") }
+    fun RegisterScreen(onSuccess: () -> Unit) {
+        var dni by remember { mutableStateOf("") }
         var pass by remember { mutableStateOf("") }
 
         Box(
@@ -76,16 +74,17 @@ class LoginActivity : ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                Text("Login")
+                Text("Registrar")
 
                 OutlinedTextField(
-                    value = user,
-                    onValueChange = { user = it },
-                    label = { Text("Usuario") },
+                    value = dni,
+                    onValueChange = { dni = it },
+                    label = { Text("DNI") },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     modifier = Modifier.fillMaxWidth()
                 )
+
                 OutlinedTextField(
                     value = pass,
                     onValueChange = { pass = it },
@@ -99,25 +98,13 @@ class LoginActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxWidth()
                 )
                 val context = LocalContext.current
-                LoginButton(
-                    user = user,
+                RegisterButton(
                     pass = pass,
+                    dni=dni,
                     onSuccess = onSuccess,
                     modifier = Modifier.fillMaxWidth()
 
                 )
-
-                val intent=Intent(context, ReegisterActivity::class.java)
-
-                Button(
-                    onClick={context.startActivity(intent)},
-                    modifier=Modifier.fillMaxWidth().padding(top=16.dp),
-                    enabled=true
-                ){
-                    Text("Registrar")
-                }
-
-
             }
         }
     }
@@ -126,12 +113,12 @@ class LoginActivity : ComponentActivity() {
     @Composable
     fun PreviewRegisterScreen() {
         EvalisTheme {
-            LoginScreen {}
+            RegisterScreen {}
         }
     }
 }
 @Composable
-fun LoginButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modifier=Modifier){
+fun RegisterButton(dni:String,pass:String, onSuccess: () -> Unit, modifier: Modifier=Modifier){
     val context = LocalContext.current
 
     Button(
@@ -140,16 +127,16 @@ fun LoginButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modif
             val baseUrl = "https://192.168.18.61" //cambiar cada que se reinicie el pc
             val method="POST"
 
-            val u= URLEncoder.encode(user, "UTF-8")
+            val d= URLEncoder.encode(dni, "UTF-8")
             val p= URLEncoder.encode(pass, "UTF-8")
             var url = ""
-            val params="username=$u&password=$p"
+            val params="dni=$d&password=$p"
 
             if (method=="GET") {
-                url = "$baseUrl/login.php?username=$u&password=$p"
+                url = "$baseUrl/crear_password.php?dni=$d&password=$p"
             }
             else if (method=="POST"){
-                url = "$baseUrl/login.php"
+                url = "$baseUrl/crear_password.php"
             }
             thread {
                 try {
@@ -174,7 +161,7 @@ fun LoginButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modif
                                 onSuccess()
                             } else{
                                 Toast.makeText(context,
-                                    "usuari o contrasenya incorrectes", Toast.LENGTH_SHORT)
+                                    "usuari existent o dni incorrecte", Toast.LENGTH_SHORT)
                                     .show()
                             }
                         }
@@ -190,7 +177,7 @@ fun LoginButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modif
             }
         }
     ) {
-        Text("Entrar")
+        Text("Registrar")
     }
 
 }
