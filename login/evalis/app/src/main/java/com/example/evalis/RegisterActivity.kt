@@ -34,31 +34,30 @@ import org.json.JSONObject
 import java.net.URLEncoder
 import kotlin.concurrent.thread
 
-//Crea usuari nou posantli contrasenya donant el username+dni
-class LoginActivity : ComponentActivity() {
+//Crea usuari nou posantli contrasenya donant el dni
+class ReegisterActivity : ComponentActivity() {
     private var user_exist: Boolean = false
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
-//        setContent {
-//            EvalisTheme {
-//                LoginScreen(
-//
-//                    onSuccess = {
-//                        startActivity(Intent(this, HomeActivity::class.java))
-//                        user_exist = true
-//                        finish()
-//                    }
-//                )
-//
-//            }
-//        }
-//    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            EvalisTheme {
+                RegisterScreen(
+
+                    onSuccess = {
+                        startActivity(Intent(this, LoginActivity::class.java))
+                        user_exist = true
+                        finish()
+                    }
+                )
+
+            }
+        }
+    }
 
     @Composable
-    fun LoginScreen(onSuccess: () -> Unit) {
-        var user by remember { mutableStateOf("") }
+    fun RegisterScreen(onSuccess: () -> Unit) {
         var dni by remember { mutableStateOf("") }
         var pass by remember { mutableStateOf("") }
 
@@ -75,16 +74,7 @@ class LoginActivity : ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                Text("Login")
-
-                OutlinedTextField(
-                    value = user,
-                    onValueChange = { user = it },
-                    label = { Text("Usuario") },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Text("Registrar")
 
                 OutlinedTextField(
                     value = dni,
@@ -108,43 +98,42 @@ class LoginActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxWidth()
                 )
                 val context = LocalContext.current
-                LoginButton(
-                    user = user,
+                RegisterButton(
                     pass = pass,
+                    dni=dni,
                     onSuccess = onSuccess,
                     modifier = Modifier.fillMaxWidth()
 
                 )
-                Text("Acceder")
             }
         }
     }
 
     @Preview(showBackground = true, showSystemUi = true)
     @Composable
-    fun PreviewLoginScreen() {
+    fun PreviewRegisterScreen() {
         EvalisTheme {
-            LoginScreen {}
+            RegisterScreen {}
         }
     }
 }
 @Composable
-fun RegisterButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modifier=Modifier){
+fun RegisterButton(dni:String,pass:String, onSuccess: () -> Unit, modifier: Modifier=Modifier){
     val context = LocalContext.current
 
     Button(
         modifier=modifier,
         onClick={
-            val baseUrl = "https://192.168.16.100" //cambiar cada que se reinicie el pc
+            val baseUrl = "https://192.168.18.61" //cambiar cada que se reinicie el pc
             val method="POST"
 
-            val u= URLEncoder.encode(user, "UTF-8")
+            val d= URLEncoder.encode(dni, "UTF-8")
             val p= URLEncoder.encode(pass, "UTF-8")
             var url = ""
-            val params="username=$u&password=$p"
+            val params="dni=$d&password=$p"
 
             if (method=="GET") {
-                url = "$baseUrl/crear_password.php?username=$u&password=$p"
+                url = "$baseUrl/crear_password.php?dni=$d&password=$p"
             }
             else if (method=="POST"){
                 url = "$baseUrl/crear_password.php"
@@ -172,7 +161,7 @@ fun RegisterButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Mo
                                 onSuccess()
                             } else{
                                 Toast.makeText(context,
-                                    "usuari o contrasenya incorrectes", Toast.LENGTH_SHORT)
+                                    "usuari existent o dni incorrecte", Toast.LENGTH_SHORT)
                                     .show()
                             }
                         }

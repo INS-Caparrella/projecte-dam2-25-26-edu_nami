@@ -1,11 +1,13 @@
 package com.example.evalis
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -55,7 +58,6 @@ class LoginActivity : ComponentActivity() {
             }
         }
     }
-
     @Composable
     fun LoginScreen(onSuccess: () -> Unit) {
         var user by remember { mutableStateOf("") }
@@ -104,14 +106,25 @@ class LoginActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxWidth()
 
                 )
-                    Text("Acceder")
+
+                val intent=Intent(context, ReegisterActivity::class.java)
+
+                Button(
+                    onClick={context.startActivity(intent)},
+                    modifier=Modifier.fillMaxWidth().padding(top=16.dp),
+                    enabled=true
+                ){
+                    Text("Registrar")
+                }
+
+
             }
         }
     }
 
     @Preview(showBackground = true, showSystemUi = true)
     @Composable
-    fun PreviewLoginScreen() {
+    fun PreviewRegisterScreen() {
         EvalisTheme {
             LoginScreen {}
         }
@@ -124,7 +137,7 @@ fun LoginButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modif
     Button(
         modifier=modifier,
         onClick={
-            val baseUrl = "https://192.168.16.100" //cambiar cada que se reinicie el pc
+            val baseUrl = "https://192.168.18.61" //cambiar cada que se reinicie el pc
             val method="POST"
 
             val u= URLEncoder.encode(user, "UTF-8")

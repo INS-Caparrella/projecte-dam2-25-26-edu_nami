@@ -5,17 +5,17 @@ if ($conn->connect_error) {
     die("Error de connexió");
 }
 
-$username = $_POST["username"] ?? "";
+$username = $_POST["dni"] ?? "";
 $password = $_POST["password"] ?? "";
 
-if ($username === "" || $password === "") {
+if ($dni === "" || $password === "") {
     die("Falten dades");
 }
 
 $hash = password_hash($password, PASSWORD_DEFAULT);
 
 $stmt = $conn->prepare(
-    "UPDATE usuaris SET password=? WHERE username=? AND password IS NULL"
+    "UPDATE usuaris SET password=? WHERE dni=? AND password IS NULL"
 );
 $stmt->bind_param("ss", $hash, $username);
 $stmt->execute();
