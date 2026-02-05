@@ -137,7 +137,7 @@ fun LoginButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modif
     Button(
         modifier=modifier,
         onClick={
-            val baseUrl = "https://192.168.18.61" //cambiar cada que se reinicie el pc
+            val baseUrl = "https://192.168.1.14" //cambiar cada que se reinicie el pc
             val method="POST"
 
             val u= URLEncoder.encode(user, "UTF-8")

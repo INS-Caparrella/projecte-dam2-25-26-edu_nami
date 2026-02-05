@@ -124,7 +124,7 @@ fun RegisterButton(dni:String,pass:String, onSuccess: () -> Unit, modifier: Modi
     Button(
         modifier=modifier,
         onClick={
-            val baseUrl = "https://192.168.18.61" //cambiar cada que se reinicie el pc
+            val baseUrl = "https://192.168.1.14" //cambiar cada que se reinicie el pc
             val method="POST"
 
             val d= URLEncoder.encode(dni, "UTF-8")
