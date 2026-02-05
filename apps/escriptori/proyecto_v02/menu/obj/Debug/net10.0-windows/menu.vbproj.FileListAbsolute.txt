@@ -1,0 +1,16 @@
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\obj\Debug\net10.0-windows\menu.evalisInicio.resources
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\obj\Debug\net10.0-windows\menu.vbproj.GenerateResource.cache
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\obj\Debug\net10.0-windows\menu.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\obj\Debug\net10.0-windows\menu.AssemblyInfoInputs.cache
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\obj\Debug\net10.0-windows\menu.AssemblyInfo.vb
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\obj\Debug\net10.0-windows\menu.vbproj.CoreCompileInputs.cache
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\bin\Debug\net10.0-windows\menu.exe
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\bin\Debug\net10.0-windows\menu.deps.json
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\bin\Debug\net10.0-windows\menu.runtimeconfig.json
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\bin\Debug\net10.0-windows\menu.dll
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\bin\Debug\net10.0-windows\menu.pdb
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\obj\Debug\net10.0-windows\menu.dll
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\obj\Debug\net10.0-windows\refint\menu.dll
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\obj\Debug\net10.0-windows\menu.pdb
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\obj\Debug\net10.0-windows\menu.genruntimeconfig.cache
+C:\Users\asus\source\repos\proyecto_vb\menu\menu\obj\Debug\net10.0-windows\ref\menu.dll
