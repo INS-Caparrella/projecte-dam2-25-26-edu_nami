@@ -1,32 +1,16 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Servidor: 127.0.0.1:3307
--- Tiempo de generación: 05-02-2026 a las 16:14:18
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Base de datos: `projecte_evalis`
---
 CREATE DATABASE IF NOT EXISTS `projecte_evalis` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `projecte_evalis`;
 
 DELIMITER $$
---
--- Procedimientos
---
 DROP PROCEDURE IF EXISTS `alumnesGrup`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `alumnesGrup` (IN `grup` VARCHAR(11))   BEGIN
     SELECT p.nom,p.cognom,p.dni, TIMESTAMPDIFF(YEAR, p.data_naix, CURDATE()) AS edat
@@ -44,9 +28,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `llistatMajorsEdatEstudiants` ()   B
     ORDER BY p.nom,p.cognom;
 END$$
 
---
--- Funciones
---
 DROP FUNCTION IF EXISTS `intentsLogin`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `intentsLogin` (`userId` INT, `rang1` DATETIME, `rang2` DATETIME) RETURNS INT(11)  BEGIN
     DECLARE result INT DEFAULT 0;
@@ -77,12 +58,6 @@ END$$
 
 DELIMITER ;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `administradors`
---
-
 DROP TABLE IF EXISTS `administradors`;
 CREATE TABLE IF NOT EXISTS `administradors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -94,10 +69,6 @@ CREATE TABLE IF NOT EXISTS `administradors` (
   KEY `fk_admindni` (`dni`),
   KEY `fk_adminuser` (`id_user`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `administradors`
---
 
 INSERT INTO `administradors` (`id`, `dni`, `id_user`, `dades`, `superadmin`) VALUES
 (11, '22334455L', 11, 1, 1),
@@ -111,12 +82,6 @@ INSERT INTO `administradors` (`id`, `dni`, `id_user`, `dades`, `superadmin`) VAL
 (19, '10111213U', 19, 0, 0),
 (20, '12131415V', 20, 1, 0);
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `admin_centre`
---
-
 DROP TABLE IF EXISTS `admin_centre`;
 CREATE TABLE IF NOT EXISTS `admin_centre` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -127,10 +92,6 @@ CREATE TABLE IF NOT EXISTS `admin_centre` (
   KEY `fk_adminid` (`admin_id`),
   KEY `fk_codicentre` (`codi_centre`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `admin_centre`
---
 
 INSERT INTO `admin_centre` (`id`, `admin_id`, `codi_centre`, `backup`) VALUES
 (11, 11, 1, 1),
@@ -144,22 +105,12 @@ INSERT INTO `admin_centre` (`id`, `admin_id`, `codi_centre`, `backup`) VALUES
 (19, 19, 9, 0),
 (20, 20, 10, 0);
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `assignatures`
---
-
 DROP TABLE IF EXISTS `assignatures`;
 CREATE TABLE IF NOT EXISTS `assignatures` (
   `codi` varchar(25) NOT NULL,
   `nom` varchar(50) NOT NULL,
   PRIMARY KEY (`codi`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `assignatures`
---
 
 INSERT INTO `assignatures` (`codi`, `nom`) VALUES
 ('ASIG001', 'Programació'),
@@ -173,12 +124,6 @@ INSERT INTO `assignatures` (`codi`, `nom`) VALUES
 ('ASIG009', 'Informàtica Bàsica'),
 ('ASIG010', 'Ciències Naturals');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `assignatures_cicle`
---
-
 DROP TABLE IF EXISTS `assignatures_cicle`;
 CREATE TABLE IF NOT EXISTS `assignatures_cicle` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -188,10 +133,6 @@ CREATE TABLE IF NOT EXISTS `assignatures_cicle` (
   KEY `fk_nomcicle` (`nom_cicle`),
   KEY `fk_cicleassignatura` (`id_assignatura`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `assignatures_cicle`
---
 
 INSERT INTO `assignatures_cicle` (`id`, `nom_cicle`, `id_assignatura`) VALUES
 (1, 'CFGM Informàtica', 'ASIG001'),
@@ -204,12 +145,6 @@ INSERT INTO `assignatures_cicle` (`id`, `nom_cicle`, `id_assignatura`) VALUES
 (8, 'Batxillerat', 'ASIG008'),
 (9, 'FP Bàsica', 'ASIG009'),
 (10, 'ESO', 'ASIG010');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `assistencia`
---
 
 DROP TABLE IF EXISTS `assistencia`;
 CREATE TABLE IF NOT EXISTS `assistencia` (
@@ -226,10 +161,6 @@ CREATE TABLE IF NOT EXISTS `assistencia` (
   KEY `fk_nomgrup` (`nom_grup`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `assistencia`
---
-
 INSERT INTO `assistencia` (`id`, `codi_prof`, `id_assignatura`, `nom_grup`, `hora_inici`, `hora_fin`, `observacio`) VALUES
 (1, 'PROF001', 'ASIG001', 'ASIX1A', '08:00:00', '09:00:00', 'Primera classe del curs'),
 (2, 'PROF002', 'ASIG002', 'ASIX2A', '09:00:00', '10:00:00', 'Sessió pràctica informàtica'),
@@ -242,12 +173,6 @@ INSERT INTO `assistencia` (`id`, `codi_prof`, `id_assignatura`, `nom_grup`, `hor
 (9, 'PROF009', 'ASIG009', 'SMX1A', '16:00:00', '17:00:00', 'Informàtica FP Bàsica'),
 (10, 'PROF010', 'ASIG010', 'SMX2A', '17:00:00', '18:00:00', 'Ciències Naturals ESO');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `centres`
---
-
 DROP TABLE IF EXISTS `centres`;
 CREATE TABLE IF NOT EXISTS `centres` (
   `codi` int(11) NOT NULL,
@@ -255,10 +180,6 @@ CREATE TABLE IF NOT EXISTS `centres` (
   `data_inaug` date NOT NULL,
   PRIMARY KEY (`codi`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `centres`
---
 
 INSERT INTO `centres` (`codi`, `nom`, `data_inaug`) VALUES
 (1, 'Institut Escola Montjuïc', '1995-09-01'),
@@ -272,21 +193,11 @@ INSERT INTO `centres` (`codi`, `nom`, `data_inaug`) VALUES
 (9, 'Institut Turó Park', '1990-12-01'),
 (10, 'Institut Vall d’Hebron', '1997-07-30');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `cicles`
---
-
 DROP TABLE IF EXISTS `cicles`;
 CREATE TABLE IF NOT EXISTS `cicles` (
   `nom` varchar(256) NOT NULL,
   PRIMARY KEY (`nom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `cicles`
---
 
 INSERT INTO `cicles` (`nom`) VALUES
 ('Batxillerat'),
@@ -299,12 +210,6 @@ INSERT INTO `cicles` (`nom`) VALUES
 ('Cicle Serveis'),
 ('ESO'),
 ('FP Bàsica');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `contractes`
---
 
 DROP TABLE IF EXISTS `contractes`;
 CREATE TABLE IF NOT EXISTS `contractes` (
@@ -319,10 +224,6 @@ CREATE TABLE IF NOT EXISTS `contractes` (
   KEY `fk_codic` (`codi_centre`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `contractes`
---
-
 INSERT INTO `contractes` (`id`, `codi_prof`, `codi_centre`, `data_alta`, `data_baix`, `vinculacio_laboral`) VALUES
 (1, 'PROF001', 1, '2023-09-01', NULL, 'Contracte a temps complet'),
 (2, 'PROF002', 2, '2023-09-01', NULL, 'Contracte parcial'),
@@ -335,12 +236,6 @@ INSERT INTO `contractes` (`id`, `codi_prof`, `codi_centre`, `data_alta`, `data_b
 (9, 'PROF009', 9, '2023-09-01', NULL, 'Contracte parcial'),
 (10, 'PROF010', 10, '2022-09-01', '2023-06-30', 'Contracte a temps complet');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `directiva`
---
-
 DROP TABLE IF EXISTS `directiva`;
 CREATE TABLE IF NOT EXISTS `directiva` (
   `rol` varchar(25) NOT NULL,
@@ -348,10 +243,6 @@ CREATE TABLE IF NOT EXISTS `directiva` (
   PRIMARY KEY (`rol`),
   KEY `fk_codiprof` (`codi_prof`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `directiva`
---
 
 INSERT INTO `directiva` (`rol`, `codi_prof`) VALUES
 ('Director', 'PROF001'),
@@ -364,12 +255,6 @@ INSERT INTO `directiva` (`rol`, `codi_prof`) VALUES
 ('Cap de FP Bàsica', 'PROF008'),
 ('Coordinador ESO', 'PROF009'),
 ('Coordinador DAW', 'PROF010');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `estudiants`
---
 
 DROP TABLE IF EXISTS `estudiants`;
 CREATE TABLE IF NOT EXISTS `estudiants` (
@@ -389,10 +274,6 @@ CREATE TABLE IF NOT EXISTS `estudiants` (
   KEY `fk_cicles` (`nom_cicle`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `estudiants`
---
-
 INSERT INTO `estudiants` (`nia`, `dni`, `nom_grup`, `nom_cicle`, `cursant`, `repetidor`, `treballant`, `empresa`, `actiu`, `data_inici`) VALUES
 (10001, '22334455L', 'ASIX1A', 'CFGM Informàtica', 1, 0, 1, 'EmpresaTech', 1, '2023-09-01'),
 (10002, '33445566M', 'ASIX2A', 'CFGS Desenvolupament', 1, 1, 0, 'SoftSolutions', 1, '2023-09-01'),
@@ -404,10 +285,6 @@ INSERT INTO `estudiants` (`nia`, `dni`, `nom_grup`, `nom_cicle`, `cursant`, `rep
 (10008, '99001122T', 'FPB2A', 'Cicle Serveis', 1, 0, 0, 'ServeisGlobal', 1, '2023-09-01'),
 (10009, '10111213U', 'SMX1A', 'ESO', 1, 1, 0, 'ESOCenter', 1, '2023-09-01'),
 (10010, '12131415V', 'SMX2A', 'FP Bàsica', 1, 0, 1, 'FPBasic', 1, '2023-09-01');
-
---
--- Disparadores `estudiants`
---
 DROP TRIGGER IF EXISTS `estudiantHistoric`;
 DELIMITER $$
 CREATE TRIGGER `estudiantHistoric` AFTER UPDATE ON `estudiants` FOR EACH ROW BEGIN
@@ -430,12 +307,6 @@ END
 $$
 DELIMITER ;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `estudiants_ras`
---
-
 DROP TABLE IF EXISTS `estudiants_ras`;
 CREATE TABLE IF NOT EXISTS `estudiants_ras` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -446,10 +317,6 @@ CREATE TABLE IF NOT EXISTS `estudiants_ras` (
   KEY `fk_idra` (`id_ra`),
   KEY `fk_niaa` (`nia`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `estudiants_ras`
---
 
 INSERT INTO `estudiants_ras` (`id`, `id_ra`, `nia`, `nota`) VALUES
 (1, 1, 10001, 9),
@@ -462,10 +329,6 @@ INSERT INTO `estudiants_ras` (`id`, `id_ra`, `nia`, `nota`) VALUES
 (8, 8, 10008, 7),
 (9, 9, 10009, 10),
 (10, 10, 10010, 9);
-
---
--- Disparadores `estudiants_ras`
---
 DROP TRIGGER IF EXISTS `promocio_fp_insert`;
 DELIMITER $$
 CREATE TRIGGER `promocio_fp_insert` AFTER INSERT ON `estudiants_ras` FOR EACH ROW BEGIN
@@ -515,22 +378,12 @@ END
 $$
 DELIMITER ;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `grup_classe`
---
-
 DROP TABLE IF EXISTS `grup_classe`;
 CREATE TABLE IF NOT EXISTS `grup_classe` (
   `nom` varchar(25) NOT NULL,
   `aula` varchar(20) NOT NULL,
   PRIMARY KEY (`nom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `grup_classe`
---
 
 INSERT INTO `grup_classe` (`nom`, `aula`) VALUES
 ('ASIX1A', 'A101'),
@@ -543,12 +396,6 @@ INSERT INTO `grup_classe` (`nom`, `aula`) VALUES
 ('FPB2A', 'A502'),
 ('SMX1A', 'A301'),
 ('SMX2A', 'A302');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `historic_estudiants`
---
 
 DROP TABLE IF EXISTS `historic_estudiants`;
 CREATE TABLE IF NOT EXISTS `historic_estudiants` (
@@ -564,10 +411,6 @@ CREATE TABLE IF NOT EXISTS `historic_estudiants` (
   KEY `fk_nomciclee` (`nom_cicle`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `historic_estudiants`
---
-
 INSERT INTO `historic_estudiants` (`id`, `nia`, `nom_cicle`, `finalitzat`, `nota_final`, `data_inici`, `data_fi`) VALUES
 (1, 10001, 'ESO', 1, 8, '2019-09-01', '2023-06-30'),
 (2, 10002, 'Batxillerat', 1, 9, '2021-09-01', '2023-06-30'),
@@ -579,12 +422,6 @@ INSERT INTO `historic_estudiants` (`id`, `nia`, `nom_cicle`, `finalitzat`, `nota
 (8, 10008, 'Cicle Oficina', 0, NULL, '2023-09-01', NULL),
 (9, 10009, 'FP Bàsica', 1, 6, '2022-09-01', '2023-06-30'),
 (10, 10010, 'Cicle Serveis', 0, NULL, '2023-09-01', NULL);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `historic_fct`
---
 
 DROP TABLE IF EXISTS `historic_fct`;
 CREATE TABLE IF NOT EXISTS `historic_fct` (
@@ -599,10 +436,6 @@ CREATE TABLE IF NOT EXISTS `historic_fct` (
   KEY `fk_niah` (`nia`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `historic_fct`
---
-
 INSERT INTO `historic_fct` (`id`, `nia`, `empreses`, `hores`, `finalitzat`, `observacions`, `incidencies`) VALUES
 (1, 10003, 'Empresa C', 120, 0, 'Inici de pràctiques', ''),
 (2, 10004, 'Empresa D', 150, 0, 'Inici de pràctiques', ''),
@@ -614,12 +447,6 @@ INSERT INTO `historic_fct` (`id`, `nia`, `empreses`, `hores`, `finalitzat`, `obs
 (8, 10003, 'Empresa K', 120, 1, 'Pràctiques finalitzades', 'Incidència menor'),
 (9, 10004, 'Empresa L', 150, 1, 'Pràctiques acabades', ''),
 (10, 10006, 'Empresa M', 200, 0, 'Pràctiques en curs', 'Falta supervisió');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `historic_professors`
---
 
 DROP TABLE IF EXISTS `historic_professors`;
 CREATE TABLE IF NOT EXISTS `historic_professors` (
@@ -633,10 +460,6 @@ CREATE TABLE IF NOT EXISTS `historic_professors` (
   KEY `fk_codipr` (`codi_prof`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `historic_professors`
---
-
 INSERT INTO `historic_professors` (`id`, `codi_prof`, `tipus`, `motius`, `justificat`, `justificant`) VALUES
 (1, 'PROF001', 'Baixa', 'Malaltia', 1, 'Informe mèdic'),
 (2, 'PROF002', 'Permís', 'Assumptes personals', 1, 'Sol·licitud aprovada'),
@@ -649,12 +472,6 @@ INSERT INTO `historic_professors` (`id`, `codi_prof`, `tipus`, `motius`, `justif
 (9, 'PROF009', 'Retard', 'Transport públic', 0, ''),
 (10, 'PROF010', 'Baixa', 'Malaltia', 1, 'Informe mèdic');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `logs_consultes`
---
-
 DROP TABLE IF EXISTS `logs_consultes`;
 CREATE TABLE IF NOT EXISTS `logs_consultes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -663,10 +480,6 @@ CREATE TABLE IF NOT EXISTS `logs_consultes` (
   PRIMARY KEY (`id`),
   KEY `fk_token` (`token`)
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `logs_consultes`
---
 
 INSERT INTO `logs_consultes` (`id`, `token`, `consulta`) VALUES
 (1, 1, 'Visualizó datos del estudiante 10001'),
@@ -695,12 +508,6 @@ INSERT INTO `logs_consultes` (`id`, `token`, `consulta`) VALUES
 (24, 24, 'Descargó informe de asistencia grupo 1rB'),
 (25, 25, 'Consultó horario de DAW1A');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `logs_login`
---
-
 DROP TABLE IF EXISTS `logs_login`;
 CREATE TABLE IF NOT EXISTS `logs_login` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -711,10 +518,6 @@ CREATE TABLE IF NOT EXISTS `logs_login` (
   PRIMARY KEY (`id`),
   KEY `fk_iduserl` (`id_user`)
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `logs_login`
---
 
 INSERT INTO `logs_login` (`id`, `id_user`, `ip`, `login`, `data`) VALUES
 (1, 1, 2147483647, 1, '2025-11-20 08:15:00'),
@@ -743,12 +546,6 @@ INSERT INTO `logs_login` (`id`, `id_user`, `ip`, `login`, `data`) VALUES
 (24, 24, 2147483647, 1, '2025-11-20 10:10:00'),
 (25, 25, 2147483647, 0, '2025-11-20 10:15:00');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `persones`
---
-
 DROP TABLE IF EXISTS `persones`;
 CREATE TABLE IF NOT EXISTS `persones` (
   `dni` varchar(9) NOT NULL,
@@ -766,10 +563,6 @@ CREATE TABLE IF NOT EXISTS `persones` (
   PRIMARY KEY (`dni`),
   KEY `dni` (`dni`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `persones`
---
 
 INSERT INTO `persones` (`dni`, `nom`, `cognom`, `data_naix`, `poblacio`, `codi_postal`, `nacionalitat`, `municipi_naix`, `telf_mob`, `telf_fix`, `email`, `ruta_foto`) VALUES
 ('10111213U', 'Biel', 'Pascual Serra', '2005-08-02', 'Lleida', 25001, 'Espanyola', 'Lleida', 690112233, 973112233, 'biel.pascual@alumne.com', 'img/alum09.jpg'),
@@ -803,10 +596,6 @@ INSERT INTO `persones` (`dni`, `nom`, `cognom`, `data_naix`, `poblacio`, `codi_p
 ('89012345H', 'Núria', 'Pérez Vidal', '1981-05-17', 'Mataró', 8301, 'Espanyola', 'Mataró', 688441122, 937441122, 'nuria.perez@centre.com', 'img/prof08.jpg'),
 ('90123456J', 'Xavier', 'Font Mir', '1974-10-30', 'Reus', 43201, 'Espanyola', 'Reus', 699554433, 977554433, 'xavier.font@centre.com', 'img/prof09.jpg'),
 ('99001122T', 'Iris', 'Reig Amat', '2006-10-21', 'Reus', 43201, 'Espanyola', 'Reus', 689998877, 977998877, 'iris.reig@alumne.com', 'img/alum08.jpg');
-
---
--- Disparadores `persones`
---
 DROP TRIGGER IF EXISTS `generarUsuari`;
 DELIMITER $$
 CREATE TRIGGER `generarUsuari` AFTER INSERT ON `persones` FOR EACH ROW BEGIN
@@ -847,12 +636,6 @@ END
 $$
 DELIMITER ;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `professors`
---
-
 DROP TABLE IF EXISTS `professors`;
 CREATE TABLE IF NOT EXISTS `professors` (
   `codi_prof` varchar(20) NOT NULL,
@@ -861,10 +644,6 @@ CREATE TABLE IF NOT EXISTS `professors` (
   PRIMARY KEY (`codi_prof`),
   KEY `fk_dniprof` (`dni`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `professors`
---
 
 INSERT INTO `professors` (`codi_prof`, `dni`, `dedicacio`) VALUES
 ('PROF001', '12345678A', 'professor'),
@@ -878,12 +657,6 @@ INSERT INTO `professors` (`codi_prof`, `dni`, `dedicacio`) VALUES
 ('PROF009', '90123456J', 'professor'),
 ('PROF010', '11223344K', 'tutor de grup');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `prof_assignatura`
---
-
 DROP TABLE IF EXISTS `prof_assignatura`;
 CREATE TABLE IF NOT EXISTS `prof_assignatura` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -893,10 +666,6 @@ CREATE TABLE IF NOT EXISTS `prof_assignatura` (
   KEY `fk_codiprofe` (`id_codiprof`),
   KEY `fk_idassignatura` (`id_assignatura`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `prof_assignatura`
---
 
 INSERT INTO `prof_assignatura` (`id`, `id_codiprof`, `id_assignatura`) VALUES
 (1, 'PROF001', 'ASIG001'),
@@ -910,44 +679,49 @@ INSERT INTO `prof_assignatura` (`id`, `id_codiprof`, `id_assignatura`) VALUES
 (9, 'PROF009', 'ASIG009'),
 (10, 'PROF010', 'ASIG010');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `ras`
---
-
 DROP TABLE IF EXISTS `ras`;
 CREATE TABLE IF NOT EXISTS `ras` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ra` int(11) NOT NULL,
   `codi_assignatura` varchar(25) NOT NULL,
   `data_inici` date NOT NULL,
   `data_fin` date NOT NULL,
-  `nota` decimal(10,0) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_assignaturaid` (`codi_assignatura`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `ras`
---
+INSERT INTO `ras` (`id`, `ra`, `codi_assignatura`, `data_inici`, `data_fin`) VALUES
+(1, 1, 'ASIG001', '2023-09-01', '2023-09-30'),
+(2, 1, 'ASIG002', '2023-09-01', '2023-09-30'),
+(3, 2, 'ASIG003', '2023-09-01', '2023-09-30'),
+(4, 1, 'ASIG004', '2023-09-01', '2023-09-30'),
+(5, 3, 'ASIG005', '2023-09-01', '2023-09-30'),
+(6, 2, 'ASIG006', '2023-09-01', '2023-09-30'),
+(7, 2, 'ASIG007', '2023-09-01', '2023-09-30'),
+(8, 1, 'ASIG008', '2023-09-01', '2023-09-30'),
+(9, 3, 'ASIG009', '2023-09-01', '2023-09-30'),
+(10, 2, 'ASIG010', '2023-09-01', '2023-09-30'),
+(11, 4, 'ASIG001', '2023-09-01', '2023-09-30'),
+(12, 4, 'ASIG002', '2023-09-01', '2023-09-30'),
+(13, 3, 'ASIG001', '2023-09-01', '2023-09-30'),
+(14, 2, 'ASIG002', '2023-09-01', '2023-09-30');
+DROP TRIGGER IF EXISTS `verificarRa`;
+DELIMITER $$
+CREATE TRIGGER `verificarRa` BEFORE INSERT ON `ras` FOR EACH ROW BEGIN
+    DECLARE exist INT DEFAULT 0;
 
-INSERT INTO `ras` (`id`, `codi_assignatura`, `data_inici`, `data_fin`, `nota`) VALUES
-(1, 'ASIG001', '2023-09-01', '2023-09-30', 9),
-(2, 'ASIG002', '2023-09-01', '2023-09-30', 8),
-(3, 'ASIG003', '2023-09-01', '2023-09-30', 7),
-(4, 'ASIG004', '2023-09-01', '2023-09-30', 10),
-(5, 'ASIG005', '2023-09-01', '2023-09-30', 4),
-(6, 'ASIG006', '2023-09-01', '2023-09-30', 9),
-(7, 'ASIG007', '2023-09-01', '2023-09-30', 8),
-(8, 'ASIG008', '2023-09-01', '2023-09-30', 7),
-(9, 'ASIG009', '2023-09-01', '2023-09-30', 10),
-(10, 'ASIG010', '2023-09-01', '2023-09-30', 9);
+    SELECT COUNT(*)
+    INTO exist
+    FROM ras
+    WHERE ra = NEW.ra;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `sessions`
---
+    IF exist > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'RA existent per a aquesta assignatura';
+    END IF;
+END
+$$
+DELIMITER ;
 
 DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE IF NOT EXISTS `sessions` (
@@ -959,10 +733,6 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   PRIMARY KEY (`token`),
   KEY `fk_iduser` (`id_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `sessions`
---
 
 INSERT INTO `sessions` (`token`, `id_user`, `username`, `data_inici`, `data_fin`) VALUES
 (1, 1, 'MarcS', '2025-11-01', '2025-11-01'),
@@ -991,12 +761,6 @@ INSERT INTO `sessions` (`token`, `id_user`, `username`, `data_inici`, `data_fin`
 (24, 24, 'SílviaG', '2025-11-24', NULL),
 (25, 25, 'RamonC', '2025-11-25', '2025-11-25');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `usuaris`
---
-
 DROP TABLE IF EXISTS `usuaris`;
 CREATE TABLE IF NOT EXISTS `usuaris` (
   `id_user` int(11) NOT NULL AUTO_INCREMENT,
@@ -1008,10 +772,6 @@ CREATE TABLE IF NOT EXISTS `usuaris` (
   UNIQUE KEY `dni` (`dni`),
   KEY `fk_usuaridni` (`dni`)
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `usuaris`
---
 
 INSERT INTO `usuaris` (`id_user`, `dni`, `username`, `password`) VALUES
 (1, '12345678A', 'MarcS', NULL),
@@ -1046,126 +806,69 @@ INSERT INTO `usuaris` (`id_user`, `dni`, `username`, `password`) VALUES
 (30, '22232425F', 'LluïsaP', NULL),
 (31, '55548601J', 'ndiakite', NULL);
 
---
--- Restricciones para tablas volcadas
---
 
---
--- Filtros para la tabla `administradors`
---
 ALTER TABLE `administradors`
   ADD CONSTRAINT `fk_admindni` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_adminuser` FOREIGN KEY (`id_user`) REFERENCES `usuaris` (`id_user`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `admin_centre`
---
 ALTER TABLE `admin_centre`
   ADD CONSTRAINT `fk_adminid` FOREIGN KEY (`admin_id`) REFERENCES `administradors` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_codicentre` FOREIGN KEY (`codi_centre`) REFERENCES `centres` (`codi`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `assignatures_cicle`
---
 ALTER TABLE `assignatures_cicle`
   ADD CONSTRAINT `fk_cicleassignatura` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_nomcicle` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `assistencia`
---
 ALTER TABLE `assistencia`
   ADD CONSTRAINT `fk_codiass` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_codiprofeass` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_nomgrup` FOREIGN KEY (`nom_grup`) REFERENCES `grup_classe` (`nom`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `contractes`
---
 ALTER TABLE `contractes`
   ADD CONSTRAINT `fk_codic` FOREIGN KEY (`codi_centre`) REFERENCES `centres` (`codi`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_codip` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `directiva`
---
 ALTER TABLE `directiva`
   ADD CONSTRAINT `fk_codiprof` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON DELETE CASCADE ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `estudiants`
---
 ALTER TABLE `estudiants`
   ADD CONSTRAINT `fk_ciclees` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_dnies` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_nomgrupes` FOREIGN KEY (`nom_grup`) REFERENCES `grup_classe` (`nom`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `estudiants_ras`
---
 ALTER TABLE `estudiants_ras`
   ADD CONSTRAINT `fk_idra` FOREIGN KEY (`id_ra`) REFERENCES `ras` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_niaa` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `historic_estudiants`
---
 ALTER TABLE `historic_estudiants`
   ADD CONSTRAINT `fk_niaes` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_nomciclee` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `historic_fct`
---
 ALTER TABLE `historic_fct`
   ADD CONSTRAINT `fk_niah` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `historic_professors`
---
 ALTER TABLE `historic_professors`
   ADD CONSTRAINT `fk_codipr` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `logs_consultes`
---
 ALTER TABLE `logs_consultes`
   ADD CONSTRAINT `fk_token` FOREIGN KEY (`token`) REFERENCES `sessions` (`token`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `logs_login`
---
 ALTER TABLE `logs_login`
   ADD CONSTRAINT `fk_iduserl` FOREIGN KEY (`id_user`) REFERENCES `usuaris` (`id_user`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `professors`
---
 ALTER TABLE `professors`
   ADD CONSTRAINT `fk_dniprof` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `prof_assignatura`
---
 ALTER TABLE `prof_assignatura`
   ADD CONSTRAINT `fk_codiprofe` FOREIGN KEY (`id_codiprof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_idassignatura` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `ras`
---
 ALTER TABLE `ras`
   ADD CONSTRAINT `fk_assignaturaid` FOREIGN KEY (`codi_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `sessions`
---
 ALTER TABLE `sessions`
   ADD CONSTRAINT `fk_iduser` FOREIGN KEY (`id_user`) REFERENCES `usuaris` (`id_user`) ON UPDATE CASCADE;
 
---
--- Filtros para la tabla `usuaris`
---
 ALTER TABLE `usuaris`
   ADD CONSTRAINT `fk_usuaridni` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE;
 COMMIT;

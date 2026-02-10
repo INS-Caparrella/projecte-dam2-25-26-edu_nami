@@ -177,6 +177,29 @@ END//
 DELIMITER ;
 
 
+DROP TRIGGER IF EXISTS verificarRa;
+DELIMITER //
+CREATE TRIGGER verificarRa
+BEFORE INSERT ON ras
+FOR EACH ROW
+BEGIN
+    DECLARE exist INT DEFAULT 0;
+
+    SELECT COUNT(*)
+    INTO exist
+    FROM ras
+    WHERE ra = NEW.ra;
+
+    IF exist > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'RA existent per a aquesta assignatura';
+    END IF;
+END //
+DELIMITER ;
+
+
+
+
 
 
 
