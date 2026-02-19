@@ -6,6 +6,8 @@ $host="localhost";
 $user="root";
 $pass="";
 $db="projecte_evalis";
+$port=3307;
+
 
 //Proves de hashos ************************************************************************************
 // var_dump(password_verify("1234", "$2y$10$6/n.5fSDPXMBw2iWVWbx7.KXWVYorccMMovgIVwVHMAEM6lzhHjje"));
@@ -13,7 +15,7 @@ $db="projecte_evalis";
 //exit;
 //*****************************************************************************************************
 
-$conn=new mysqli($host,$user,$pass,$db);
+$conn=new mysqli($host,$user,$pass,$db,$port);
 if($conn->connect_error){
     echo json_encode([
         "pot_entrar"=>false,
