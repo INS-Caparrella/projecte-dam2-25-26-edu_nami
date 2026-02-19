@@ -76,12 +76,12 @@ class LoginActivity : ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                Text("Login")
+                R.string.login_label
 
                 OutlinedTextField(
                     value = user,
                     onValueChange = { user = it },
-                    label = { Text("Usuario") },
+                    label = { R.string.user_label },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     modifier = Modifier.fillMaxWidth()
@@ -89,7 +89,7 @@ class LoginActivity : ComponentActivity() {
                 OutlinedTextField(
                     value = pass,
                     onValueChange = { pass = it },
-                    label = { Text("Contraseña") },
+                    label = { R.string.pass_label },
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
@@ -114,7 +114,7 @@ class LoginActivity : ComponentActivity() {
                     modifier=Modifier.fillMaxWidth().padding(top=16.dp),
                     enabled=true
                 ){
-                    Text("Registrar")
+                    R.string.reg_button
                 }
 
 
@@ -163,10 +163,10 @@ fun LoginButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modif
                     (context as? ComponentActivity)?.runOnUiThread {
                         if (obj==null){
                             val missatgeError=gestor.lastError
-                                ?: "sense resposta o error desconegut (revisa URL, port i JSON)"
+                                ?: R.string.error_aviso1
 
                             Toast.makeText(context,
-                                "error en la connexió: $missatgeError",
+                               context.getString(R.string.error_aviso2, missatgeError),
                                 Toast.LENGTH_LONG).show()
                         } else {
                             val potEntrar = obj.optBoolean("pot_entrar", false)
@@ -174,7 +174,7 @@ fun LoginButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modif
                                 onSuccess()
                             } else{
                                 Toast.makeText(context,
-                                    "usuari o contrasenya incorrectes", Toast.LENGTH_SHORT)
+                                    context.getString(R.string.error_aviso3), Toast.LENGTH_SHORT)
                                     .show()
                             }
                         }
@@ -183,14 +183,14 @@ fun LoginButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modif
                     e.printStackTrace()
                     (context as? ComponentActivity)?.runOnUiThread {
                         Toast.makeText(context,
-                            "error inesperat: ${e.message}",
+                            context.getString(R.string.error_aviso4,e.message),
                             Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
     ) {
-        Text("Entrar")
+        R.string.login_button
     }
 
 }
