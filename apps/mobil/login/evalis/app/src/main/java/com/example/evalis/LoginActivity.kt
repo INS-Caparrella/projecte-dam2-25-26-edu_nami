@@ -76,7 +76,9 @@ class LoginActivity : ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                R.string.login_label
+                Text (
+                    text = stringResource(R.string.login_label)
+                )
 
                 OutlinedTextField(
                     value = user,
@@ -114,7 +116,9 @@ class LoginActivity : ComponentActivity() {
                     modifier=Modifier.fillMaxWidth().padding(top=16.dp),
                     enabled=true
                 ){
-                    R.string.reg_button
+                    Text (
+                        text = stringResource(R.string.reg_button)
+                    )
                 }
 
 
@@ -190,7 +194,9 @@ fun LoginButton(user:String, pass:String, onSuccess: () -> Unit, modifier: Modif
             }
         }
     ) {
-        R.string.login_button
+        Text(
+            text = stringResource(R.string.login_button)
+        )
     }
 
 }
