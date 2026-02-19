@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">evalis</string>
+
+    <string name="login_label">Log in</string>
+    <string name="user_label">Username</string>
+    <string name="pass_label">Password</string>
+
+    <string name="reg_button">Register</string>
+    <string name="login_button">Log in</string>
+    <string name="login_aviso">Hello! You have logged in successfully.</string>
+
+
+    <string name="error_aviso1">No response or unknown error (check URL, port and JSON)</string>
+    <string name="error_aviso2">Connection error: %1$s</string>
+    <string name="error_aviso3">Incorrect username or password</string>
+    <string name="error_aviso4">Unexpected error: %1$s</string>
+
+    <string name="tema_app">App theme</string>
+    <string name="tema_claro">Light</string>
+    <string name="tema_oscuro">Dark</string>
+    <string name="tema_sistema">Follow system</string>
+
+</resources>

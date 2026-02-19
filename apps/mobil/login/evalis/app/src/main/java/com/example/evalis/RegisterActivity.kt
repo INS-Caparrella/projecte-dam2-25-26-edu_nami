@@ -74,8 +74,7 @@ class ReegisterActivity : ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                Text("Registrar")
-
+                R.string.reg_button
                 OutlinedTextField(
                     value = dni,
                     onValueChange = { dni = it },
