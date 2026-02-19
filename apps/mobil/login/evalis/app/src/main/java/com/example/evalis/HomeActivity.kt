@@ -122,7 +122,7 @@ class HomeActivity : ComponentActivity() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp),
-        ) {
+        ) {//cambiar
             Text(stringResource(R.string.login_aviso))
 
             Spacer(modifier = Modifier.height(24.dp))
