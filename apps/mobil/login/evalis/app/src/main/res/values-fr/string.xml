@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">evalis</string>
+
+    <string name="login_label">Connexion</string>
+    <string name="user_label">Utilisateur</string>
+    <string name="pass_label">Mot de passe</string>
+
+    <string name="reg_button">S´inscrire</string>
+    <string name="login_button">Se connecter</string>
+    <string name="login_aviso">Bonjour ! Vous vous êtes connecté avec succès.</string>
+
+
+    <string name="error_aviso1">Pas de réponse ou erreur inconnue (vérifiez l’URL, le port et le JSON)</string>
+    <string name="error_aviso2">Erreur de connexion: %1$s</string>
+    <string name="error_aviso3">Nom d´utilisateur ou mot de passe incorrect</string>
+    <string name="error_aviso4">Erreur inattendue: %1$s</string>
+
+    <string name="tema_app">Thème de l´application</string>
+    <string name="tema_claro">Clair</string>
+    <string name="tema_oscuro">Sombre</string>
+    <string name="tema_sistema">Suivre le système</string>
+
+</resources>

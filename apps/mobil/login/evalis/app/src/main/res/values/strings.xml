@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">evalis</string>
+
+    <string name="login_label">Inicio de sesión</string>
+    <string name="user_label">Usuario</string>
+    <string name="pass_label">Contraseña</string>
+
+    <string name="reg_button">Registrar</string>
+    <string name="login_button">Entrar</string>
+    <string name="login_aviso">¡Hola! Has iniciado sesión correctamente.</string>
+
+    <string name="error_aviso1">Sin respuesta o error desconocido (revisa URL, puerto y JSON)</string>
+    <string name="error_aviso2">Error en la conexión: %1$s</string>
+    <string name="error_aviso3">Usuario o contraseña incorrectos</string>
+    <string name="error_aviso4">Error inesperado: %1$s</string>
+
+    <string name="tema_app">Tema de la aplicación</string>
+    <string name="tema_claro">Claro</string>
+    <string name="tema_oscuro">Oscuro</string>
+    <string name="tema_sistema">Seguir sistema</string>
+
 </resources>
