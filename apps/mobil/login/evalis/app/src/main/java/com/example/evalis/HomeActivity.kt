@@ -41,6 +41,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.evalis.ui.theme.EvalisTheme
 import java.nio.file.WatchEvent
 
+
 enum class ThemeMode{
     LIGHT, DARK, SYSTEM
 }
@@ -116,13 +117,14 @@ class HomeActivity : ComponentActivity() {
             Text(text = text)
         }
     }
+
     @Composable
     fun HomeScreen(themeMode: ThemeMode, onThemeChange: (ThemeMode) -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp),
-        ) {//cambiar
+        ) {
             Text(stringResource(R.string.login_aviso))
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -133,3 +135,22 @@ class HomeActivity : ComponentActivity() {
             )
         }
     }
+
+@Preview(showBackground = true)
+@Composable
+fun ThemeSettingsPreview() {
+    var themeMode by remember { mutableStateOf(ThemeMode.SYSTEM) }
+
+    EvalisTheme(
+        darkTheme = when (themeMode) {
+            ThemeMode.LIGHT -> false
+            ThemeMode.DARK -> true
+            ThemeMode.SYSTEM -> isSystemInDarkTheme()
+        }
+    ) {
+        ThemeSettings(
+            selectedMode = themeMode,
+            onModeSelected = { themeMode = it }
+        )
+    }
+}
