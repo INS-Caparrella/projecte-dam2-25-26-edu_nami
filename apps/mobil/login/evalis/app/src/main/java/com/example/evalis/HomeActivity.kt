@@ -135,22 +135,3 @@ class HomeActivity : ComponentActivity() {
             )
         }
     }
-
-@Preview(showBackground = true)
-@Composable
-fun ThemeSettingsPreview() {
-    var themeMode by remember { mutableStateOf(ThemeMode.SYSTEM) }
-
-    EvalisTheme(
-        darkTheme = when (themeMode) {
-            ThemeMode.LIGHT -> false
-            ThemeMode.DARK -> true
-            ThemeMode.SYSTEM -> isSystemInDarkTheme()
-        }
-    ) {
-        ThemeSettings(
-            selectedMode = themeMode,
-            onModeSelected = { themeMode = it }
-        )
-    }
-}
