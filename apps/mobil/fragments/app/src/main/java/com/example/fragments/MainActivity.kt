@@ -53,6 +53,7 @@ class MainActivity : ComponentActivity() {
 }
 
 //@PreviewScreenSizes
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FragmentsApp() {
     val drawerState= rememberDrawerState(initialValue = DrawerValue.Closed)
