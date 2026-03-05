@@ -14,6 +14,16 @@
     <string name="error_aviso3">Usuario o contraseña incorrectos</string>
     <string name="error_aviso4">Error inesperado: %1$s</string>
 
+    <string name="user_reg">Usuario creado existosamente</string>
+    <string name="error_reg1">Usuario existente o dni incorrecto</string>
+
+    <string name="inicio">Inicio</string>
+    <string name="favoritos">Favoritos</string>
+    <string name="perfil">Perfil</string>
+    <string name="menu">Menú</string>
+
+    <string name="saludo">Hola, %1$s</string>
+
     <string name="tema_app">Tema de la aplicación</string>
     <string name="tema_claro">Claro</string>
     <string name="tema_oscuro">Oscuro</string>
