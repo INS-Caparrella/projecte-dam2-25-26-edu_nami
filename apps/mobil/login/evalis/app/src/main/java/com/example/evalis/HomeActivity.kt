@@ -65,7 +65,11 @@ class HomeActivity : ComponentActivity() {
             }
 
             EvalisTheme(darkTheme = darkTheme){
-                HomeScreen(
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    HomeScreen(
                         themeMode = themeMode,
                         onThemeChange = {
                             themeMode = it
@@ -73,7 +77,8 @@ class HomeActivity : ComponentActivity() {
                                 .putString("theme_mode", it.name)
                                 .apply()
                         }
-                )
+                    )
+                }
             }
         }
     }

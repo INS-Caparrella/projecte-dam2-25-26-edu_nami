@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -58,7 +59,7 @@ fun RegisterScreen(onSuccess: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-            R.string.reg_button
+            Text(stringResource(R.string.reg_button))
             OutlinedTextField(
                 value = dni,
                 onValueChange = { dni = it },
@@ -73,7 +74,7 @@ fun RegisterScreen(onSuccess: () -> Unit) {
             OutlinedTextField(
                 value = pass,
                 onValueChange = { pass = it },
-                label = { Text("Contraseña") },
+                label = { Text(stringResource(R.string.pass_label)) },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
@@ -139,11 +140,11 @@ fun RegisterButton(
                     (context as? ComponentActivity)?.runOnUiThread {
                         if (obj == null) {
                             val missatgeError = gestor.lastError
-                                ?: "sense resposta o error desconegut (revisa URL, port i JSON)"
+                                ?: R.string.error_aviso1
 
                             Toast.makeText(
                                 context,
-                                "error en la connexió: $missatgeError",
+                                context.getString(R.string.error_aviso2, missatgeError),
                                 Toast.LENGTH_LONG
                             ).show()
                         } else {
@@ -152,13 +153,13 @@ fun RegisterButton(
                                 onSuccess()
                                 Toast.makeText(
                                     context,
-                                    "Usuari creat existosament", Toast.LENGTH_SHORT
+                                    R.string.user_reg, Toast.LENGTH_SHORT
                                 )
                                     .show()
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "usuari existent o dni incorrecte", Toast.LENGTH_SHORT
+                                    R.string.error_reg1, Toast.LENGTH_SHORT
                                 )
                                     .show()
                             }
@@ -169,7 +170,7 @@ fun RegisterButton(
                     (context as? ComponentActivity)?.runOnUiThread {
                         Toast.makeText(
                             context,
-                            "error inesperat: ${e.message}",
+                            context.getString(R.string.error_aviso4, e.message),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -177,7 +178,7 @@ fun RegisterButton(
             }
         }
     ) {
-        Text("Registrar")
+        Text(stringResource(R.string.reg_button))
     }
 }
 

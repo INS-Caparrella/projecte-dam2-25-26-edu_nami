@@ -31,11 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.evalis.R
 import com.example.evalis.ui.theme.EvalisTheme
 import kotlinx.coroutines.launch
 
@@ -54,7 +56,7 @@ fun HomeScreen() {
         drawerContent = {
             ModalDrawerSheet {
                 NavigationDrawerItem(
-                    label = { Text("Home") },
+                    label = { Text(stringResource(R.string.inicio))  },
                     selected = false,
                     onClick = {
                         navController.navigate("home")
@@ -62,7 +64,7 @@ fun HomeScreen() {
                     }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Favorites") },
+                    label = { Text(stringResource(R.string.favoritos)) },
                     selected = false,
                     onClick = {
                         navController.navigate("favorites")
@@ -70,7 +72,7 @@ fun HomeScreen() {
                     }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Profile") },
+                    label = { Text(stringResource(R.string.perfil)) },
                     selected = false,
                     onClick = {
                         navController.navigate("profile")
@@ -83,7 +85,7 @@ fun HomeScreen() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Menu") },
+                    title = { Text(stringResource(R.string.menu)) },
                     navigationIcon = {
                         IconButton(onClick = {
                             scope.launch { drawerState.open() }
@@ -119,7 +121,7 @@ enum class AppDestinations(
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
+        text = stringResource(R.string.saludo, name),
         modifier = modifier
     )
 }
