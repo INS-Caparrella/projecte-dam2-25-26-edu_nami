@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">evalis</string>
+
+    <string name="login_label">Inici de sessió</string>
+    <string name="user_label">Usuari</string>
+    <string name="pass_label">Contrasenya</string>
+
+    <string name="reg_button">Registrar</string>
+    <string name="login_button">Entrar</string>
+    <string name="login_aviso">Hola! Has fet login correctament.</string>
+
+    <string name="error_aviso1">sense resposta o error desconegut (revisa URL, port i JSON)</string>
+    <string name="error_aviso2">Error en la connexió: %1$s</string>
+    <string name="error_aviso3">Usuari o contrasenya incorrectes</string>
+    <string name="error_aviso4">Error inesperat: %1$s</string>
+
+    <string name="user_reg">Usuari creat existosament</string>
+    <string name="error_reg1">Usuari existent o dni incorrecte</string>
+
+    <string name="inicio">Inici</string>
+    <string name="favoritos">Favorits</string>
+    <string name="perfil">Perfil</string>
+    <string name="menu">Menú</string>
+    <string name="saludo">Hola, %1$s</string>
+
+    <string name="tema_app">Tema de l´aplicació</string>
+    <string name="tema_claro">Clar</string>
+    <string name="tema_oscuro">Fosc</string>
+    <string name="tema_sistema">Seguir sistema</string>
+
+
+</resources>
