@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 //@PreviewScreenSizes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreenF() {
 
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -88,7 +88,7 @@ fun HomeScreen() {
                 startDestination = "home",
                 modifier = Modifier.padding(padding)
             ) {
-                composable("home") { HomeScreen() }
+                composable("home") { HomeScreenF() }
 
             }
         }
@@ -116,7 +116,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun PreviewPhone(){
     EvalisTheme() {
-        HomeScreen()
+        HomeScreenF()
     }
 }
 
