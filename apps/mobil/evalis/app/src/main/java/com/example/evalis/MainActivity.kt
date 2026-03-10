@@ -25,6 +25,8 @@ import androidx.compose.runtime.*
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
         val savedMode = prefs.getString("theme_mode", ThemeMode.SYSTEM.name)
         val initialMode = ThemeMode.valueOf(savedMode!!)
@@ -39,15 +41,20 @@ class MainActivity : ComponentActivity() {
             }
 
             EvalisTheme(darkTheme = darkTheme){
-                HomeScreen(
-                    themeMode = themeMode,
-                    onThemeChange = {
-                        themeMode = it
-                        prefs.edit()
-                            .putString("theme_mode", it.name)
-                            .apply()
-                    }
-                )
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    HomeScreen(
+                        themeMode = themeMode,
+                        onThemeChange = {
+                            themeMode = it
+                            prefs.edit()
+                                .putString("theme_mode", it.name)
+                                .apply()
+                        }
+                    )
+                }
             }
         }
 

@@ -62,68 +62,6 @@ enum class AppDestinations(
     PROFILE("Profile", Icons.Default.AccountBox),
 }
 
-
-@Composable
-fun ThemeSettings(
-    selectedMode: ThemeMode, onModeSelected: (ThemeMode) -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-    ) {
-        Text(
-            text = stringResource(R.string.tema_app),
-            style = MaterialTheme.typography.titleLarge
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        ThemeOption(
-            stringResource(R.string.tema_claro),
-            ThemeMode.LIGHT,
-            selectedMode,
-            onModeSelected
-        )
-        ThemeOption(
-            stringResource(R.string.tema_oscuro),
-            ThemeMode.DARK,
-            selectedMode,
-            onModeSelected
-        )
-        ThemeOption(
-            stringResource(R.string.tema_sistema),
-            ThemeMode.SYSTEM,
-            selectedMode,
-            onModeSelected
-        )
-
-    }
-}
-
-@Composable
-fun ThemeOption(
-    text: String,
-    mode: ThemeMode,
-    selectedMode: ThemeMode,
-    onModeSelected: (ThemeMode) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable() { onModeSelected(mode) }
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RadioButton(
-            selected = (mode == selectedMode),
-            onClick = { onModeSelected(mode) }
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Text(text = text)
-    }
-}
-
 @Composable
 fun HomeScreen(themeMode: ThemeMode, onThemeChange: (ThemeMode) -> Unit) {
 
@@ -142,3 +80,44 @@ fun HomeScreen(themeMode: ThemeMode, onThemeChange: (ThemeMode) -> Unit) {
         )
     }
 }
+
+
+@Composable
+fun ThemeSettings(selectedMode: ThemeMode, onModeSelected:(ThemeMode)-> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+            .padding(24.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.tema_app),
+            style = MaterialTheme.typography.titleLarge
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        ThemeOption(stringResource(R.string.tema_claro), ThemeMode.LIGHT, selectedMode, onModeSelected)
+        ThemeOption(stringResource(R.string.tema_oscuro), ThemeMode.DARK, selectedMode, onModeSelected)
+        ThemeOption(stringResource(R.string.tema_sistema), ThemeMode.SYSTEM, selectedMode, onModeSelected)
+
+    }
+}
+
+@Composable
+fun ThemeOption(text: String, mode: ThemeMode, selectedMode: ThemeMode, onModeSelected: (ThemeMode) -> Unit){
+    Row(
+        modifier = Modifier.fillMaxWidth()
+            .clickable() { onModeSelected(mode) }
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = (mode == selectedMode),
+            onClick = { onModeSelected(mode) }
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Text(text = text)
+    }
+}
+
+
