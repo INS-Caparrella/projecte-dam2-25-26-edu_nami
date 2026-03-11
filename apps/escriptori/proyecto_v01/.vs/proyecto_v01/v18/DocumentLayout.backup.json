@@ -3,12 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\app.config||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:app.config||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
       "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\proyecto_v01.vbproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:proyecto_v01.vbproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\unsafessl.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:unsafessl.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\app.config||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:app.config||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\form1.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
@@ -22,20 +30,46 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Form1.vb",
               "DocumentMoniker": "C:\\Users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\Form1.vb",
               "RelativeDocumentMoniker": "Form1.vb",
-              "ToolTip": "C:\\Users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\Form1.vb",
-              "RelativeToolTip": "Form1.vb",
-              "ViewState": "AgIAABQAAAAAAAAAAAAgwCMAAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\Form1.vb*",
+              "RelativeToolTip": "Form1.vb*",
+              "ViewState": "AgIAADYAAAAAAAAAAAAMwEgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
               "WhenOpened": "2026-02-05T11:07:08.822Z",
               "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UnsafeSSL.vb",
+              "DocumentMoniker": "C:\\Users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\UnsafeSSL.vb",
+              "RelativeDocumentMoniker": "UnsafeSSL.vb",
+              "ToolTip": "C:\\Users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\UnsafeSSL.vb",
+              "RelativeToolTip": "UnsafeSSL.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-03-11T18:58:50.648Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "proyecto_v01",
+              "DocumentMoniker": "C:\\Users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\proyecto_v01.vbproj",
+              "RelativeDocumentMoniker": "proyecto_v01.vbproj",
+              "ToolTip": "C:\\Users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\proyecto_v01.vbproj",
+              "RelativeToolTip": "proyecto_v01.vbproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003380|",
+              "WhenOpened": "2026-03-11T18:58:33.045Z",
               "EditorCaption": ""
             },
             {
@@ -43,8 +77,16 @@
               "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "app.config",
               "DocumentMoniker": "C:\\Users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\app.config",
               "RelativeDocumentMoniker": "app.config",
@@ -57,12 +99,12 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "Form1.vb [Dise\u00F1o]",
               "DocumentMoniker": "C:\\Users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\Form1.vb",
               "RelativeDocumentMoniker": "Form1.vb",
-              "ToolTip": "C:\\Users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\Form1.vb [Dise\u00F1o]",
-              "RelativeToolTip": "Form1.vb [Dise\u00F1o]",
+              "ToolTip": "C:\\Users\\asus\\source\\repos\\proyecto_vb\\proyecto_v01\\Form1.vb [Dise\u00F1o]*",
+              "RelativeToolTip": "Form1.vb [Dise\u00F1o]*",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
               "WhenOpened": "2025-11-25T16:30:46.86Z",
               "EditorCaption": " [Dise\u00F1o]"

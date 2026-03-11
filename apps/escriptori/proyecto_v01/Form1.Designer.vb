@@ -48,7 +48,7 @@ Partial Class Form1
         btnContinue.BackColor = SystemColors.ButtonHighlight
         btnContinue.Enabled = False
         btnContinue.ForeColor = SystemColors.ActiveCaptionText
-        btnContinue.Location = New Point(354, 278)
+        btnContinue.Location = New Point(354, 274)
         btnContinue.Name = "btnContinue"
         btnContinue.Size = New Size(94, 29)
         btnContinue.TabIndex = 6
