@@ -40,36 +40,20 @@ class MainActivity : ComponentActivity() {
                 ThemeMode.SYSTEM -> isSystemInDarkTheme()
             }
 
-            EvalisTheme(darkTheme = darkTheme){
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    HomeScreen(
-                        themeMode = themeMode,
-                        onThemeChange = {
-                            themeMode = it
-                            prefs.edit()
-                                .putString("theme_mode", it.name)
-                                .apply()
-                        }
-                    )
-                }
+            EvalisTheme(darkTheme = darkTheme) {
+                AppNavigation(
+                    themeMode = themeMode,
+                    onThemeChange = {
+                        themeMode = it
+                        prefs.edit()
+                            .putString("theme_mode", it.name)
+                            .apply()
+                    }
+
+                )
             }
         }
 
-
-        setContent {
-            MyApp()
-        }
     }
 }
 
-@Composable
-fun MyApp() {
-    MaterialTheme {
-        Surface {
-            AppNavigation()
-        }
-    }
-}
