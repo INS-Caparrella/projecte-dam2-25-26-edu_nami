@@ -1,113 +1,74 @@
-package com.example.evalis.ui.screens
+package com.example.evalis
 
+import android.R.style.Theme
+import android.content.Context.MODE_PRIVATE
+import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
+import android.provider.MediaStore
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.*
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.evalis.R
+import androidx.compose.ui.unit.dp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.example.evalis.models.*
 import com.example.evalis.ui.theme.EvalisTheme
-import kotlinx.coroutines.launch
+import java.nio.file.WatchEvent
 
 
-//@PreviewScreenSizes
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HomeScreen() {
 
-    val navController = rememberNavController()
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
-
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                NavigationDrawerItem(
-                    label = { Text(stringResource(R.string.inicio))  },
-                    selected = false,
-                    onClick = {
-                        navController.navigate("home")
-                        scope.launch { drawerState.close() }
-                    }
-                )
-                NavigationDrawerItem(
-                    label = { Text(stringResource(R.string.favoritos)) },
-                    selected = false,
-                    onClick = {
-                        navController.navigate("favorites")
-                        scope.launch { drawerState.close() }
-                    }
-                )
-                NavigationDrawerItem(
-                    label = { Text(stringResource(R.string.perfil)) },
-                    selected = false,
-                    onClick = {
-                        navController.navigate("profile")
-                        scope.launch { drawerState.close() }
-                    }
-                )
-            }
-        }
-    ) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(R.string.menu)) },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch { drawerState.open() }
-                        }) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu")
-                        }
-                    }
-                )
-            }
-        ) { padding ->
-
-            NavHost(
-                navController = navController,
-                startDestination = "home",
-                modifier = Modifier.padding(padding)
-            ) {
-                composable("home") { HomeScreen() }
-
-            }
-        }
-    }
+enum class ThemeMode {
+    LIGHT, DARK, SYSTEM
 }
+
 
 enum class AppDestinations(
     val label: String,
@@ -119,26 +80,76 @@ enum class AppDestinations(
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = stringResource(R.string.saludo, name),
-        modifier = modifier
-    )
-}
+fun HomeScreen(themeMode: ThemeMode, onThemeChange: (ThemeMode) -> Unit,options:List<Option>) {
 
-@Preview(name="Phone", showBackground = true, device="spec:width=411dp,height=891dp,dpi=420")
-@Composable
-fun PreviewPhone(){
-    EvalisTheme() {
-        HomeScreen()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+    ) {
+
+        Text(
+            modifier = Modifier.padding(24.dp),
+            text=stringResource(R.string.login_aviso),
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            items(options){ op-> OptionsListItem(op) }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        ThemeSettings(
+            selectedMode = themeMode,
+            onModeSelected = onThemeChange
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+
     }
 }
 
-//@Preview(name="Tablet", showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240")
-//@Composable
-//fun PreviewTablet(){
-//    FragmentsTheme {
-//        FragmentsApp()
-//    }
-//}
+
+@Composable
+fun ThemeSettings(selectedMode: ThemeMode, onModeSelected:(ThemeMode)-> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+            .padding(24.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.tema_app),
+            style = MaterialTheme.typography.titleLarge
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        ThemeOption(stringResource(R.string.tema_claro), ThemeMode.LIGHT, selectedMode, onModeSelected)
+        ThemeOption(stringResource(R.string.tema_oscuro), ThemeMode.DARK, selectedMode, onModeSelected)
+        ThemeOption(stringResource(R.string.tema_sistema), ThemeMode.SYSTEM, selectedMode, onModeSelected)
+
+    }
+}
+
+@Composable
+fun ThemeOption(text: String, mode: ThemeMode, selectedMode: ThemeMode, onModeSelected: (ThemeMode) -> Unit){
+    Row(
+        modifier = Modifier.fillMaxWidth()
+            .clickable() { onModeSelected(mode) }
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = (mode == selectedMode),
+            onClick = { onModeSelected(mode) }
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Text(text = text)
+    }
+}
+
+
 
