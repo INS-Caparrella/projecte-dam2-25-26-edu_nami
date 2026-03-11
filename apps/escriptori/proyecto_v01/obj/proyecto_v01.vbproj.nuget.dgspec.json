@@ -62,9 +62,13 @@
               "target": "Package",
               "version": "[2.5.0, )"
             },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.4, )"
+            },
             "System.Configuration.ConfigurationManager": {
               "target": "Package",
-              "version": "[10.0.2, )"
+              "version": "[10.0.4, )"
             }
           },
           "imports": [
@@ -86,7 +90,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.104/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

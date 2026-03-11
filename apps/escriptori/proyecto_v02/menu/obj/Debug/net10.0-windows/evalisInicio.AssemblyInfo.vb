@@ -16,7 +16,7 @@ Imports System.Reflection
 <Assembly: System.Reflection.AssemblyCompanyAttribute("evalisInicio"),  _
  Assembly: System.Reflection.AssemblyConfigurationAttribute("Debug"),  _
  Assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0"),  _
- Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0"),  _
+ Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eb237fde5cb9ed710e2200fec03e04fde639520c"),  _
  Assembly: System.Reflection.AssemblyProductAttribute("evalisInicio"),  _
  Assembly: System.Reflection.AssemblyTitleAttribute("evalisInicio"),  _
  Assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0"),  _
