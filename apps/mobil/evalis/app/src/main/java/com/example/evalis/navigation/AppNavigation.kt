@@ -9,11 +9,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.evalis.HomeScreen
 import com.example.evalis.ThemeMode
+import com.example.evalis.models.Option
+import com.example.evalis.models.OptionsList
 import com.example.evalis.ui.screens.*
 import com.example.evalis.ui.screens.login.RegisterScreen
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(
+    themeMode: ThemeMode,
+    onThemeChange: (ThemeMode) -> Unit
+) {
     val navController = rememberNavController()
 
     NavHost(
@@ -23,17 +28,18 @@ fun AppNavigation() {
         composable("login") {
             LoginScreen(
                 onRegister={navController.navigate("register")},
-                onSuccess = { navController.navigate("home")}
+                onSuccess = { navController.navigate("menu")}
 
             )
         }
 
-        composable("home") {
+        composable("menu") {
             val initialMode = ThemeMode.SYSTEM
 
-            HomeScreen(
-                themeMode = initialMode,
-                onThemeChange =
+            MenuScreen(
+                themeMode = themeMode,
+                onThemeChange = onThemeChange,
+                option = OptionsList.all()
             )
         }
 

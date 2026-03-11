@@ -24,6 +24,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.evalis.HomeScreen
+import com.example.evalis.ThemeMode
+import com.example.evalis.models.Option
+import com.example.evalis.models.OptionsList
+import com.example.evalis.models.OptionsListItem
 import com.example.evalis.ui.theme.EvalisTheme
 import kotlinx.coroutines.launch
 
@@ -31,11 +36,12 @@ import kotlinx.coroutines.launch
 //@PreviewScreenSizes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenF() {
+fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (ThemeMode) -> Unit) {
 
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -88,9 +94,11 @@ fun HomeScreenF() {
                 startDestination = "home",
                 modifier = Modifier.padding(padding)
             ) {
-                composable("home") { HomeScreenF() }
-
+                composable("home") { HomeScreen(themeMode, onThemeChange, options= option)}
+                composable("favorites") { Text("Favorites") }
+                composable("profile") { Text("Profile") }
             }
+
         }
     }
 }
@@ -112,13 +120,13 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(name="Phone", showBackground = true, device="spec:width=411dp,height=891dp,dpi=420")
-@Composable
-fun PreviewPhone(){
-    EvalisTheme() {
-        HomeScreenF()
-    }
-}
+//@Preview(name="Phone", showBackground = true, device="spec:width=411dp,height=891dp,dpi=420")
+//@Composable
+//fun PreviewPhone(){
+//    EvalisTheme() {
+//
+//    }
+//}
 
 //@Preview(name="Tablet", showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240")
 //@Composable
