@@ -17,6 +17,7 @@ import com.example.evalis.navigation.*
 import android.os.*
 import androidx.activity.*
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
@@ -24,17 +25,35 @@ import androidx.compose.runtime.*
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        val savedMode = prefs.getString("theme_mode", ThemeMode.SYSTEM.name)
+        val initialMode = ThemeMode.valueOf(savedMode!!)
+
         setContent {
-            MyApp()
+            var themeMode by remember { mutableStateOf(initialMode) }
+
+            val darkTheme = when (themeMode) {
+                ThemeMode.LIGHT -> false
+                ThemeMode.DARK -> true
+                ThemeMode.SYSTEM -> isSystemInDarkTheme()
+            }
+
+            EvalisTheme(darkTheme = darkTheme) {
+                AppNavigation(
+                    themeMode = themeMode,
+                    onThemeChange = {
+                        themeMode = it
+                        prefs.edit()
+                            .putString("theme_mode", it.name)
+                            .apply()
+                    }
+
+                )
+            }
         }
+
     }
 }
 
-@Composable
-fun MyApp() {
-    MaterialTheme {
-        Surface {
-            AppNavigation()
-        }
-    }
-}
