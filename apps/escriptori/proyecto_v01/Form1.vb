@@ -15,7 +15,6 @@ Public Class Form1
 
     Private Sub txtPass_TextChanged(sender As Object, e As EventArgs) Handles txtPass.TextChanged
         txtPass.PasswordChar = "*"
-
         btnContinue.Enabled = Not String.IsNullOrEmpty(txtUser.Text) AndAlso Not String.IsNullOrEmpty(txtPass.Text)
 
     End Sub
@@ -38,8 +37,6 @@ Public Class Form1
         Catch ex As Exception
             MessageBox.Show("Error: " & ex.Message)
         End Try
-
-
     End Sub
 
     ''POST
