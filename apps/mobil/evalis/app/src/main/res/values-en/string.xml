@@ -22,6 +22,8 @@
     <string name="inicio">Home</string>
     <string name="favoritos">Favorites</string>
     <string name="perfil">Profile</string>
+    <string name="profs">Profesores</string>
+
     <string name="menu">Menu</string>
     <string name="saludo">Hello, %1$s</string>
 
