@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.evalis.R
 import kotlin.reflect.KClass
 
@@ -43,12 +44,13 @@ object OptionsList {
 }
 
 @Composable
-fun OptionsListItem(option: Option) {
+fun OptionsListItem(option: Option,navController: NavController) {
     val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
+                navController.navigate("profs")
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
 

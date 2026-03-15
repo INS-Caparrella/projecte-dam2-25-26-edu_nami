@@ -94,7 +94,7 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
                 startDestination = "home",
                 modifier = Modifier.padding(padding)
             ) {
-                composable("home") { HomeScreen(themeMode, onThemeChange, options= option)}
+                composable("home") { HomeScreen(themeMode, onThemeChange, options= option,navController)}
                 composable("favorites") { Text("Favorites") }
                 composable("profile") { Text("Profile") }
             }

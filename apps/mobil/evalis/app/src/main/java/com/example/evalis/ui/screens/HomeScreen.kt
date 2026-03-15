@@ -59,6 +59,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.NavController
 import com.example.evalis.models.*
 import com.example.evalis.ui.theme.EvalisTheme
 import java.nio.file.WatchEvent
@@ -80,7 +81,7 @@ enum class AppDestinations(
 }
 
 @Composable
-fun HomeScreen(themeMode: ThemeMode, onThemeChange: (ThemeMode) -> Unit,options:List<Option>) {
+fun HomeScreen(themeMode: ThemeMode, onThemeChange: (ThemeMode) -> Unit,options:List<Option>,navController: NavController) {
 
     Column(
         modifier = Modifier
@@ -93,10 +94,8 @@ fun HomeScreen(themeMode: ThemeMode, onThemeChange: (ThemeMode) -> Unit,options:
             text=stringResource(R.string.login_aviso),
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(options){ op-> OptionsListItem(op) }
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            items(options){ op-> OptionsListItem(op,navController) }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
