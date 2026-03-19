@@ -49,33 +49,35 @@ if($username===""||$password===""){
 }
 
 // Busquem l'usuari
-$stmt=$conn->prepare("SELECT password FROM usuaris WHERE username=?");
-$stmt->bind_param("s",$username);
+$stmt = $conn->prepare("SELECT password, u.dni, p.dni, p.rol 
+                        FROM usuaris u 
+                        INNER JOIN persones p ON p.dni = u.dni 
+                        WHERE username=?");
+$stmt->bind_param("s", $username);
 $stmt->execute();
 $stmt->store_result();
 
-if($stmt->num_rows===0){
+if ($stmt->num_rows === 0) {
     echo json_encode([
-        "pot_entrar"=>false,
-        "tipus_error"=>"Usuari o contrasenya incorrectes"
+        "pot_entrar" => false,
+        "tipus_error" => "Usuari o contrasenya incorrectes"
     ]);
     exit;
 }
 
-$stmt->bind_result($password_hash_bd);
+$stmt->bind_result($password_hash_bd, $dni_u, $dni_p, $rol);
 $stmt->fetch();
 
-// Comprovem la contrasenya amb password_verify
-if(password_verify($password,$password_hash_bd)){
+// Comprovem contrasenya
+if (password_verify($password, $password_hash_bd)) {
     echo json_encode([
-        "pot_entrar"=>true        
+        "pot_entrar" => true,
+        "dni" => $dni_u,   
+        "rol" => (bool)$rol
     ]);
-}else{
+} else {
     echo json_encode([
-        "pot_entrar"=>false,
-        "tipus_error"=>"Usuari o contrasenya incorrectes"
+        "pot_entrar" => false,
+        "tipus_error" => "Usuari o contrasenya incorrectes"
     ]);
 }
-
-$stmt->close();
-$conn->close();
