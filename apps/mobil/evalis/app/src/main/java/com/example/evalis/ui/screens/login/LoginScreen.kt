@@ -38,12 +38,18 @@ import java.net.URLEncoder
 import kotlin.concurrent.thread
 import kotlin.jvm.java
 
+object SessionData {
+    var dni: String =""
+}
+
+
 @Composable
 fun LoginScreen(  onRegister: () -> Unit,
                   onSuccess: () -> Unit) {
 
     var user by remember { mutableStateOf("") }
     var pass by remember { mutableStateOf("") }
+
 
     Box(
         modifier = Modifier
@@ -151,6 +157,8 @@ fun LoginButton(user: String, pass: String, onSuccess: () -> Unit, modifier: Mod
                             ).show()
                         } else {
                             val potEntrar = obj.optBoolean("pot_entrar", false)
+                            SessionData.dni = obj.optString("dni")
+
                             if (potEntrar) {
                                 onSuccess()
                             } else {
