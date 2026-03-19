@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.evalis.GestorSQLExternModern
 import com.example.evalis.R
+import com.example.evalis.ui.screens.login.SessionData
 import org.json.JSONArray
 import kotlin.concurrent.thread
 
@@ -116,7 +117,7 @@ fun ProfsScreen() {
     profState.clear()
     profState.addAll(ProfsList.placeholders())
 
-    carregarProfsDesDeServidor()
+    carregarProfsDesDeServidor(SessionData.dni)
 
     Scaffold(modifier = Modifier.fillMaxWidth()) { inner ->
         Column(
@@ -141,43 +142,41 @@ fun ProfsScreen() {
 
 }
 
-private fun carregarProfsDesDeServidor() {
+private fun carregarProfsDesDeServidor(dniAlumne: String) {
     isLoading = true
     thread {
         try {
             val gestor = GestorSQLExternModern()
-            val arr: JSONArray? = gestor.connectar("$BASE_URL/get_players.php")
-            android.os.Handler(Looper.getMainLooper()).post {
-                if (arr == null) {
+            val arr: JSONArray? = gestor.connectar("$BASE_URL/get_profs.php?dni=$dniAlumne")
 
+            android.os.Handler(Looper.getMainLooper()).post {
+
+                if (arr == null) {
                     profState.clear()
                     profState.add(Prof(-1, "Sense connexió", "", "", ""))
                     isLoading = false
-
                     return@post
                 }
 
                 profState.clear()
+
                 for (i in 0 until arr.length()) {
                     val obj = arr.getJSONObject(i)
 
-                    val id = obj.optString("id", "-1").toIntOrNull() ?: -1
+                    val id = obj.optString("dni", "-1").toIntOrNull() ?: -1
                     val name = obj.optString("nom")
                     val surname = obj.optString("cognom")
                     val email = obj.optString("email")
 
-
-
-                    val rutaRel = obj.optString("ruta_foto")
-                    val url = if (rutaRel.startsWith("/")) "$BASE_URL$rutaRel" else rutaRel
+                    val urlFoto = ""
 
                     if (id >= 0) {
-                        profState.add(Prof(id, name,surname,url,email))
+                        profState.add(Prof(id, name, surname, urlFoto, email))
                     }
                 }
 
                 if (profState.isEmpty()) {
-                    profState.add(Prof(-1, "No hi ha dades", "","",""))
+                    profState.add(Prof(-1, "No hi ha dades", "", "", ""))
                 }
 
                 isLoading = false
@@ -187,4 +186,5 @@ private fun carregarProfsDesDeServidor() {
         }
     }
 }
+
 
