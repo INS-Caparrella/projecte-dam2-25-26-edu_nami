@@ -46,10 +46,10 @@ import kotlin.concurrent.thread
 
 var isLoading by mutableStateOf(true)
 val profState = mutableStateListOf<Prof>()
-private const val BASE_URL = "http://192.168.16.100"
+private const val BASE_URL = "http://10.252.70.110"
 
 data class Prof(
-    val id: Int,
+    val id: String,
     val name: String,
     val surname: String,
     val imageUrl: String,
@@ -58,9 +58,9 @@ data class Prof(
 
 object ProfsList {
     fun placeholders(): List<Prof> = listOf(
-        Prof(-1, "Loading...", "", "", ""),
-        Prof(-1, "Loading...", "", "", ""),
-        Prof(-1, "Loading...", "", "", "")
+        Prof("", "Loading...", "", "", ""),
+        Prof("", "Loading...", "", "", ""),
+        Prof("", "Loading...", "", "", "")
     )
 }
 
@@ -74,7 +74,7 @@ private fun ProfsList(profs: List<Prof>, isLoading: Boolean) {
 @Composable
 fun ProfsListItem(prof: Prof, isLoading: Boolean) {
     val context = LocalContext.current
-    val clickableEnabled = !isLoading && prof.id >= 0
+    val clickableEnabled = !isLoading && prof.id != ""
 
     Card(
         modifier = Modifier
@@ -102,7 +102,7 @@ fun ProfsListItem(prof: Prof, isLoading: Boolean) {
             )
             Spacer(Modifier.width(12.dp))
             Text(
-                text = "${prof.surname},${prof.name}",
+                text = "${prof.surname}, ${prof.name}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
@@ -153,7 +153,7 @@ private fun carregarProfsDesDeServidor(dniAlumne: String) {
 
                 if (arr == null) {
                     profState.clear()
-                    profState.add(Prof(-1, "Sense connexió", "", "", ""))
+                    profState.add(Prof("", "Sense connexió", "", "", ""))
                     isLoading = false
                     return@post
                 }
@@ -163,20 +163,22 @@ private fun carregarProfsDesDeServidor(dniAlumne: String) {
                 for (i in 0 until arr.length()) {
                     val obj = arr.getJSONObject(i)
 
-                    val id = obj.optString("dni", "-1").toIntOrNull() ?: -1
+                    val id = obj.optString("codi_prof")
                     val name = obj.optString("nom")
                     val surname = obj.optString("cognom")
                     val email = obj.optString("email")
 
-                    val urlFoto = ""
+                    val rutaRel=obj.optString("ruta_foto")
 
-                    if (id >= 0) {
+                    val urlFoto= if(rutaRel.startsWith("/")) "${BASE_URL}$rutaRel" else rutaRel
+
+                    if (id != "") {
                         profState.add(Prof(id, name, surname, urlFoto, email))
                     }
                 }
 
                 if (profState.isEmpty()) {
-                    profState.add(Prof(-1, "No hi ha dades", "", "", ""))
+                    profState.add(Prof("", "No hi ha dades", "", "", ""))
                 }
 
                 isLoading = false

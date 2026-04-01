@@ -97,6 +97,8 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
                 composable("home") { HomeScreen(themeMode, onThemeChange, options= option,navController)}
                 composable("favorites") { Text("Favorites") }
                 composable("profile") { Text("Profile") }
+                composable("profs") { ProfsScreen() }
+
             }
 
         }
