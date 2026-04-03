@@ -20,16 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.evalis.HomeScreen
 import com.example.evalis.ThemeMode
-import com.example.evalis.models.Option
-import com.example.evalis.models.OptionsList
-import com.example.evalis.models.OptionsListItem
-import com.example.evalis.ui.theme.EvalisTheme
+import com.example.evalis.ui.components.Option
 import kotlinx.coroutines.launch
 
 
@@ -97,7 +93,18 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
                 composable("home") { HomeScreen(themeMode, onThemeChange, options= option,navController)}
                 composable("favorites") { Text("Favorites") }
                 composable("profile") { Text("Profile") }
-                composable("profs") { ProfsScreen() }
+                composable("profs") { ProfsScreen(navController) }
+                composable("profDetail/{profId}/{dni}") { backStackEntry ->
+                    val profId = backStackEntry.arguments?.getString("profId") ?: ""
+                    val dni = backStackEntry.arguments?.getString("dni") ?: ""
+                    ProfsDetail(
+                        dni = dni,
+                        profId = profId,
+                        onClose = { navController.popBackStack() }
+                    )
+                }
+
+
 
             }
 

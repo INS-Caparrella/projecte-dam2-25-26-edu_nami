@@ -22,16 +22,21 @@
     <string name="inicio">Accueil</string>
     <string name="favoritos">Favoris</string>
     <string name="perfil">Profil</string>
-    <string name="profs">Professors</string>
+    <string name="profs_label">Professors</string>
+    <string name="prof_label">Professeur</string>
+
+    <string name="email_label">Courriel</string>
 
     <string name="menu">Menu</string>
     <string name="saludo">Bonjour, %1$s</string>
-
-
 
     <string name="tema_app">Thème de l´application</string>
     <string name="tema_claro">Clair</string>
     <string name="tema_oscuro">Sombre</string>
     <string name="tema_sistema">Suivre le système</string>
 
+    <string name="assignatures_label">Matières</string>
+    <string name="aula_label">salle de classe</string>
+
+    <string name="button_label">Retour</string>
 </resources>
