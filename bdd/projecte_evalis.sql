@@ -1,17 +1,30 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1:3307
+-- Temps de generació: 03-04-2026 a les 20:14:44
+-- Versió del servidor: 10.4.32-MariaDB
+-- Versió de PHP: 8.2.12
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-CREATE DATABASE IF NOT EXISTS `projecte_evalis` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `projecte_evalis`;
+--
+-- Base de dades: `projecte_evalis`
+--
 
 DELIMITER $$
-DROP PROCEDURE IF EXISTS `alumnesGrup`$$
+--
+-- Procediments
+--
 CREATE DEFINER=`root`@`localhost` PROCEDURE `alumnesGrup` (IN `grup` VARCHAR(11))   BEGIN
     SELECT p.nom,p.cognom,p.dni, TIMESTAMPDIFF(YEAR, p.data_naix, CURDATE()) AS edat
     FROM persones p
@@ -20,7 +33,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `alumnesGrup` (IN `grup` VARCHAR(11)
     ORDER BY p.nom,p.cognom;
 END$$
 
-DROP PROCEDURE IF EXISTS `llistatMajorsEdatEstudiants`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `llistatMajorsEdatEstudiants` ()   BEGIN
     SELECT p.nom AS nom,p.cognom AS cognom, TIMESTAMPDIFF(YEAR, p.data_naix, CURDATE()) AS edat
     FROM persones p JOIN estudiants e ON e.dni = p.dni
@@ -28,7 +40,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `llistatMajorsEdatEstudiants` ()   B
     ORDER BY p.nom,p.cognom;
 END$$
 
-DROP FUNCTION IF EXISTS `intentsLogin`$$
+--
+-- Funcions
+--
 CREATE DEFINER=`root`@`localhost` FUNCTION `intentsLogin` (`userId` INT, `rang1` DATETIME, `rang2` DATETIME) RETURNS INT(11)  BEGIN
     DECLARE result INT DEFAULT 0;
 
@@ -40,7 +54,6 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `intentsLogin` (`userId` INT, `rang1`
     RETURN result;
 END$$
 
-DROP FUNCTION IF EXISTS `majorEdat`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `majorEdat` (`dni` VARCHAR(9)) RETURNS TINYINT(1)  BEGIN
     DECLARE edat INT;
     DECLARE major BOOLEAN DEFAULT FALSE;
@@ -58,17 +71,23 @@ END$$
 
 DELIMITER ;
 
-DROP TABLE IF EXISTS `administradors`;
-CREATE TABLE IF NOT EXISTS `administradors` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `administradors`
+--
+
+CREATE TABLE `administradors` (
+  `id` int(11) NOT NULL,
   `dni` varchar(9) NOT NULL,
   `id_user` int(11) NOT NULL,
   `dades` tinyint(1) NOT NULL,
-  `superadmin` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_admindni` (`dni`),
-  KEY `fk_adminuser` (`id_user`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `superadmin` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `administradors`
+--
 
 INSERT INTO `administradors` (`id`, `dni`, `id_user`, `dades`, `superadmin`) VALUES
 (11, '22334455L', 11, 1, 1),
@@ -82,16 +101,22 @@ INSERT INTO `administradors` (`id`, `dni`, `id_user`, `dades`, `superadmin`) VAL
 (19, '10111213U', 19, 0, 0),
 (20, '12131415V', 20, 1, 0);
 
-DROP TABLE IF EXISTS `admin_centre`;
-CREATE TABLE IF NOT EXISTS `admin_centre` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `admin_centre`
+--
+
+CREATE TABLE `admin_centre` (
+  `id` int(11) NOT NULL,
   `admin_id` int(11) NOT NULL,
   `codi_centre` int(11) NOT NULL,
-  `backup` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_adminid` (`admin_id`),
-  KEY `fk_codicentre` (`codi_centre`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `backup` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `admin_centre`
+--
 
 INSERT INTO `admin_centre` (`id`, `admin_id`, `codi_centre`, `backup`) VALUES
 (11, 11, 1, 1),
@@ -105,12 +130,20 @@ INSERT INTO `admin_centre` (`id`, `admin_id`, `codi_centre`, `backup`) VALUES
 (19, 19, 9, 0),
 (20, 20, 10, 0);
 
-DROP TABLE IF EXISTS `assignatures`;
-CREATE TABLE IF NOT EXISTS `assignatures` (
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `assignatures`
+--
+
+CREATE TABLE `assignatures` (
   `codi` varchar(25) NOT NULL,
-  `nom` varchar(50) NOT NULL,
-  PRIMARY KEY (`codi`)
+  `nom` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `assignatures`
+--
 
 INSERT INTO `assignatures` (`codi`, `nom`) VALUES
 ('ASIG001', 'Programació'),
@@ -124,15 +157,21 @@ INSERT INTO `assignatures` (`codi`, `nom`) VALUES
 ('ASIG009', 'Informàtica Bàsica'),
 ('ASIG010', 'Ciències Naturals');
 
-DROP TABLE IF EXISTS `assignatures_cicle`;
-CREATE TABLE IF NOT EXISTS `assignatures_cicle` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `assignatures_cicle`
+--
+
+CREATE TABLE `assignatures_cicle` (
+  `id` int(11) NOT NULL,
   `nom_cicle` varchar(256) NOT NULL,
-  `id_assignatura` varchar(25) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_nomcicle` (`nom_cicle`),
-  KEY `fk_cicleassignatura` (`id_assignatura`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `id_assignatura` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `assignatures_cicle`
+--
 
 INSERT INTO `assignatures_cicle` (`id`, `nom_cicle`, `id_assignatura`) VALUES
 (1, 'CFGM Informàtica', 'ASIG001'),
@@ -146,20 +185,25 @@ INSERT INTO `assignatures_cicle` (`id`, `nom_cicle`, `id_assignatura`) VALUES
 (9, 'FP Bàsica', 'ASIG009'),
 (10, 'ESO', 'ASIG010');
 
-DROP TABLE IF EXISTS `assistencia`;
-CREATE TABLE IF NOT EXISTS `assistencia` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `assistencia`
+--
+
+CREATE TABLE `assistencia` (
+  `id` int(11) NOT NULL,
   `codi_prof` varchar(20) NOT NULL,
   `id_assignatura` varchar(25) NOT NULL,
   `nom_grup` varchar(25) NOT NULL,
   `hora_inici` time NOT NULL,
   `hora_fin` time NOT NULL,
-  `observacio` varchar(256) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_codiprofeass` (`codi_prof`),
-  KEY `fk_codiass` (`id_assignatura`),
-  KEY `fk_nomgrup` (`nom_grup`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `observacio` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `assistencia`
+--
 
 INSERT INTO `assistencia` (`id`, `codi_prof`, `id_assignatura`, `nom_grup`, `hora_inici`, `hora_fin`, `observacio`) VALUES
 (1, 'PROF001', 'ASIG001', 'ASIX1A', '08:00:00', '09:00:00', 'Primera classe del curs'),
@@ -173,13 +217,21 @@ INSERT INTO `assistencia` (`id`, `codi_prof`, `id_assignatura`, `nom_grup`, `hor
 (9, 'PROF009', 'ASIG009', 'SMX1A', '16:00:00', '17:00:00', 'Informàtica FP Bàsica'),
 (10, 'PROF010', 'ASIG010', 'SMX2A', '17:00:00', '18:00:00', 'Ciències Naturals ESO');
 
-DROP TABLE IF EXISTS `centres`;
-CREATE TABLE IF NOT EXISTS `centres` (
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `centres`
+--
+
+CREATE TABLE `centres` (
   `codi` int(11) NOT NULL,
   `nom` varchar(256) NOT NULL,
-  `data_inaug` date NOT NULL,
-  PRIMARY KEY (`codi`)
+  `data_inaug` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `centres`
+--
 
 INSERT INTO `centres` (`codi`, `nom`, `data_inaug`) VALUES
 (1, 'Institut Escola Montjuïc', '1995-09-01'),
@@ -193,11 +245,19 @@ INSERT INTO `centres` (`codi`, `nom`, `data_inaug`) VALUES
 (9, 'Institut Turó Park', '1990-12-01'),
 (10, 'Institut Vall d’Hebron', '1997-07-30');
 
-DROP TABLE IF EXISTS `cicles`;
-CREATE TABLE IF NOT EXISTS `cicles` (
-  `nom` varchar(256) NOT NULL,
-  PRIMARY KEY (`nom`)
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `cicles`
+--
+
+CREATE TABLE `cicles` (
+  `nom` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `cicles`
+--
 
 INSERT INTO `cicles` (`nom`) VALUES
 ('Batxillerat'),
@@ -211,18 +271,24 @@ INSERT INTO `cicles` (`nom`) VALUES
 ('ESO'),
 ('FP Bàsica');
 
-DROP TABLE IF EXISTS `contractes`;
-CREATE TABLE IF NOT EXISTS `contractes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `contractes`
+--
+
+CREATE TABLE `contractes` (
+  `id` int(11) NOT NULL,
   `codi_prof` varchar(20) NOT NULL,
   `codi_centre` int(11) NOT NULL,
   `data_alta` date NOT NULL,
   `data_baix` date DEFAULT NULL,
-  `vinculacio_laboral` varchar(256) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_codip` (`codi_prof`),
-  KEY `fk_codic` (`codi_centre`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `vinculacio_laboral` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `contractes`
+--
 
 INSERT INTO `contractes` (`id`, `codi_prof`, `codi_centre`, `data_alta`, `data_baix`, `vinculacio_laboral`) VALUES
 (1, 'PROF001', 1, '2023-09-01', NULL, 'Contracte a temps complet'),
@@ -236,13 +302,20 @@ INSERT INTO `contractes` (`id`, `codi_prof`, `codi_centre`, `data_alta`, `data_b
 (9, 'PROF009', 9, '2023-09-01', NULL, 'Contracte parcial'),
 (10, 'PROF010', 10, '2022-09-01', '2023-06-30', 'Contracte a temps complet');
 
-DROP TABLE IF EXISTS `directiva`;
-CREATE TABLE IF NOT EXISTS `directiva` (
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `directiva`
+--
+
+CREATE TABLE `directiva` (
   `rol` varchar(25) NOT NULL,
-  `codi_prof` varchar(20) NOT NULL,
-  PRIMARY KEY (`rol`),
-  KEY `fk_codiprof` (`codi_prof`)
+  `codi_prof` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `directiva`
+--
 
 INSERT INTO `directiva` (`rol`, `codi_prof`) VALUES
 ('Director', 'PROF001'),
@@ -256,8 +329,13 @@ INSERT INTO `directiva` (`rol`, `codi_prof`) VALUES
 ('Coordinador ESO', 'PROF009'),
 ('Coordinador DAW', 'PROF010');
 
-DROP TABLE IF EXISTS `estudiants`;
-CREATE TABLE IF NOT EXISTS `estudiants` (
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `estudiants`
+--
+
+CREATE TABLE `estudiants` (
   `nia` int(11) NOT NULL,
   `dni` varchar(9) NOT NULL,
   `nom_grup` varchar(25) NOT NULL,
@@ -267,12 +345,12 @@ CREATE TABLE IF NOT EXISTS `estudiants` (
   `treballant` tinyint(1) NOT NULL,
   `empresa` varchar(256) NOT NULL,
   `actiu` tinyint(1) NOT NULL DEFAULT 1,
-  `data_inici` date NOT NULL,
-  PRIMARY KEY (`nia`),
-  KEY `fk_dnies` (`dni`),
-  KEY `fk_nomgrupes` (`nom_grup`),
-  KEY `fk_cicles` (`nom_cicle`) USING BTREE
+  `data_inici` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `estudiants`
+--
 
 INSERT INTO `estudiants` (`nia`, `dni`, `nom_grup`, `nom_cicle`, `cursant`, `repetidor`, `treballant`, `empresa`, `actiu`, `data_inici`) VALUES
 (10001, '22334455L', 'ASIX1A', 'CFGM Informàtica', 1, 0, 1, 'EmpresaTech', 1, '2023-09-01'),
@@ -285,7 +363,10 @@ INSERT INTO `estudiants` (`nia`, `dni`, `nom_grup`, `nom_cicle`, `cursant`, `rep
 (10008, '99001122T', 'FPB2A', 'Cicle Serveis', 1, 0, 0, 'ServeisGlobal', 1, '2023-09-01'),
 (10009, '10111213U', 'SMX1A', 'ESO', 1, 1, 0, 'ESOCenter', 1, '2023-09-01'),
 (10010, '12131415V', 'SMX2A', 'FP Bàsica', 1, 0, 1, 'FPBasic', 1, '2023-09-01');
-DROP TRIGGER IF EXISTS `estudiantHistoric`;
+
+--
+-- Disparadors `estudiants`
+--
 DELIMITER $$
 CREATE TRIGGER `estudiantHistoric` AFTER UPDATE ON `estudiants` FOR EACH ROW BEGIN
     DECLARE fin BOOLEAN DEFAULT FALSE;
@@ -307,16 +388,22 @@ END
 $$
 DELIMITER ;
 
-DROP TABLE IF EXISTS `estudiants_ras`;
-CREATE TABLE IF NOT EXISTS `estudiants_ras` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `estudiants_ras`
+--
+
+CREATE TABLE `estudiants_ras` (
+  `id` int(11) NOT NULL,
   `id_ra` int(11) NOT NULL,
   `nia` int(11) NOT NULL,
-  `nota` decimal(10,0) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_idra` (`id_ra`),
-  KEY `fk_niaa` (`nia`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `nota` decimal(10,0) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `estudiants_ras`
+--
 
 INSERT INTO `estudiants_ras` (`id`, `id_ra`, `nia`, `nota`) VALUES
 (1, 1, 10001, 9),
@@ -329,7 +416,10 @@ INSERT INTO `estudiants_ras` (`id`, `id_ra`, `nia`, `nota`) VALUES
 (8, 8, 10008, 7),
 (9, 9, 10009, 10),
 (10, 10, 10010, 9);
-DROP TRIGGER IF EXISTS `promocio_fp_insert`;
+
+--
+-- Disparadors `estudiants_ras`
+--
 DELIMITER $$
 CREATE TRIGGER `promocio_fp_insert` AFTER INSERT ON `estudiants_ras` FOR EACH ROW BEGIN
     DECLARE total_ras INT;
@@ -353,7 +443,6 @@ CREATE TRIGGER `promocio_fp_insert` AFTER INSERT ON `estudiants_ras` FOR EACH RO
 END
 $$
 DELIMITER ;
-DROP TRIGGER IF EXISTS `promocio_fp_update`;
 DELIMITER $$
 CREATE TRIGGER `promocio_fp_update` AFTER UPDATE ON `estudiants_ras` FOR EACH ROW BEGIN
     DECLARE total_ras INT;
@@ -378,12 +467,20 @@ END
 $$
 DELIMITER ;
 
-DROP TABLE IF EXISTS `grup_classe`;
-CREATE TABLE IF NOT EXISTS `grup_classe` (
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `grup_classe`
+--
+
+CREATE TABLE `grup_classe` (
   `nom` varchar(25) NOT NULL,
-  `aula` varchar(20) NOT NULL,
-  PRIMARY KEY (`nom`)
+  `aula` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `grup_classe`
+--
 
 INSERT INTO `grup_classe` (`nom`, `aula`) VALUES
 ('ASIX1A', 'A101'),
@@ -397,19 +494,25 @@ INSERT INTO `grup_classe` (`nom`, `aula`) VALUES
 ('SMX1A', 'A301'),
 ('SMX2A', 'A302');
 
-DROP TABLE IF EXISTS `historic_estudiants`;
-CREATE TABLE IF NOT EXISTS `historic_estudiants` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `historic_estudiants`
+--
+
+CREATE TABLE `historic_estudiants` (
+  `id` int(11) NOT NULL,
   `nia` int(11) NOT NULL,
   `nom_cicle` varchar(256) NOT NULL,
   `finalitzat` tinyint(1) NOT NULL,
   `nota_final` decimal(10,0) DEFAULT NULL,
   `data_inici` date NOT NULL,
-  `data_fi` date DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_niaes` (`nia`),
-  KEY `fk_nomciclee` (`nom_cicle`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `data_fi` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `historic_estudiants`
+--
 
 INSERT INTO `historic_estudiants` (`id`, `nia`, `nom_cicle`, `finalitzat`, `nota_final`, `data_inici`, `data_fi`) VALUES
 (1, 10001, 'ESO', 1, 8, '2019-09-01', '2023-06-30'),
@@ -423,18 +526,25 @@ INSERT INTO `historic_estudiants` (`id`, `nia`, `nom_cicle`, `finalitzat`, `nota
 (9, 10009, 'FP Bàsica', 1, 6, '2022-09-01', '2023-06-30'),
 (10, 10010, 'Cicle Serveis', 0, NULL, '2023-09-01', NULL);
 
-DROP TABLE IF EXISTS `historic_fct`;
-CREATE TABLE IF NOT EXISTS `historic_fct` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `historic_fct`
+--
+
+CREATE TABLE `historic_fct` (
+  `id` int(11) NOT NULL,
   `nia` int(11) NOT NULL,
   `empreses` varchar(256) NOT NULL,
   `hores` int(11) NOT NULL,
   `finalitzat` tinyint(1) NOT NULL,
   `observacions` varchar(256) NOT NULL,
-  `incidencies` varchar(256) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_niah` (`nia`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `incidencies` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `historic_fct`
+--
 
 INSERT INTO `historic_fct` (`id`, `nia`, `empreses`, `hores`, `finalitzat`, `observacions`, `incidencies`) VALUES
 (1, 10003, 'Empresa C', 120, 0, 'Inici de pràctiques', ''),
@@ -448,17 +558,24 @@ INSERT INTO `historic_fct` (`id`, `nia`, `empreses`, `hores`, `finalitzat`, `obs
 (9, 10004, 'Empresa L', 150, 1, 'Pràctiques acabades', ''),
 (10, 10006, 'Empresa M', 200, 0, 'Pràctiques en curs', 'Falta supervisió');
 
-DROP TABLE IF EXISTS `historic_professors`;
-CREATE TABLE IF NOT EXISTS `historic_professors` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `historic_professors`
+--
+
+CREATE TABLE `historic_professors` (
+  `id` int(11) NOT NULL,
   `codi_prof` varchar(20) NOT NULL,
   `tipus` varchar(50) NOT NULL,
   `motius` varchar(125) NOT NULL,
   `justificat` tinyint(1) NOT NULL,
-  `justificant` varchar(256) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_codipr` (`codi_prof`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `justificant` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `historic_professors`
+--
 
 INSERT INTO `historic_professors` (`id`, `codi_prof`, `tipus`, `motius`, `justificat`, `justificant`) VALUES
 (1, 'PROF001', 'Baixa', 'Malaltia', 1, 'Informe mèdic'),
@@ -472,14 +589,21 @@ INSERT INTO `historic_professors` (`id`, `codi_prof`, `tipus`, `motius`, `justif
 (9, 'PROF009', 'Retard', 'Transport públic', 0, ''),
 (10, 'PROF010', 'Baixa', 'Malaltia', 1, 'Informe mèdic');
 
-DROP TABLE IF EXISTS `logs_consultes`;
-CREATE TABLE IF NOT EXISTS `logs_consultes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `logs_consultes`
+--
+
+CREATE TABLE `logs_consultes` (
+  `id` int(11) NOT NULL,
   `token` int(11) NOT NULL,
-  `consulta` varchar(256) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_token` (`token`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `consulta` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `logs_consultes`
+--
 
 INSERT INTO `logs_consultes` (`id`, `token`, `consulta`) VALUES
 (1, 1, 'Visualizó datos del estudiante 10001'),
@@ -508,16 +632,23 @@ INSERT INTO `logs_consultes` (`id`, `token`, `consulta`) VALUES
 (24, 24, 'Descargó informe de asistencia grupo 1rB'),
 (25, 25, 'Consultó horario de DAW1A');
 
-DROP TABLE IF EXISTS `logs_login`;
-CREATE TABLE IF NOT EXISTS `logs_login` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `logs_login`
+--
+
+CREATE TABLE `logs_login` (
+  `id` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
   `ip` int(12) NOT NULL,
   `login` tinyint(1) NOT NULL,
-  `data` datetime NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `fk_iduserl` (`id_user`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `data` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `logs_login`
+--
 
 INSERT INTO `logs_login` (`id`, `id_user`, `ip`, `login`, `data`) VALUES
 (1, 1, 2147483647, 1, '2025-11-20 08:15:00'),
@@ -544,10 +675,71 @@ INSERT INTO `logs_login` (`id`, `id_user`, `ip`, `login`, `data`) VALUES
 (22, 22, 2147483647, 0, '2025-11-20 10:00:00'),
 (23, 23, 2147483647, 1, '2025-11-20 10:05:00'),
 (24, 24, 2147483647, 1, '2025-11-20 10:10:00'),
-(25, 25, 2147483647, 0, '2025-11-20 10:15:00');
+(25, 25, 2147483647, 0, '2025-11-20 10:15:00'),
+(26, 12, 2130706433, 1, '2026-04-01 12:15:59'),
+(27, 12, 2130706433, 1, '2026-04-01 12:16:07'),
+(28, 12, 2130706433, 1, '2026-04-01 12:16:41'),
+(29, 12, 2147483647, 1, '2026-04-01 12:17:38'),
+(30, 12, 2130706433, 1, '2026-04-01 12:21:32'),
+(31, 12, 2130706433, 1, '2026-04-01 12:22:31'),
+(32, 12, 2147483647, 1, '2026-04-01 12:22:42'),
+(33, 12, 2130706433, 1, '2026-04-01 12:24:44'),
+(34, 12, 2147483647, 1, '2026-04-01 12:25:31'),
+(35, 12, 2147483647, 1, '2026-04-01 12:26:17'),
+(36, 12, 2147483647, 1, '2026-04-01 13:09:21'),
+(37, 12, 2147483647, 1, '2026-04-01 13:09:48'),
+(38, 12, 2147483647, 1, '2026-04-01 13:35:29'),
+(39, 12, 2147483647, 1, '2026-04-01 14:42:58'),
+(40, 12, 2147483647, 1, '2026-04-01 14:43:57'),
+(41, 10, 2147483647, 1, '2026-04-01 14:52:15'),
+(42, 10, 2147483647, 1, '2026-04-03 19:07:20'),
+(43, 10, 2147483647, 1, '2026-04-03 19:08:50'),
+(44, 10, 2147483647, 1, '2026-04-03 19:13:20'),
+(45, 10, 2147483647, 1, '2026-04-03 19:14:38'),
+(46, 10, 2147483647, 1, '2026-04-03 19:39:51'),
+(47, 10, 2147483647, 1, '2026-04-03 19:40:28'),
+(48, 10, 2147483647, 1, '2026-04-03 19:40:49'),
+(49, 10, 2147483647, 1, '2026-04-03 19:42:06'),
+(50, 10, 2147483647, 1, '2026-04-03 19:44:52'),
+(51, 10, 2147483647, 1, '2026-04-03 19:46:23'),
+(52, 10, 2147483647, 1, '2026-04-03 19:51:49'),
+(53, 10, 2147483647, 1, '2026-04-03 19:55:50'),
+(54, 12, 2147483647, 1, '2026-04-03 20:00:41'),
+(55, 12, 2147483647, 1, '2026-04-03 20:01:27'),
+(56, 12, 2147483647, 1, '2026-04-03 20:02:04');
 
-DROP TABLE IF EXISTS `persones`;
-CREATE TABLE IF NOT EXISTS `persones` (
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `periodes_avaluacio`
+--
+
+CREATE TABLE `periodes_avaluacio` (
+  `id` int(11) NOT NULL,
+  `trimestre` tinyint(1) NOT NULL COMMENT '1, 2 o 3',
+  `curs` varchar(9) NOT NULL COMMENT 'p.ex. 2026-2027',
+  `obert` tinyint(1) NOT NULL DEFAULT 0,
+  `data_obertura` datetime DEFAULT NULL,
+  `data_tancament` datetime DEFAULT NULL,
+  `obert_per` varchar(9) DEFAULT NULL COMMENT 'dni del cap d estudis'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `periodes_avaluacio`
+--
+
+INSERT INTO `periodes_avaluacio` (`id`, `trimestre`, `curs`, `obert`, `data_obertura`, `data_tancament`, `obert_per`) VALUES
+(1, 1, '2026-2027', 0, '2026-04-03 19:55:54', '2026-04-03 19:56:07', '11223344K'),
+(2, 2, '2026-2027', 0, NULL, NULL, NULL),
+(3, 3, '2026-2027', 0, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `persones`
+--
+
+CREATE TABLE `persones` (
   `dni` varchar(9) NOT NULL,
   `nom` varchar(25) NOT NULL,
   `cognom` varchar(50) NOT NULL,
@@ -560,43 +752,49 @@ CREATE TABLE IF NOT EXISTS `persones` (
   `telf_fix` int(9) NOT NULL,
   `email` varchar(50) NOT NULL,
   `ruta_foto` varchar(125) NOT NULL,
-  PRIMARY KEY (`dni`),
-  KEY `dni` (`dni`)
+  `rol` enum('professor','alumne','director','administrador') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `persones` (`dni`, `nom`, `cognom`, `data_naix`, `poblacio`, `codi_postal`, `nacionalitat`, `municipi_naix`, `telf_mob`, `telf_fix`, `email`, `ruta_foto`) VALUES
-('10111213U', 'Biel', 'Pascual Serra', '2005-08-02', 'Lleida', 25001, 'Espanyola', 'Lleida', 690112233, 973112233, 'biel.pascual@alumne.com', 'img/alum09.jpg'),
-('11223344K', 'Eva', 'Torres Prat', '1987-06-14', 'Manresa', 8240, 'Espanyola', 'Manresa', 611223344, 938223344, 'eva.torres@centre.com', 'img/prof10.jpg'),
-('12131415V', 'Emma', 'Vidal Torres', '2006-01-30', 'Manresa', 8240, 'Espanyola', 'Manresa', 691223344, 938223344, 'emma.vidal@alumne.com', 'img/alum10.jpg'),
-('12345678A', 'Marc', 'Serra Puig', '1980-04-12', 'Barcelona', 8001, 'Espanyola', 'Barcelona', 612345678, 934567890, 'marc.serra@centre.com', 'img/prof01.jpg'),
-('13141516W', 'Joan', 'Garriga Pons', '1970-05-11', 'Barcelona', 8002, 'Espanyola', 'Barcelona', 612334455, 934334455, 'joan.garriga@admin.com', 'img/admin01.jpg'),
-('14151617X', 'Rosa', 'Molina Casals', '1968-10-08', 'Sabadell', 8203, 'Espanyola', 'Sabadell', 623445566, 937445566, 'rosa.molina@admin.com', 'img/admin02.png'),
-('15161718Y', 'Albert', 'Ferrer Dalmau', '1972-01-27', 'Terrassa', 8222, 'Espanyola', 'Terrassa', 634556677, 937556677, 'albert.ferrer@admin.com', 'img/admin03.jpg'),
-('16171819Z', 'Sílvia', 'Guardiola Vives', '1974-03-19', 'Girona', 17001, 'Espanyola', 'Girona', 645667788, 972667788, 'silvia.guardiola@admin.com', 'img/admin04.jpg'),
-('17181920A', 'Ramon', 'Casals Vidal', '1969-09-03', 'Reus', 43201, 'Espanyola', 'Reus', 656778899, 977778899, 'ramon.casals@admin.com', 'img/admin05.jpg'),
-('18192021B', 'Teresa', 'Roca Gallart', '1973-11-29', 'Lleida', 25001, 'Espanyola', 'Lleida', 667889900, 973889900, 'teresa.roca@admin.com', 'img/admin06.jpg'),
-('19202122C', 'Francesc', 'Alba Puig', '1971-02-14', 'Manresa', 8240, 'Espanyola', 'Manresa', 678990011, 938990011, 'francesc.alba@admin.com', 'img/admin07.jpg'),
-('20212223D', 'Helena', 'Vallès Mora', '1967-07-22', 'Badalona', 8911, 'Espanyola', 'Badalona', 689001122, 935001122, 'helena.valles@admin.com', 'img/admin08.jpg'),
-('21222324E', 'Ricard', 'Solé Font', '1970-04-06', 'Mataró', 8301, 'Espanyola', 'Mataró', 690112244, 937112244, 'ricard.sole@admin.com', 'img/admin09.jpg'),
-('22232425F', 'Lluïsa', 'Padró Estany', '1968-12-13', 'Cornellà', 8940, 'Espanyola', 'Cornellà', 691223355, 933223355, 'lluisa.padro@admin.com', 'img/admin10.jpg'),
-('22334455L', 'Pol', 'Gómez Ruiz', '2005-02-18', 'Barcelona', 8015, 'Espanyola', 'Barcelona', 612112233, 934112233, 'pol.gomez@alumne.com', 'img/alum01.jpg'),
-('23456789B', 'Anna', 'Ribas Soler', '1975-09-23', 'Girona', 17001, 'Espanyola', 'Girona', 622334455, 972334455, 'anna.ribas@centre.com', 'img/prof02.jpg'),
-('33445566M', 'Aina', 'Martí Soler', '2006-11-05', 'Cornellà', 8940, 'Espanyola', 'Cornellà', 623221144, 933221144, 'aina.marti@alumne.com', 'img/alum02.jpg'),
-('34567890C', 'Jordi', 'Casas Vila', '1982-01-15', 'Tarragona', 43001, 'Espanyola', 'Tarragona', 633221144, 977221144, 'jordi.casas@centre.com', 'img/prof03.jpg'),
-('44556677N', 'Nil', 'Costa Riba', '2004-07-23', 'Sabadell', 8201, 'Espanyola', 'Sabadell', 634443322, 937443322, 'nil.costa@alumne.com', 'img/alum03.jpg'),
-('45678901D', 'Marta', 'Puig Ferrer', '1978-11-04', 'Lleida', 25001, 'Espanyola', 'Lleida', 644552211, 973552211, 'marta.puig@centre.com', 'img/prof04.jpg'),
-('55548601J', 'Nami', 'Diakite', '0000-00-00', '-', 0, '-', '-', 111111111, 111111111, 'admin@gmail.com', '-'),
-('55667788P', 'Laia', 'Romero Gil', '2005-09-14', 'Terrassa', 8222, 'Espanyola', 'Terrassa', 645554433, 937554433, 'laia.romero@alumne.com', 'img/alum04.jpg'),
-('56789012E', 'Pere', 'Anton López', '1985-03-29', 'Badalona', 8911, 'Espanyola', 'Badalona', 655441122, 935441122, 'pere.anton@centre.com', 'img/prof05.jpg'),
-('66778899Q', 'Jan', 'Navarro Puig', '2006-03-09', 'Badalona', 8911, 'Espanyola', 'Badalona', 656665544, 935665544, 'jan.navarro@alumne.com', 'img/alum05.jpg'),
-('67890123F', 'Laura', 'Sánchez Mora', '1979-07-08', 'Sabadell', 8201, 'Espanyola', 'Sabadell', 666332211, 937332211, 'laura.sanchez@centre.com', 'img/prof06.jpg'),
-('77889900R', 'Clara', 'Ortiz Vila', '2004-12-27', 'Girona', 17001, 'Espanyola', 'Girona', 667776655, 972776655, 'clara.ortiz@alumne.com', 'img/alum06.jpg'),
-('78901234G', 'Carles', 'Domènech Roca', '1983-12-19', 'Terrassa', 8222, 'Espanyola', 'Terrassa', 677221133, 937221133, 'carles.domenech@centre.com', 'img/prof07.jpg'),
-('88990011S', 'Eric', 'Soler Llorens', '2005-04-11', 'Mataró', 8301, 'Espanyola', 'Mataró', 678887766, 937887766, 'eric.soler@alumne.com', 'img/alum07.jpg'),
-('89012345H', 'Núria', 'Pérez Vidal', '1981-05-17', 'Mataró', 8301, 'Espanyola', 'Mataró', 688441122, 937441122, 'nuria.perez@centre.com', 'img/prof08.jpg'),
-('90123456J', 'Xavier', 'Font Mir', '1974-10-30', 'Reus', 43201, 'Espanyola', 'Reus', 699554433, 977554433, 'xavier.font@centre.com', 'img/prof09.jpg'),
-('99001122T', 'Iris', 'Reig Amat', '2006-10-21', 'Reus', 43201, 'Espanyola', 'Reus', 689998877, 977998877, 'iris.reig@alumne.com', 'img/alum08.jpg');
-DROP TRIGGER IF EXISTS `generarUsuari`;
+--
+-- Bolcament de dades per a la taula `persones`
+--
+
+INSERT INTO `persones` (`dni`, `nom`, `cognom`, `data_naix`, `poblacio`, `codi_postal`, `nacionalitat`, `municipi_naix`, `telf_mob`, `telf_fix`, `email`, `ruta_foto`, `rol`) VALUES
+('10111213U', 'Biel', 'Pascual Serra', '2005-08-02', 'Lleida', 25001, 'Espanyola', 'Lleida', 690112233, 973112233, 'biel.pascual@alumne.com', 'img/alum09.jpg', NULL),
+('11223344K', 'Eva', 'Torres Prat', '1987-06-14', 'Manresa', 8240, 'Espanyola', 'Manresa', 611223344, 938223344, 'eva.torres@centre.com', 'img/prof10.jpg', 'director'),
+('12131415V', 'Emma', 'Vidal Torres', '2006-01-30', 'Manresa', 8240, 'Espanyola', 'Manresa', 691223344, 938223344, 'emma.vidal@alumne.com', 'img/alum10.jpg', NULL),
+('12345678A', 'Marc', 'Serra Puig', '1980-04-12', 'Barcelona', 8001, 'Espanyola', 'Barcelona', 612345678, 934567890, 'marc.serra@centre.com', 'img/prof01.jpg', NULL),
+('13141516W', 'Joan', 'Garriga Pons', '1970-05-11', 'Barcelona', 8002, 'Espanyola', 'Barcelona', 612334455, 934334455, 'joan.garriga@admin.com', 'img/admin01.jpg', NULL),
+('14151617X', 'Rosa', 'Molina Casals', '1968-10-08', 'Sabadell', 8203, 'Espanyola', 'Sabadell', 623445566, 937445566, 'rosa.molina@admin.com', 'img/admin02.png', NULL),
+('15161718Y', 'Albert', 'Ferrer Dalmau', '1972-01-27', 'Terrassa', 8222, 'Espanyola', 'Terrassa', 634556677, 937556677, 'albert.ferrer@admin.com', 'img/admin03.jpg', 'administrador'),
+('16171819Z', 'Sílvia', 'Guardiola Vives', '1974-03-19', 'Girona', 17001, 'Espanyola', 'Girona', 645667788, 972667788, 'silvia.guardiola@admin.com', 'img/admin04.jpg', NULL),
+('17181920A', 'Ramon', 'Casals Vidal', '1969-09-03', 'Reus', 43201, 'Espanyola', 'Reus', 656778899, 977778899, 'ramon.casals@admin.com', 'img/admin05.jpg', NULL),
+('18192021B', 'Teresa', 'Roca Gallart', '1973-11-29', 'Lleida', 25001, 'Espanyola', 'Lleida', 667889900, 973889900, 'teresa.roca@admin.com', 'img/admin06.jpg', NULL),
+('19202122C', 'Francesc', 'Alba Puig', '1971-02-14', 'Manresa', 8240, 'Espanyola', 'Manresa', 678990011, 938990011, 'francesc.alba@admin.com', 'img/admin07.jpg', NULL),
+('20212223D', 'Helena', 'Vallès Mora', '1967-07-22', 'Badalona', 8911, 'Espanyola', 'Badalona', 689001122, 935001122, 'helena.valles@admin.com', 'img/admin08.jpg', NULL),
+('21222324E', 'Ricard', 'Solé Font', '1970-04-06', 'Mataró', 8301, 'Espanyola', 'Mataró', 690112244, 937112244, 'ricard.sole@admin.com', 'img/admin09.jpg', NULL),
+('22232425F', 'Lluïsa', 'Padró Estany', '1968-12-13', 'Cornellà', 8940, 'Espanyola', 'Cornellà', 691223355, 933223355, 'lluisa.padro@admin.com', 'img/admin10.jpg', NULL),
+('22334455L', 'Pol', 'Gómez Ruiz', '2005-02-18', 'Barcelona', 8015, 'Espanyola', 'Barcelona', 612112233, 934112233, 'pol.gomez@alumne.com', 'img/alum01.jpg', NULL),
+('23456789B', 'Anna', 'Ribas Soler', '1975-09-23', 'Girona', 17001, 'Espanyola', 'Girona', 622334455, 972334455, 'anna.ribas@centre.com', 'img/prof02.jpg', NULL),
+('33445566M', 'Aina', 'Martí Soler', '2006-11-05', 'Cornellà', 8940, 'Espanyola', 'Cornellà', 623221144, 933221144, 'aina.marti@alumne.com', 'img/alum02.jpg', 'alumne'),
+('34567890C', 'Jordi', 'Casas Vila', '1982-01-15', 'Tarragona', 43001, 'Espanyola', 'Tarragona', 633221144, 977221144, 'jordi.casas@centre.com', 'img/prof03.jpg', NULL),
+('44556677N', 'Nil', 'Costa Riba', '2004-07-23', 'Sabadell', 8201, 'Espanyola', 'Sabadell', 634443322, 937443322, 'nil.costa@alumne.com', 'img/alum03.jpg', NULL),
+('45678901D', 'Marta', 'Puig Ferrer', '1978-11-04', 'Lleida', 25001, 'Espanyola', 'Lleida', 644552211, 973552211, 'marta.puig@centre.com', 'img/prof04.jpg', NULL),
+('55548601J', 'Nami', 'Diakite', '0000-00-00', '-', 0, '-', '-', 111111111, 111111111, 'admin@gmail.com', '-', NULL),
+('55667788P', 'Laia', 'Romero Gil', '2005-09-14', 'Terrassa', 8222, 'Espanyola', 'Terrassa', 645554433, 937554433, 'laia.romero@alumne.com', 'img/alum04.jpg', NULL),
+('56789012E', 'Pere', 'Anton López', '1985-03-29', 'Badalona', 8911, 'Espanyola', 'Badalona', 655441122, 935441122, 'pere.anton@centre.com', 'img/prof05.jpg', NULL),
+('66778899Q', 'Jan', 'Navarro Puig', '2006-03-09', 'Badalona', 8911, 'Espanyola', 'Badalona', 656665544, 935665544, 'jan.navarro@alumne.com', 'img/alum05.jpg', NULL),
+('67890123F', 'Laura', 'Sánchez Mora', '1979-07-08', 'Sabadell', 8201, 'Espanyola', 'Sabadell', 666332211, 937332211, 'laura.sanchez@centre.com', 'img/prof06.jpg', NULL),
+('77889900R', 'Clara', 'Ortiz Vila', '2004-12-27', 'Girona', 17001, 'Espanyola', 'Girona', 667776655, 972776655, 'clara.ortiz@alumne.com', 'img/alum06.jpg', NULL),
+('78901234G', 'Carles', 'Domènech Roca', '1983-12-19', 'Terrassa', 8222, 'Espanyola', 'Terrassa', 677221133, 937221133, 'carles.domenech@centre.com', 'img/prof07.jpg', NULL),
+('88990011S', 'Eric', 'Soler Llorens', '2005-04-11', 'Mataró', 8301, 'Espanyola', 'Mataró', 678887766, 937887766, 'eric.soler@alumne.com', 'img/alum07.jpg', NULL),
+('89012345H', 'Núria', 'Pérez Vidal', '1981-05-17', 'Mataró', 8301, 'Espanyola', 'Mataró', 688441122, 937441122, 'nuria.perez@centre.com', 'img/prof08.jpg', NULL),
+('90123456J', 'Xavier', 'Font Mir', '1974-10-30', 'Reus', 43201, 'Espanyola', 'Reus', 699554433, 977554433, 'xavier.font@centre.com', 'img/prof09.jpg', NULL),
+('99001122T', 'Iris', 'Reig Amat', '2006-10-21', 'Reus', 43201, 'Espanyola', 'Reus', 689998877, 977998877, 'iris.reig@alumne.com', 'img/alum08.jpg', NULL);
+
+--
+-- Disparadors `persones`
+--
 DELIMITER $$
 CREATE TRIGGER `generarUsuari` AFTER INSERT ON `persones` FOR EACH ROW BEGIN
     DECLARE usernameBase VARCHAR(50);
@@ -625,7 +823,6 @@ CREATE TRIGGER `generarUsuari` AFTER INSERT ON `persones` FOR EACH ROW BEGIN
 END
 $$
 DELIMITER ;
-DROP TRIGGER IF EXISTS `valid_email`;
 DELIMITER $$
 CREATE TRIGGER `valid_email` BEFORE INSERT ON `persones` FOR EACH ROW BEGIN
 	IF NEW.email NOT REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}$' THEN 
@@ -636,14 +833,21 @@ END
 $$
 DELIMITER ;
 
-DROP TABLE IF EXISTS `professors`;
-CREATE TABLE IF NOT EXISTS `professors` (
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `professors`
+--
+
+CREATE TABLE `professors` (
   `codi_prof` varchar(20) NOT NULL,
   `dni` varchar(9) NOT NULL,
-  `dedicacio` enum('professor','tutor de grup','tutor FCT','') NOT NULL,
-  PRIMARY KEY (`codi_prof`),
-  KEY `fk_dniprof` (`dni`)
+  `dedicacio` enum('professor','tutor de grup','tutor FCT','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `professors`
+--
 
 INSERT INTO `professors` (`codi_prof`, `dni`, `dedicacio`) VALUES
 ('PROF001', '12345678A', 'professor'),
@@ -657,15 +861,21 @@ INSERT INTO `professors` (`codi_prof`, `dni`, `dedicacio`) VALUES
 ('PROF009', '90123456J', 'professor'),
 ('PROF010', '11223344K', 'tutor de grup');
 
-DROP TABLE IF EXISTS `prof_assignatura`;
-CREATE TABLE IF NOT EXISTS `prof_assignatura` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `prof_assignatura`
+--
+
+CREATE TABLE `prof_assignatura` (
+  `id` int(11) NOT NULL,
   `id_codiprof` varchar(20) NOT NULL,
-  `id_assignatura` varchar(25) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_codiprofe` (`id_codiprof`),
-  KEY `fk_idassignatura` (`id_assignatura`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `id_assignatura` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `prof_assignatura`
+--
 
 INSERT INTO `prof_assignatura` (`id`, `id_codiprof`, `id_assignatura`) VALUES
 (1, 'PROF001', 'ASIG001'),
@@ -679,16 +889,23 @@ INSERT INTO `prof_assignatura` (`id`, `id_codiprof`, `id_assignatura`) VALUES
 (9, 'PROF009', 'ASIG009'),
 (10, 'PROF010', 'ASIG010');
 
-DROP TABLE IF EXISTS `ras`;
-CREATE TABLE IF NOT EXISTS `ras` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `ras`
+--
+
+CREATE TABLE `ras` (
+  `id` int(11) NOT NULL,
   `ra` int(11) NOT NULL,
   `codi_assignatura` varchar(25) NOT NULL,
   `data_inici` date NOT NULL,
-  `data_fin` date NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_assignaturaid` (`codi_assignatura`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `data_fin` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `ras`
+--
 
 INSERT INTO `ras` (`id`, `ra`, `codi_assignatura`, `data_inici`, `data_fin`) VALUES
 (1, 1, 'ASIG001', '2023-09-01', '2023-09-30'),
@@ -705,7 +922,10 @@ INSERT INTO `ras` (`id`, `ra`, `codi_assignatura`, `data_inici`, `data_fin`) VAL
 (12, 4, 'ASIG002', '2023-09-01', '2023-09-30'),
 (13, 3, 'ASIG001', '2023-09-01', '2023-09-30'),
 (14, 2, 'ASIG002', '2023-09-01', '2023-09-30');
-DROP TRIGGER IF EXISTS `verificarRa`;
+
+--
+-- Disparadors `ras`
+--
 DELIMITER $$
 CREATE TRIGGER `verificarRa` BEFORE INSERT ON `ras` FOR EACH ROW BEGIN
     DECLARE exist INT DEFAULT 0;
@@ -723,16 +943,23 @@ END
 $$
 DELIMITER ;
 
-DROP TABLE IF EXISTS `sessions`;
-CREATE TABLE IF NOT EXISTS `sessions` (
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `sessions`
+--
+
+CREATE TABLE `sessions` (
   `token` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
   `username` varchar(11) NOT NULL,
   `data_inici` date NOT NULL,
-  `data_fin` date DEFAULT NULL,
-  PRIMARY KEY (`token`),
-  KEY `fk_iduser` (`id_user`)
+  `data_fin` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `sessions`
+--
 
 INSERT INTO `sessions` (`token`, `id_user`, `username`, `data_inici`, `data_fin`) VALUES
 (1, 1, 'MarcS', '2025-11-01', '2025-11-01'),
@@ -761,17 +988,22 @@ INSERT INTO `sessions` (`token`, `id_user`, `username`, `data_inici`, `data_fin`
 (24, 24, 'SílviaG', '2025-11-24', NULL),
 (25, 25, 'RamonC', '2025-11-25', '2025-11-25');
 
-DROP TABLE IF EXISTS `usuaris`;
-CREATE TABLE IF NOT EXISTS `usuaris` (
-  `id_user` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `usuaris`
+--
+
+CREATE TABLE `usuaris` (
+  `id_user` int(11) NOT NULL,
   `dni` varchar(9) NOT NULL,
   `username` varchar(11) NOT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_user`),
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `dni` (`dni`),
-  KEY `fk_usuaridni` (`dni`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `password` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `usuaris`
+--
 
 INSERT INTO `usuaris` (`id_user`, `dni`, `username`, `password`) VALUES
 (1, '12345678A', 'MarcS', NULL),
@@ -783,7 +1015,7 @@ INSERT INTO `usuaris` (`id_user`, `dni`, `username`, `password`) VALUES
 (7, '78901234G', 'CarlesD', NULL),
 (8, '89012345H', 'NúriaP', NULL),
 (9, '90123456J', 'XavierF', NULL),
-(10, '11223344K', 'EvaT', NULL),
+(10, '11223344K', 'EvaT', '$2y$10$.pdrW2dT1f0gkDYiuMwfcua8vps4/jr850cBKmifFsDzgWLPPHd/a'),
 (11, '22334455L', 'PolG', NULL),
 (12, '33445566M', 'AinaM', '$2y$10$KcYFOrHYmVbK06FwxSgHfOcMD32yIn2Rx97LIueYsg5yqSj.z389K'),
 (13, '44556677N', 'NilC', NULL),
@@ -804,71 +1036,410 @@ INSERT INTO `usuaris` (`id_user`, `dni`, `username`, `password`) VALUES
 (28, '20212223D', 'HelenaV', NULL),
 (29, '21222324E', 'RicardS', 'e88794475313fbacc133'),
 (30, '22232425F', 'LluïsaP', NULL),
-(31, '55548601J', 'ndiakite', NULL);
+(31, '55548601J', 'ndiakite', '$2y$10$KgehDN6QACvuFua9Lc7YAe58oIjRIXeKWZuhRnBaey0TcbDW.WEOG');
 
+--
+-- Índexs per a les taules bolcades
+--
 
+--
+-- Índexs per a la taula `administradors`
+--
+ALTER TABLE `administradors`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_admindni` (`dni`),
+  ADD KEY `fk_adminuser` (`id_user`);
+
+--
+-- Índexs per a la taula `admin_centre`
+--
+ALTER TABLE `admin_centre`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_adminid` (`admin_id`),
+  ADD KEY `fk_codicentre` (`codi_centre`);
+
+--
+-- Índexs per a la taula `assignatures`
+--
+ALTER TABLE `assignatures`
+  ADD PRIMARY KEY (`codi`);
+
+--
+-- Índexs per a la taula `assignatures_cicle`
+--
+ALTER TABLE `assignatures_cicle`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_nomcicle` (`nom_cicle`),
+  ADD KEY `fk_cicleassignatura` (`id_assignatura`);
+
+--
+-- Índexs per a la taula `assistencia`
+--
+ALTER TABLE `assistencia`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_codiprofeass` (`codi_prof`),
+  ADD KEY `fk_codiass` (`id_assignatura`),
+  ADD KEY `fk_nomgrup` (`nom_grup`);
+
+--
+-- Índexs per a la taula `centres`
+--
+ALTER TABLE `centres`
+  ADD PRIMARY KEY (`codi`);
+
+--
+-- Índexs per a la taula `cicles`
+--
+ALTER TABLE `cicles`
+  ADD PRIMARY KEY (`nom`);
+
+--
+-- Índexs per a la taula `contractes`
+--
+ALTER TABLE `contractes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_codip` (`codi_prof`),
+  ADD KEY `fk_codic` (`codi_centre`);
+
+--
+-- Índexs per a la taula `directiva`
+--
+ALTER TABLE `directiva`
+  ADD PRIMARY KEY (`rol`),
+  ADD KEY `fk_codiprof` (`codi_prof`);
+
+--
+-- Índexs per a la taula `estudiants`
+--
+ALTER TABLE `estudiants`
+  ADD PRIMARY KEY (`nia`),
+  ADD KEY `fk_dnies` (`dni`),
+  ADD KEY `fk_nomgrupes` (`nom_grup`),
+  ADD KEY `fk_cicles` (`nom_cicle`) USING BTREE;
+
+--
+-- Índexs per a la taula `estudiants_ras`
+--
+ALTER TABLE `estudiants_ras`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_idra` (`id_ra`),
+  ADD KEY `fk_niaa` (`nia`);
+
+--
+-- Índexs per a la taula `grup_classe`
+--
+ALTER TABLE `grup_classe`
+  ADD PRIMARY KEY (`nom`);
+
+--
+-- Índexs per a la taula `historic_estudiants`
+--
+ALTER TABLE `historic_estudiants`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_niaes` (`nia`),
+  ADD KEY `fk_nomciclee` (`nom_cicle`);
+
+--
+-- Índexs per a la taula `historic_fct`
+--
+ALTER TABLE `historic_fct`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_niah` (`nia`);
+
+--
+-- Índexs per a la taula `historic_professors`
+--
+ALTER TABLE `historic_professors`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_codipr` (`codi_prof`);
+
+--
+-- Índexs per a la taula `logs_consultes`
+--
+ALTER TABLE `logs_consultes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_token` (`token`);
+
+--
+-- Índexs per a la taula `logs_login`
+--
+ALTER TABLE `logs_login`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_iduserl` (`id_user`);
+
+--
+-- Índexs per a la taula `periodes_avaluacio`
+--
+ALTER TABLE `periodes_avaluacio`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_trimestre_curs` (`trimestre`,`curs`),
+  ADD KEY `fk_periode_persona` (`obert_per`);
+
+--
+-- Índexs per a la taula `persones`
+--
+ALTER TABLE `persones`
+  ADD PRIMARY KEY (`dni`),
+  ADD KEY `dni` (`dni`);
+
+--
+-- Índexs per a la taula `professors`
+--
+ALTER TABLE `professors`
+  ADD PRIMARY KEY (`codi_prof`),
+  ADD KEY `fk_dniprof` (`dni`);
+
+--
+-- Índexs per a la taula `prof_assignatura`
+--
+ALTER TABLE `prof_assignatura`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_codiprofe` (`id_codiprof`),
+  ADD KEY `fk_idassignatura` (`id_assignatura`);
+
+--
+-- Índexs per a la taula `ras`
+--
+ALTER TABLE `ras`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_assignaturaid` (`codi_assignatura`);
+
+--
+-- Índexs per a la taula `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`token`),
+  ADD KEY `fk_iduser` (`id_user`);
+
+--
+-- Índexs per a la taula `usuaris`
+--
+ALTER TABLE `usuaris`
+  ADD PRIMARY KEY (`id_user`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `dni` (`dni`),
+  ADD KEY `fk_usuaridni` (`dni`);
+
+--
+-- AUTO_INCREMENT per les taules bolcades
+--
+
+--
+-- AUTO_INCREMENT per la taula `administradors`
+--
+ALTER TABLE `administradors`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT per la taula `admin_centre`
+--
+ALTER TABLE `admin_centre`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT per la taula `assignatures_cicle`
+--
+ALTER TABLE `assignatures_cicle`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT per la taula `assistencia`
+--
+ALTER TABLE `assistencia`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT per la taula `contractes`
+--
+ALTER TABLE `contractes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT per la taula `estudiants_ras`
+--
+ALTER TABLE `estudiants_ras`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT per la taula `historic_estudiants`
+--
+ALTER TABLE `historic_estudiants`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT per la taula `historic_fct`
+--
+ALTER TABLE `historic_fct`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT per la taula `historic_professors`
+--
+ALTER TABLE `historic_professors`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT per la taula `logs_consultes`
+--
+ALTER TABLE `logs_consultes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT per la taula `logs_login`
+--
+ALTER TABLE `logs_login`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+
+--
+-- AUTO_INCREMENT per la taula `periodes_avaluacio`
+--
+ALTER TABLE `periodes_avaluacio`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT per la taula `prof_assignatura`
+--
+ALTER TABLE `prof_assignatura`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT per la taula `ras`
+--
+ALTER TABLE `ras`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT per la taula `usuaris`
+--
+ALTER TABLE `usuaris`
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- Restriccions per a les taules bolcades
+--
+
+--
+-- Restriccions per a la taula `administradors`
+--
 ALTER TABLE `administradors`
   ADD CONSTRAINT `fk_admindni` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_adminuser` FOREIGN KEY (`id_user`) REFERENCES `usuaris` (`id_user`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `admin_centre`
+--
 ALTER TABLE `admin_centre`
   ADD CONSTRAINT `fk_adminid` FOREIGN KEY (`admin_id`) REFERENCES `administradors` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_codicentre` FOREIGN KEY (`codi_centre`) REFERENCES `centres` (`codi`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `assignatures_cicle`
+--
 ALTER TABLE `assignatures_cicle`
   ADD CONSTRAINT `fk_cicleassignatura` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_nomcicle` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `assistencia`
+--
 ALTER TABLE `assistencia`
   ADD CONSTRAINT `fk_codiass` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_codiprofeass` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_nomgrup` FOREIGN KEY (`nom_grup`) REFERENCES `grup_classe` (`nom`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `contractes`
+--
 ALTER TABLE `contractes`
   ADD CONSTRAINT `fk_codic` FOREIGN KEY (`codi_centre`) REFERENCES `centres` (`codi`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_codip` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `directiva`
+--
 ALTER TABLE `directiva`
   ADD CONSTRAINT `fk_codiprof` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `estudiants`
+--
 ALTER TABLE `estudiants`
   ADD CONSTRAINT `fk_ciclees` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_dnies` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_nomgrupes` FOREIGN KEY (`nom_grup`) REFERENCES `grup_classe` (`nom`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `estudiants_ras`
+--
 ALTER TABLE `estudiants_ras`
   ADD CONSTRAINT `fk_idra` FOREIGN KEY (`id_ra`) REFERENCES `ras` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_niaa` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `historic_estudiants`
+--
 ALTER TABLE `historic_estudiants`
   ADD CONSTRAINT `fk_niaes` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_nomciclee` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `historic_fct`
+--
 ALTER TABLE `historic_fct`
   ADD CONSTRAINT `fk_niah` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `historic_professors`
+--
 ALTER TABLE `historic_professors`
   ADD CONSTRAINT `fk_codipr` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `logs_consultes`
+--
 ALTER TABLE `logs_consultes`
   ADD CONSTRAINT `fk_token` FOREIGN KEY (`token`) REFERENCES `sessions` (`token`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `logs_login`
+--
 ALTER TABLE `logs_login`
   ADD CONSTRAINT `fk_iduserl` FOREIGN KEY (`id_user`) REFERENCES `usuaris` (`id_user`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `periodes_avaluacio`
+--
+ALTER TABLE `periodes_avaluacio`
+  ADD CONSTRAINT `fk_periode_persona` FOREIGN KEY (`obert_per`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE;
+
+--
+-- Restriccions per a la taula `professors`
+--
 ALTER TABLE `professors`
   ADD CONSTRAINT `fk_dniprof` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `prof_assignatura`
+--
 ALTER TABLE `prof_assignatura`
   ADD CONSTRAINT `fk_codiprofe` FOREIGN KEY (`id_codiprof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_idassignatura` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `ras`
+--
 ALTER TABLE `ras`
   ADD CONSTRAINT `fk_assignaturaid` FOREIGN KEY (`codi_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `sessions`
+--
 ALTER TABLE `sessions`
   ADD CONSTRAINT `fk_iduser` FOREIGN KEY (`id_user`) REFERENCES `usuaris` (`id_user`) ON UPDATE CASCADE;
 
+--
+-- Restriccions per a la taula `usuaris`
+--
 ALTER TABLE `usuaris`
   ADD CONSTRAINT `fk_usuaridni` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE;
 COMMIT;
