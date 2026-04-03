@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class Form1
+Partial Class LogIn
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -38,13 +38,15 @@ Partial Class Form1
         Panel1.Controls.Add(lblPass)
         Panel1.Controls.Add(lblUser)
         Panel1.Controls.Add(txtUser)
+        Panel1.Dock = DockStyle.Fill
         Panel1.Location = New Point(0, 0)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(788, 438)
+        Panel1.Size = New Size(800, 450)
         Panel1.TabIndex = 0
         ' 
         ' btnContinue
         ' 
+        btnContinue.Anchor = AnchorStyles.None
         btnContinue.BackColor = SystemColors.ButtonHighlight
         btnContinue.Enabled = False
         btnContinue.ForeColor = SystemColors.ActiveCaptionText
@@ -57,6 +59,7 @@ Partial Class Form1
         ' 
         ' txtPass
         ' 
+        txtPass.Anchor = AnchorStyles.None
         txtPass.Location = New Point(267, 228)
         txtPass.Name = "txtPass"
         txtPass.Size = New Size(262, 27)
@@ -64,6 +67,7 @@ Partial Class Form1
         ' 
         ' lblPass
         ' 
+        lblPass.Anchor = AnchorStyles.None
         lblPass.AutoSize = True
         lblPass.Location = New Point(354, 194)
         lblPass.Name = "lblPass"
@@ -73,6 +77,7 @@ Partial Class Form1
         ' 
         ' lblUser
         ' 
+        lblUser.Anchor = AnchorStyles.None
         lblUser.AutoSize = True
         lblUser.Location = New Point(365, 120)
         lblUser.Name = "lblUser"
@@ -82,18 +87,20 @@ Partial Class Form1
         ' 
         ' txtUser
         ' 
+        txtUser.Anchor = AnchorStyles.None
         txtUser.Location = New Point(267, 154)
         txtUser.Name = "txtUser"
         txtUser.Size = New Size(262, 27)
         txtUser.TabIndex = 0
         ' 
-        ' Form1
+        ' LogIn
         ' 
         AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 450)
         Controls.Add(Panel1)
-        Name = "Form1"
+        Name = "LogIn"
+        StartPosition = FormStartPosition.CenterScreen
         Text = "login"
         Panel1.ResumeLayout(False)
         Panel1.PerformLayout()

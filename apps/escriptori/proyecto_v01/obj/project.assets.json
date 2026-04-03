@@ -858,23 +858,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\namin\\.nuget\\packages\\": {},
+    "C:\\Users\\asus\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\proyecto_v01.vbproj",
+      "projectUniqueName": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\proyecto_v01.vbproj",
       "projectName": "proyecto_v01",
-      "projectPath": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\proyecto_v01.vbproj",
-      "packagesPath": "C:\\Users\\namin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\obj\\",
+      "projectPath": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\proyecto_v01.vbproj",
+      "packagesPath": "C:\\Users\\asus\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\namin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\asus\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -947,7 +947,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   },

@@ -49,15 +49,21 @@ if($username===""||$password===""){
 }
 
 // Busquem l'usuari
-$stmt = $conn->prepare("SELECT password, u.dni, p.dni, p.rol 
+$stmt = $conn->prepare("SELECT u.id_user, u.password, u.dni, p.nom, p.cognom, p.rol 
                         FROM usuaris u 
                         INNER JOIN persones p ON p.dni = u.dni 
                         WHERE username=?");
+
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $stmt->store_result();
 
+//IP del cliente convertida
+$ip = ip2long($_SERVER["REMOTE_ADDR"] ?? "0.0.0.0");
+if ($ip === false) $ip = 0;
+
 if ($stmt->num_rows === 0) {
+    guardarLog($conn, 0, $ip, 0);
     echo json_encode([
         "pot_entrar" => false,
         "tipus_error" => "Usuari o contrasenya incorrectes"
@@ -65,19 +71,42 @@ if ($stmt->num_rows === 0) {
     exit;
 }
 
-$stmt->bind_result($password_hash_bd, $dni_u, $dni_p, $rol);
+
+$stmt->bind_result($id_user, $password_hash_bd, $dni, $nom, $cognom, $rol);
 $stmt->fetch();
+$stmt->close();
+
+if($password_hash_bd === null) {
+    guardarLog($conn, $id_user, $ip, 0);
+    echo json_encode(["pot_entrar" => false, 
+    "tipus_error" => "cuenta sin contraseña."]);
+    exit;
+}
 
 // Comprovem contrasenya
 if (password_verify($password, $password_hash_bd)) {
+    guardarLog($conn, $id_user, $ip, 1);
+    
     echo json_encode([
         "pot_entrar" => true,
-        "dni" => $dni_u,   
-        "rol" => (bool)$rol
+        "dni"    => $dni,   
+        "rol"    => $rol,    // "professor" | "alumne" | "director" | "administrador"
+        "nom"    => $nom,
+        "cognom" => $cognom
     ]);
 } else {
+    guardarLog($conn, $id_user, $ip, 0);
+
     echo json_encode([
         "pot_entrar" => false,
         "tipus_error" => "Usuari o contrasenya incorrectes"
     ]);
+}
+function guardarLog(mysqli $conn, int $id_user, int $ip, int $login): void {
+    if($id_user === 0) return;
+    $log = $conn->prepare("
+    INSERT INTO logs_login (id_user, ip, login) 
+    VALUES (?, ?, ?);");
+    $log->bind_param("iii", $id_user, $ip, $login);
+    $log->execute();
 }
