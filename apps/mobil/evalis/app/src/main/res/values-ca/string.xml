@@ -21,7 +21,10 @@
     <string name="inicio">Inici</string>
     <string name="favoritos">Favorits</string>
     <string name="perfil">Perfil</string>
-    <string name="profs">Professors</string>
+    <string name="profs_label">Professors</string>
+    <string name="prof_label">Professor/a</string>
+
+    <string name="email_label">Correu</string>
 
     <string name="menu">Menú</string>
     <string name="saludo">Hola, %1$s</string>
@@ -31,5 +34,8 @@
     <string name="tema_oscuro">Fosc</string>
     <string name="tema_sistema">Seguir sistema</string>
 
+    <string name="assignatures_label">Assignatures</string>
+    <string name="aula_label">aula</string>
 
+    <string name="button_label">Enrere</string>
 </resources>

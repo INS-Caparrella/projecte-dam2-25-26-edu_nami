@@ -1,7 +1,5 @@
-package com.example.evalis.models
+package com.example.evalis.ui.components
 
-import android.content.Intent
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -26,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.evalis.R
-import kotlin.reflect.KClass
 
 
 data class Option(
@@ -36,6 +33,7 @@ data class Option(
 
 object OptionsList {
     fun all(): List<Option> {
+
         return listOf(
             Option("Butlletí", R.drawable.prof_icon),
             Option("Els meus professors", R.drawable.butlleti_icon),

@@ -22,7 +22,10 @@
     <string name="inicio">Home</string>
     <string name="favoritos">Favorites</string>
     <string name="perfil">Profile</string>
-    <string name="profs">Profesores</string>
+    <string name="profs_label">Profesores</string>
+    <string name="prof_label">Teacher</string>
+
+    <string name="email_label">Email</string>
 
     <string name="menu">Menu</string>
     <string name="saludo">Hello, %1$s</string>
@@ -33,4 +36,8 @@
     <string name="tema_oscuro">Dark</string>
     <string name="tema_sistema">Follow system</string>
 
+    <string name="assignatures_label">Subjects</string>
+    <string name="aula_label">classroom</string>
+
+    <string name="button_label">Back</string>
 </resources>

@@ -37,6 +37,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.evalis.GestorSQLExternModern
 import com.example.evalis.R
@@ -46,7 +48,7 @@ import kotlin.concurrent.thread
 
 var isLoading by mutableStateOf(true)
 val profState = mutableStateListOf<Prof>()
-private const val BASE_URL = "http://10.252.70.110"
+private const val BASE_URL = "http://192.168.1.15"
 
 data class Prof(
     val id: String,
@@ -65,14 +67,16 @@ object ProfsList {
 }
 
 @Composable
-private fun ProfsList(profs: List<Prof>, isLoading: Boolean) {
+private fun ProfsList(profs: List<Prof>, isLoading: Boolean,navController: NavController) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(profs) { p -> ProfsListItem(p, isLoading) }
+        items(profs) { p -> ProfsListItem(p, isLoading, navController) }
     }
+
+
 }
 
 @Composable
-fun ProfsListItem(prof: Prof, isLoading: Boolean) {
+fun ProfsListItem(prof: Prof, isLoading: Boolean,navController: NavController) {
     val context = LocalContext.current
     val clickableEnabled = !isLoading && prof.id != ""
 
@@ -80,7 +84,7 @@ fun ProfsListItem(prof: Prof, isLoading: Boolean) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(enabled = clickableEnabled) {
-
+                navController.navigate("profDetail/${prof.id}/${SessionData.dni}")
             },
     ) {
         Row(
@@ -112,12 +116,12 @@ fun ProfsListItem(prof: Prof, isLoading: Boolean) {
 }
 
 @Composable
-fun ProfsScreen() {
+fun ProfsScreen(navController: NavController) {
 
     profState.clear()
     profState.addAll(ProfsList.placeholders())
 
-    carregarProfsDesDeServidor(SessionData.dni)
+    carregarProfDesDeServidor(SessionData.dni)
 
     Scaffold(modifier = Modifier.fillMaxWidth()) { inner ->
         Column(
@@ -127,7 +131,7 @@ fun ProfsScreen() {
                 .padding(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.profs),
+                text = stringResource(R.string.profs_label),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -135,14 +139,15 @@ fun ProfsScreen() {
 
             ProfsList(
                 isLoading = isLoading,
-                profs = profState
+                profs = profState,
+                navController = navController
             )
         }
     }
 
 }
 
-private fun carregarProfsDesDeServidor(dniAlumne: String) {
+private fun carregarProfDesDeServidor(dniAlumne: String) {
     isLoading = true
     thread {
         try {
