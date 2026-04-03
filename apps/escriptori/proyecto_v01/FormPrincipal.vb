@@ -20,6 +20,6 @@ Public Class FormPrincipal
     End Sub
 
     Private Sub btnGrades_Click(sender As Object, e As EventArgs) Handles btnGrades.Click
-
+        ''enviar nombre de asignatura a la que quiere añadir notas
     End Sub
 End Class
