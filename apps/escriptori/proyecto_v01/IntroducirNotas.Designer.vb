@@ -33,9 +33,6 @@ Partial Class IntroducirNotas
         lblTitle = New Label()
         lblAsig = New Label()
         lblStatus = New Label()
-        TableLayoutPanel1 = New TableLayoutPanel()
-        lblRa = New Label()
-        cbRa = New ComboBox()
         pnlDgv = New Panel()
         pnlFoot = New Panel()
         btnClose = New Button()
@@ -44,13 +41,14 @@ Partial Class IntroducirNotas
         dgvEstudiants = New DataGridView()
         NIA = New DataGridViewTextBoxColumn()
         Alumno = New DataGridViewTextBoxColumn()
-        Nota = New DataGridViewTextBoxColumn()
+        RA1 = New DataGridViewTextBoxColumn()
+        RA2 = New DataGridViewTextBoxColumn()
+        RA3 = New DataGridViewTextBoxColumn()
         Media = New DataGridViewTextBoxColumn()
         Estado = New DataGridViewTextBoxColumn()
         Comentarios = New DataGridViewTextBoxColumn()
         tlpInfo.SuspendLayout()
         CType(pbProf, ComponentModel.ISupportInitialize).BeginInit()
-        TableLayoutPanel1.SuspendLayout()
         pnlDgv.SuspendLayout()
         pnlFoot.SuspendLayout()
         CType(dgvEstudiants, ComponentModel.ISupportInitialize).BeginInit()
@@ -149,45 +147,6 @@ Partial Class IntroducirNotas
         lblStatus.TabIndex = 3
         lblStatus.Text = "Estado: Cargando..."
         ' 
-        ' TableLayoutPanel1
-        ' 
-        TableLayoutPanel1.ColumnCount = 2
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, 40.0F))
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanel1.Controls.Add(lblRa, 0, 0)
-        TableLayoutPanel1.Controls.Add(cbRa, 1, 0)
-        TableLayoutPanel1.Dock = DockStyle.Top
-        TableLayoutPanel1.Location = New Point(0, 138)
-        TableLayoutPanel1.Name = "TableLayoutPanel1"
-        TableLayoutPanel1.Padding = New Padding(8, 4, 8, 4)
-        TableLayoutPanel1.RowCount = 1
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Absolute, 20.0F))
-        TableLayoutPanel1.Size = New Size(922, 48)
-        TableLayoutPanel1.TabIndex = 4
-        ' 
-        ' lblRa
-        ' 
-        lblRa.Anchor = AnchorStyles.None
-        lblRa.AutoSize = True
-        lblRa.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        lblRa.Location = New Point(11, 14)
-        lblRa.Name = "lblRa"
-        lblRa.Size = New Size(34, 20)
-        lblRa.TabIndex = 0
-        lblRa.Text = "RA:"
-        ' 
-        ' cbRa
-        ' 
-        cbRa.Dock = DockStyle.Fill
-        cbRa.DropDownStyle = ComboBoxStyle.DropDownList
-        cbRa.Enabled = False
-        cbRa.FormattingEnabled = True
-        cbRa.Location = New Point(51, 7)
-        cbRa.Name = "cbRa"
-        cbRa.Size = New Size(860, 28)
-        cbRa.TabIndex = 1
-        ' 
         ' pnlDgv
         ' 
         pnlDgv.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
@@ -269,7 +228,7 @@ Partial Class IntroducirNotas
         dgvEstudiants.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         dgvEstudiants.ColumnHeadersHeight = 36
         dgvEstudiants.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        dgvEstudiants.Columns.AddRange(New DataGridViewColumn() {NIA, Alumno, Nota, Media, Estado, Comentarios})
+        dgvEstudiants.Columns.AddRange(New DataGridViewColumn() {NIA, Alumno, RA1, RA2, RA3, Media, Estado, Comentarios})
         DataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = Color.White
         DataGridViewCellStyle3.Font = New Font("Segoe UI", 9.0F)
@@ -300,19 +259,35 @@ Partial Class IntroducirNotas
         ' 
         ' Alumno
         ' 
-        Alumno.FillWeight = 35.0F
+        Alumno.FillWeight = 25.0F
         Alumno.HeaderText = "Alumno"
         Alumno.MinimumWidth = 6
         Alumno.Name = "Alumno"
         Alumno.ReadOnly = True
         ' 
-        ' Nota
+        ' RA1
         ' 
-        Nota.FillWeight = 15.0F
-        Nota.HeaderText = "Nota RA"
-        Nota.MinimumWidth = 6
-        Nota.Name = "Nota"
-        Nota.ReadOnly = True
+        RA1.FillWeight = 15.0F
+        RA1.HeaderText = "RA1"
+        RA1.MinimumWidth = 6
+        RA1.Name = "RA1"
+        RA1.ReadOnly = True
+        ' 
+        ' RA2
+        ' 
+        RA2.FillWeight = 15.0F
+        RA2.HeaderText = "RA2"
+        RA2.MinimumWidth = 6
+        RA2.Name = "RA2"
+        RA2.ReadOnly = True
+        ' 
+        ' RA3
+        ' 
+        RA3.FillWeight = 15.0F
+        RA3.HeaderText = "RA3"
+        RA3.MinimumWidth = 6
+        RA3.Name = "RA3"
+        RA3.ReadOnly = True
         ' 
         ' Media
         ' 
@@ -342,7 +317,6 @@ Partial Class IntroducirNotas
         ' 
         AutoScaleDimensions = New SizeF(8.0F, 20.0F)
         AutoScaleMode = AutoScaleMode.Font
-        Controls.Add(TableLayoutPanel1)
         Controls.Add(lblStatus)
         Controls.Add(pnlDgv)
         Controls.Add(lblAsig)
@@ -353,8 +327,6 @@ Partial Class IntroducirNotas
         tlpInfo.ResumeLayout(False)
         tlpInfo.PerformLayout()
         CType(pbProf, ComponentModel.ISupportInitialize).EndInit()
-        TableLayoutPanel1.ResumeLayout(False)
-        TableLayoutPanel1.PerformLayout()
         pnlDgv.ResumeLayout(False)
         pnlFoot.ResumeLayout(False)
         CType(dgvEstudiants, ComponentModel.ISupportInitialize).EndInit()
@@ -370,20 +342,19 @@ Partial Class IntroducirNotas
     Friend WithEvents lblTitle As Label
     Friend WithEvents lblAsig As Label
     Friend WithEvents lblStatus As Label
-    Friend WithEvents lblRa As Label
-    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
-    Friend WithEvents cbRa As ComboBox
     Friend WithEvents pnlDgv As Panel
     Friend WithEvents dgvEstudiants As DataGridView
-    Friend WithEvents NIA As DataGridViewTextBoxColumn
-    Friend WithEvents Alumno As DataGridViewTextBoxColumn
-    Friend WithEvents Nota As DataGridViewTextBoxColumn
-    Friend WithEvents Media As DataGridViewTextBoxColumn
-    Friend WithEvents Estado As DataGridViewTextBoxColumn
-    Friend WithEvents Comentarios As DataGridViewTextBoxColumn
     Friend WithEvents pnlFoot As Panel
     Friend WithEvents btnSave As Button
     Friend WithEvents sep As Panel
     Friend WithEvents btnClose As Button
+    Friend WithEvents NIA As DataGridViewTextBoxColumn
+    Friend WithEvents Alumno As DataGridViewTextBoxColumn
+    Friend WithEvents RA1 As DataGridViewTextBoxColumn
+    Friend WithEvents RA2 As DataGridViewTextBoxColumn
+    Friend WithEvents RA3 As DataGridViewTextBoxColumn
+    Friend WithEvents Media As DataGridViewTextBoxColumn
+    Friend WithEvents Estado As DataGridViewTextBoxColumn
+    Friend WithEvents Comentarios As DataGridViewTextBoxColumn
 
 End Class

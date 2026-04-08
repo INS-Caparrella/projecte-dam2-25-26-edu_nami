@@ -21,5 +21,9 @@ Public Class FormPrincipal
 
     Private Sub btnGrades_Click(sender As Object, e As EventArgs) Handles btnGrades.Click
         ''enviar nombre de asignatura a la que quiere añadir notas
+        Dim sel As New SeleccionarAsignatura(dni)
+        If sel.ShowDialog() = DialogResult.OK Then
+            LoadOpenNotes(New IntroducirNotas(dni, sel.asignaturaId, sel.asignaturaNom))
+        End If
     End Sub
 End Class
