@@ -138,3 +138,4 @@ C:\Users\asus\Documents\GitHub\projecte-dam2-25-26-edu_nami\apps\escriptori\proy
 C:\Users\asus\Documents\GitHub\projecte-dam2-25-26-edu_nami\apps\escriptori\proyecto_v01\obj\Debug\net8.0-windows\proyecto_v01.AbrirEvaluacion.resources
 C:\Users\asus\Documents\GitHub\projecte-dam2-25-26-edu_nami\apps\escriptori\proyecto_v01\obj\Debug\net8.0-windows\proyecto_v01.IntroducirNotas.resources
 C:\Users\asus\Documents\GitHub\projecte-dam2-25-26-edu_nami\apps\escriptori\proyecto_v01\obj\Debug\net8.0-windows\proyecto_v01.SeleccionarAsignatura.resources
+C:\Users\asus\Documents\GitHub\projecte-dam2-25-26-edu_nami\apps\escriptori\proyecto_v01\obj\Debug\net8.0-windows\proyecto_v01.FormNotas.resources

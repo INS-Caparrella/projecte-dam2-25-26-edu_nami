@@ -1,4 +1,5 @@
 ﻿Imports Habanero.Base
+Imports Org.BouncyCastle.Crypto.Paddings
 
 Public Class FormPrincipal
     Private ReadOnly dni As String
@@ -21,11 +22,17 @@ Public Class FormPrincipal
         LoadOpenNotes(New AbrirEvaluacion(dni))
     End Sub
 
+    Public Sub GoHome()
+        pnlPrincipal.Controls.Clear()
+    End Sub
     Private Sub btnGrades_Click(sender As Object, e As EventArgs) Handles btnGrades.Click
         ''enviar nombre de asignatura a la que quiere añadir notas
         Dim sel As New SeleccionarAsignatura(dni)
-        If sel.ShowDialog() = DialogResult.OK Then
-            LoadOpenNotes(New IntroducirNotas(dni, sel.asignaturaId, sel.asignaturaNom, _nomProf))
+
+        If sel.ShowDialog = DialogResult.OK Then
+            Dim f As New FormNotas(Me, dni, sel.asignaturaId, sel.asignaturaNom, _nomProf)
+            Me.Hide()
+            f.Show()
         End If
     End Sub
 End Class
