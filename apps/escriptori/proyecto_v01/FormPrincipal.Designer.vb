@@ -23,9 +23,6 @@ Partial Class FormPrincipal
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormPrincipal))
-        tlpInfoP = New TableLayoutPanel()
-        lblName = New Label()
-        lblRol = New Label()
         pnlPrincipal = New Panel()
         tsMenuPrincipal = New ToolStrip()
         btnGrades = New ToolStripButton()
@@ -33,11 +30,78 @@ Partial Class FormPrincipal
         btnOrlas = New ToolStripButton()
         btnDownload = New ToolStripButton()
         pbPicture = New PictureBox()
-        tlpInfoP.SuspendLayout()
-        pnlPrincipal.SuspendLayout()
+        tlpInfoP = New TableLayoutPanel()
+        lblName = New Label()
+        lblRol = New Label()
         tsMenuPrincipal.SuspendLayout()
         CType(pbPicture, ComponentModel.ISupportInitialize).BeginInit()
+        tlpInfoP.SuspendLayout()
         SuspendLayout()
+        ' 
+        ' pnlPrincipal
+        ' 
+        pnlPrincipal.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        pnlPrincipal.Location = New Point(25, 65)
+        pnlPrincipal.Name = "pnlPrincipal"
+        pnlPrincipal.Size = New Size(775, 385)
+        pnlPrincipal.TabIndex = 0
+        ' 
+        ' tsMenuPrincipal
+        ' 
+        tsMenuPrincipal.Dock = DockStyle.Left
+        tsMenuPrincipal.ImageScalingSize = New Size(20, 20)
+        tsMenuPrincipal.Items.AddRange(New ToolStripItem() {btnGrades, btnOpenT, btnOrlas, btnDownload})
+        tsMenuPrincipal.Location = New Point(0, 0)
+        tsMenuPrincipal.Name = "tsMenuPrincipal"
+        tsMenuPrincipal.Size = New Size(30, 450)
+        tsMenuPrincipal.TabIndex = 14
+        tsMenuPrincipal.Text = "Menú"
+        tsMenuPrincipal.TextDirection = ToolStripTextDirection.Vertical90
+        ' 
+        ' btnGrades
+        ' 
+        btnGrades.DisplayStyle = ToolStripItemDisplayStyle.Image
+        btnGrades.Image = CType(resources.GetObject("btnGrades.Image"), Image)
+        btnGrades.ImageTransparentColor = Color.Magenta
+        btnGrades.Name = "btnGrades"
+        btnGrades.Size = New Size(27, 24)
+        btnGrades.Text = "Introducir notas"
+        ' 
+        ' btnOpenT
+        ' 
+        btnOpenT.DisplayStyle = ToolStripItemDisplayStyle.Image
+        btnOpenT.Image = CType(resources.GetObject("btnOpenT.Image"), Image)
+        btnOpenT.ImageTransparentColor = Color.Magenta
+        btnOpenT.Name = "btnOpenT"
+        btnOpenT.Size = New Size(27, 24)
+        btnOpenT.Text = "Gestionar período evaluación"
+        ' 
+        ' btnOrlas
+        ' 
+        btnOrlas.DisplayStyle = ToolStripItemDisplayStyle.Image
+        btnOrlas.Image = CType(resources.GetObject("btnOrlas.Image"), Image)
+        btnOrlas.ImageTransparentColor = Color.Magenta
+        btnOrlas.Name = "btnOrlas"
+        btnOrlas.Size = New Size(27, 24)
+        btnOrlas.Text = "Ver la orla de profesores"
+        ' 
+        ' btnDownload
+        ' 
+        btnDownload.DisplayStyle = ToolStripItemDisplayStyle.Image
+        btnDownload.Image = CType(resources.GetObject("btnDownload.Image"), Image)
+        btnDownload.ImageTransparentColor = Color.Magenta
+        btnDownload.Name = "btnDownload"
+        btnDownload.Size = New Size(27, 24)
+        btnDownload.Text = "Descargar PDF"
+        ' 
+        ' pbPicture
+        ' 
+        pbPicture.Anchor = AnchorStyles.None
+        pbPicture.Location = New Point(723, 3)
+        pbPicture.Name = "pbPicture"
+        pbPicture.Size = New Size(77, 59)
+        pbPicture.TabIndex = 13
+        pbPicture.TabStop = False
         ' 
         ' tlpInfoP
         ' 
@@ -53,7 +117,7 @@ Partial Class FormPrincipal
         tlpInfoP.RowStyles.Add(New RowStyle(SizeType.Absolute, 20F))
         tlpInfoP.RowStyles.Add(New RowStyle(SizeType.Absolute, 20F))
         tlpInfoP.Size = New Size(211, 59)
-        tlpInfoP.TabIndex = 0
+        tlpInfoP.TabIndex = 12
         ' 
         ' lblName
         ' 
@@ -78,101 +142,34 @@ Partial Class FormPrincipal
         lblRol.TabIndex = 2
         lblRol.Text = "Rol"
         ' 
-        ' pnlPrincipal
-        ' 
-        pnlPrincipal.Controls.Add(tsMenuPrincipal)
-        pnlPrincipal.Controls.Add(pbPicture)
-        pnlPrincipal.Controls.Add(tlpInfoP)
-        pnlPrincipal.Dock = DockStyle.Fill
-        pnlPrincipal.Location = New Point(0, 0)
-        pnlPrincipal.Name = "pnlPrincipal"
-        pnlPrincipal.Size = New Size(800, 450)
-        pnlPrincipal.TabIndex = 0
-        ' 
-        ' tsMenuPrincipal
-        ' 
-        tsMenuPrincipal.Dock = DockStyle.Left
-        tsMenuPrincipal.ImageScalingSize = New Size(20, 20)
-        tsMenuPrincipal.Items.AddRange(New ToolStripItem() {btnGrades, btnOpenT, btnOrlas, btnDownload})
-        tsMenuPrincipal.Location = New Point(0, 0)
-        tsMenuPrincipal.Name = "tsMenuPrincipal"
-        tsMenuPrincipal.Size = New Size(40, 450)
-        tsMenuPrincipal.TabIndex = 2
-        tsMenuPrincipal.Text = "Menú"
-        tsMenuPrincipal.TextDirection = ToolStripTextDirection.Vertical90
-        ' 
-        ' btnGrades
-        ' 
-        btnGrades.DisplayStyle = ToolStripItemDisplayStyle.Image
-        btnGrades.Image = CType(resources.GetObject("btnGrades.Image"), Image)
-        btnGrades.ImageTransparentColor = Color.Magenta
-        btnGrades.Name = "btnGrades"
-        btnGrades.Size = New Size(37, 24)
-        btnGrades.Text = "Introducir notas"
-        ' 
-        ' btnOpenT
-        ' 
-        btnOpenT.DisplayStyle = ToolStripItemDisplayStyle.Image
-        btnOpenT.Image = CType(resources.GetObject("btnOpenT.Image"), Image)
-        btnOpenT.ImageTransparentColor = Color.Magenta
-        btnOpenT.Name = "btnOpenT"
-        btnOpenT.Size = New Size(37, 24)
-        btnOpenT.Text = "Gestionar período evaluación"
-        ' 
-        ' btnOrlas
-        ' 
-        btnOrlas.DisplayStyle = ToolStripItemDisplayStyle.Image
-        btnOrlas.Image = CType(resources.GetObject("btnOrlas.Image"), Image)
-        btnOrlas.ImageTransparentColor = Color.Magenta
-        btnOrlas.Name = "btnOrlas"
-        btnOrlas.Size = New Size(37, 24)
-        btnOrlas.Text = "Ver la orla de profesores"
-        ' 
-        ' btnDownload
-        ' 
-        btnDownload.DisplayStyle = ToolStripItemDisplayStyle.Image
-        btnDownload.Image = CType(resources.GetObject("btnDownload.Image"), Image)
-        btnDownload.ImageTransparentColor = Color.Magenta
-        btnDownload.Name = "btnDownload"
-        btnDownload.Size = New Size(37, 24)
-        btnDownload.Text = "Descargar PDF"
-        ' 
-        ' pbPicture
-        ' 
-        pbPicture.Anchor = AnchorStyles.None
-        pbPicture.Location = New Point(723, 3)
-        pbPicture.Name = "pbPicture"
-        pbPicture.Size = New Size(77, 59)
-        pbPicture.TabIndex = 1
-        pbPicture.TabStop = False
-        ' 
         ' FormPrincipal
         ' 
         AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 450)
+        Controls.Add(tsMenuPrincipal)
+        Controls.Add(pbPicture)
+        Controls.Add(tlpInfoP)
         Controls.Add(pnlPrincipal)
         Name = "FormPrincipal"
         StartPosition = FormStartPosition.CenterScreen
         Text = "Inicio"
-        tlpInfoP.ResumeLayout(False)
-        tlpInfoP.PerformLayout()
-        pnlPrincipal.ResumeLayout(False)
-        pnlPrincipal.PerformLayout()
         tsMenuPrincipal.ResumeLayout(False)
         tsMenuPrincipal.PerformLayout()
         CType(pbPicture, ComponentModel.ISupportInitialize).EndInit()
+        tlpInfoP.ResumeLayout(False)
+        tlpInfoP.PerformLayout()
         ResumeLayout(False)
+        PerformLayout()
     End Sub
-
-    Friend WithEvents tlpInfoP As TableLayoutPanel
-    Friend WithEvents lblName As Label
     Friend WithEvents pnlPrincipal As Panel
-    Friend WithEvents lblRol As Label
     Friend WithEvents tsMenuPrincipal As ToolStrip
     Friend WithEvents btnGrades As ToolStripButton
-    Friend WithEvents pbPicture As PictureBox
     Friend WithEvents btnOpenT As ToolStripButton
     Friend WithEvents btnOrlas As ToolStripButton
     Friend WithEvents btnDownload As ToolStripButton
+    Friend WithEvents pbPicture As PictureBox
+    Friend WithEvents tlpInfoP As TableLayoutPanel
+    Friend WithEvents lblName As Label
+    Friend WithEvents lblRol As Label
 End Class
