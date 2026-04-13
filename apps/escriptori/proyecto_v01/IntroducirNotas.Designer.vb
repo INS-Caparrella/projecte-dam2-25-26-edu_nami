@@ -41,9 +41,6 @@ Partial Class IntroducirNotas
         dgvEstudiants = New DataGridView()
         NIA = New DataGridViewTextBoxColumn()
         Alumno = New DataGridViewTextBoxColumn()
-        RA1 = New DataGridViewTextBoxColumn()
-        RA2 = New DataGridViewTextBoxColumn()
-        RA3 = New DataGridViewTextBoxColumn()
         Media = New DataGridViewTextBoxColumn()
         Estado = New DataGridViewTextBoxColumn()
         Comentarios = New DataGridViewTextBoxColumn()
@@ -57,7 +54,7 @@ Partial Class IntroducirNotas
         ' tlpInfo
         ' 
         tlpInfo.ColumnCount = 4
-        tlpInfo.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, 80.0F))
+        tlpInfo.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, 80F))
         tlpInfo.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 70.70707F))
         tlpInfo.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 13.1313133F))
         tlpInfo.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 16.1616154F))
@@ -69,7 +66,7 @@ Partial Class IntroducirNotas
         tlpInfo.Location = New Point(0, 0)
         tlpInfo.Name = "tlpInfo"
         tlpInfo.RowCount = 1
-        tlpInfo.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        tlpInfo.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
         tlpInfo.Size = New Size(922, 53)
         tlpInfo.TabIndex = 0
         ' 
@@ -96,7 +93,7 @@ Partial Class IntroducirNotas
         ' 
         lblName.Anchor = AnchorStyles.Left
         lblName.AutoSize = True
-        lblName.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        lblName.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         lblName.ForeColor = Color.LightSlateGray
         lblName.Location = New Point(83, 16)
         lblName.Name = "lblName"
@@ -213,28 +210,27 @@ Partial Class IntroducirNotas
         dgvEstudiants.AllowUserToDeleteRows = False
         DataGridViewCellStyle1.BackColor = Color.FromArgb(CByte(250), CByte(250), CByte(252))
         dgvEstudiants.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
-        dgvEstudiants.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         dgvEstudiants.BackgroundColor = Color.White
         dgvEstudiants.BorderStyle = BorderStyle.None
         dgvEstudiants.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
         DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = Color.WhiteSmoke
-        DataGridViewCellStyle2.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        DataGridViewCellStyle2.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         DataGridViewCellStyle2.ForeColor = Color.FromArgb(CByte(60), CByte(60), CByte(60))
         DataGridViewCellStyle2.Padding = New Padding(6, 0, 0, 0)
-        DataGridViewCellStyle2.SelectionBackColor = Color.DarkSlateGray
-        DataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle2.SelectionBackColor = SystemColors.ActiveCaption
+        DataGridViewCellStyle2.SelectionForeColor = SystemColors.ControlText
         DataGridViewCellStyle2.WrapMode = DataGridViewTriState.True
         dgvEstudiants.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         dgvEstudiants.ColumnHeadersHeight = 36
         dgvEstudiants.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        dgvEstudiants.Columns.AddRange(New DataGridViewColumn() {NIA, Alumno, RA1, RA2, RA3, Media, Estado, Comentarios})
+        dgvEstudiants.Columns.AddRange(New DataGridViewColumn() {NIA, Alumno, Media, Estado, Comentarios})
         DataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = Color.White
-        DataGridViewCellStyle3.Font = New Font("Segoe UI", 9.0F)
+        DataGridViewCellStyle3.Font = New Font("Segoe UI", 9F)
         DataGridViewCellStyle3.ForeColor = Color.FromArgb(CByte(40), CByte(40), CByte(40))
         DataGridViewCellStyle3.Padding = New Padding(6, 0, 0, 0)
-        DataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(CByte(232), CByte(240), CByte(255))
+        DataGridViewCellStyle3.SelectionBackColor = SystemColors.GradientActiveCaption
         DataGridViewCellStyle3.SelectionForeColor = Color.Black
         DataGridViewCellStyle3.WrapMode = DataGridViewTriState.False
         dgvEstudiants.DefaultCellStyle = DataGridViewCellStyle3
@@ -256,66 +252,47 @@ Partial Class IntroducirNotas
         NIA.MinimumWidth = 6
         NIA.Name = "NIA"
         NIA.Visible = False
+        NIA.Width = 125
         ' 
         ' Alumno
         ' 
-        Alumno.FillWeight = 25.0F
+        Alumno.FillWeight = 20F
         Alumno.HeaderText = "Alumno"
         Alumno.MinimumWidth = 6
         Alumno.Name = "Alumno"
         Alumno.ReadOnly = True
-        ' 
-        ' RA1
-        ' 
-        RA1.FillWeight = 15.0F
-        RA1.HeaderText = "RA1"
-        RA1.MinimumWidth = 6
-        RA1.Name = "RA1"
-        RA1.ReadOnly = True
-        ' 
-        ' RA2
-        ' 
-        RA2.FillWeight = 15.0F
-        RA2.HeaderText = "RA2"
-        RA2.MinimumWidth = 6
-        RA2.Name = "RA2"
-        RA2.ReadOnly = True
-        ' 
-        ' RA3
-        ' 
-        RA3.FillWeight = 15.0F
-        RA3.HeaderText = "RA3"
-        RA3.MinimumWidth = 6
-        RA3.Name = "RA3"
-        RA3.ReadOnly = True
+        Alumno.Width = 395
         ' 
         ' Media
         ' 
-        Media.FillWeight = 12.0F
+        Media.FillWeight = 10F
         Media.HeaderText = "Media"
         Media.MinimumWidth = 6
         Media.Name = "Media"
         Media.ReadOnly = True
+        Media.Width = 132
         ' 
         ' Estado
         ' 
-        Estado.FillWeight = 12.0F
+        Estado.FillWeight = 10F
         Estado.HeaderText = "Estado"
         Estado.MinimumWidth = 6
         Estado.Name = "Estado"
         Estado.ReadOnly = True
+        Estado.Width = 132
         ' 
         ' Comentarios
         ' 
-        Comentarios.FillWeight = 26.0F
+        Comentarios.FillWeight = 20F
         Comentarios.HeaderText = "Comentarios"
         Comentarios.MinimumWidth = 6
         Comentarios.Name = "Comentarios"
         Comentarios.ReadOnly = True
+        Comentarios.Width = 263
         ' 
         ' IntroducirNotas
         ' 
-        AutoScaleDimensions = New SizeF(8.0F, 20.0F)
+        AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
         Controls.Add(lblStatus)
         Controls.Add(pnlDgv)
@@ -350,9 +327,6 @@ Partial Class IntroducirNotas
     Friend WithEvents btnClose As Button
     Friend WithEvents NIA As DataGridViewTextBoxColumn
     Friend WithEvents Alumno As DataGridViewTextBoxColumn
-    Friend WithEvents RA1 As DataGridViewTextBoxColumn
-    Friend WithEvents RA2 As DataGridViewTextBoxColumn
-    Friend WithEvents RA3 As DataGridViewTextBoxColumn
     Friend WithEvents Media As DataGridViewTextBoxColumn
     Friend WithEvents Estado As DataGridViewTextBoxColumn
     Friend WithEvents Comentarios As DataGridViewTextBoxColumn

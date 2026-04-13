@@ -2,10 +2,12 @@
 
 Public Class FormPrincipal
     Private ReadOnly dni As String
+    Private ReadOnly _nomProf As String
     Public Sub New(result As LoginResult)
         InitializeComponent()
-        lblName.Text = $"{result.name} {result.surname}"
+        _nomProf = $"{result.name} {result.surname}"
         lblRol.Text = $"{result.rol}"
+        lblName.Text = _nomProf
 
         Me.dni = result.dni
     End Sub
@@ -23,7 +25,7 @@ Public Class FormPrincipal
         ''enviar nombre de asignatura a la que quiere añadir notas
         Dim sel As New SeleccionarAsignatura(dni)
         If sel.ShowDialog() = DialogResult.OK Then
-            LoadOpenNotes(New IntroducirNotas(dni, sel.asignaturaId, sel.asignaturaNom))
+            LoadOpenNotes(New IntroducirNotas(dni, sel.asignaturaId, sel.asignaturaNom, _nomProf))
         End If
     End Sub
 End Class

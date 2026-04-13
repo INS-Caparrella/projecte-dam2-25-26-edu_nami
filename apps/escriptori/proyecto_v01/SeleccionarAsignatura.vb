@@ -63,7 +63,7 @@ Public Class SeleccionarAsignatura
         If item Is Nothing OrElse item.Value = "" Then Return
 
         asignaturaId = item.Value
-        asignaturaNom = item.Text
+        asignaturaNom = item.Display
 
         Me.DialogResult = DialogResult.OK
         Me.Close()
@@ -76,15 +76,15 @@ Public Class SeleccionarAsignatura
 End Class
 
 Public Class ComboItem
-    Public Property Text As String
     Public Property Value As String
+    Public Property Display As String
 
-    Public Sub New(text As String, value As String)
-        Me.Text = text
+    Public Sub New(value As String, display As String)
         Me.Value = value
+        Me.Display = display
     End Sub
 
     Public Overrides Function ToString() As String
-        Return Text
+        Return Display
     End Function
 End Class
