@@ -16,6 +16,9 @@
     <Compile Update="LogIn.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="OrlaProfesores.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="SeleccionarAsignatura.vb">
       <SubType>Form</SubType>
     </Compile>
