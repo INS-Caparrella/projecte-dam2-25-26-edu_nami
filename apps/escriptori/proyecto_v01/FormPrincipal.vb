@@ -30,7 +30,7 @@ Public Class FormPrincipal
         Dim sel As New SeleccionarAsignatura(dni)
 
         If sel.ShowDialog = DialogResult.OK Then
-            Dim f As New FormNotas(Me, dni, sel.asignaturaId, sel.asignaturaNom, _nomProf)
+            Dim f As New FormNotas(Me, dni, sel.asignaturaId, sel.asignaturaNom, _nomProf, lblRol.Text)
             Me.Hide()
             f.Show()
         End If
