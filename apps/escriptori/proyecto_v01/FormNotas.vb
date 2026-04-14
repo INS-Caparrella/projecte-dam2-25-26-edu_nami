@@ -14,30 +14,44 @@ Public Class FormNotas
         Private ReadOnly _dni As String
         Private ReadOnly _idAssignatura As String
         Private ReadOnly _nomAssignatura As String
-        Private ReadOnly _nomProf As String
+    Private ReadOnly _nomProf As String
+    Private ReadOnly _rol As String
 
-        ''lista de ras
-        Private _ras As New List(Of (id As Integer, ra As Integer))
+    ''lista de ras
+    Private _ras As New List(Of (id As Integer, ra As Integer))
 
         Private nies As New List(Of Integer)
         Private ended As Boolean = False
 
-        Public Sub New(parent As FormPrincipal, dni As String, idAssignatura As String, nomAssignatura As String, Optional nomProf As String = "")
-            InitializeComponent()
-            _parent = parent
-            _dni = dni
-            _idAssignatura = idAssignatura
-            _nomAssignatura = nomAssignatura
-            _nomProf = nomProf
-        End Sub
+    Public Sub New(parent As FormPrincipal, dni As String, idAssignatura As String, nomAssignatura As String, nomProf As String, rol As String)
+        InitializeComponent()
+        _parent = parent
+        _dni = dni
+        _idAssignatura = idAssignatura
+        _nomAssignatura = nomAssignatura
+        _nomProf = nomProf
+        _rol = rol
+    End Sub
 
-        Private Async Sub IntroducirNotas_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub IntroducirNotas_Load(sender As Object, e As EventArgs) Handles MyBase.Load
             lblName.Text = _nomProf
             lblAsig.Text = _nomAssignatura
 
             Await loadPeriodAsync()
-            Await loadStudentsAsync()
-        End Sub
+        Await loadStudentsAsync()
+
+        ''??
+        If _rol <> "tutor" AndAlso _rol <> "director" Then
+            For Each col As DataGridViewColumn In dgvEstudiants.Columns
+                If col.Name.StartsWith("RA_") Then
+                    col.ReadOnly = True
+                End If
+            Next
+            btnSave.Enabled = False
+            btnClose.Enabled = False
+            lblStatus.Text &= " · Modo lectura. No tiene permisos para modificar las notas. ·"
+        End If
+    End Sub
 
         ''comprobar si el periodo de evaluación está abierto
         Private Async Function loadPeriodAsync() As Task
