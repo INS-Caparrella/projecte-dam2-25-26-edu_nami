@@ -53,7 +53,7 @@ Partial Class FormPrincipal
         tsMenuPrincipal.Items.AddRange(New ToolStripItem() {btnGrades, btnOpenT, btnOrlas, btnDownload})
         tsMenuPrincipal.Location = New Point(0, 0)
         tsMenuPrincipal.Name = "tsMenuPrincipal"
-        tsMenuPrincipal.Size = New Size(30, 450)
+        tsMenuPrincipal.Size = New Size(40, 450)
         tsMenuPrincipal.TabIndex = 14
         tsMenuPrincipal.Text = "Menú"
         tsMenuPrincipal.TextDirection = ToolStripTextDirection.Vertical90
@@ -64,7 +64,7 @@ Partial Class FormPrincipal
         btnGrades.Image = CType(resources.GetObject("btnGrades.Image"), Image)
         btnGrades.ImageTransparentColor = Color.Magenta
         btnGrades.Name = "btnGrades"
-        btnGrades.Size = New Size(27, 24)
+        btnGrades.Size = New Size(37, 24)
         btnGrades.Text = "Introducir notas"
         ' 
         ' btnOpenT
@@ -73,7 +73,7 @@ Partial Class FormPrincipal
         btnOpenT.Image = CType(resources.GetObject("btnOpenT.Image"), Image)
         btnOpenT.ImageTransparentColor = Color.Magenta
         btnOpenT.Name = "btnOpenT"
-        btnOpenT.Size = New Size(27, 24)
+        btnOpenT.Size = New Size(37, 24)
         btnOpenT.Text = "Gestionar período evaluación"
         ' 
         ' btnOrlas
@@ -82,7 +82,7 @@ Partial Class FormPrincipal
         btnOrlas.Image = CType(resources.GetObject("btnOrlas.Image"), Image)
         btnOrlas.ImageTransparentColor = Color.Magenta
         btnOrlas.Name = "btnOrlas"
-        btnOrlas.Size = New Size(27, 24)
+        btnOrlas.Size = New Size(37, 24)
         btnOrlas.Text = "Ver la orla de profesores"
         ' 
         ' btnDownload
@@ -91,7 +91,7 @@ Partial Class FormPrincipal
         btnDownload.Image = CType(resources.GetObject("btnDownload.Image"), Image)
         btnDownload.ImageTransparentColor = Color.Magenta
         btnDownload.Name = "btnDownload"
-        btnDownload.Size = New Size(27, 24)
+        btnDownload.Size = New Size(37, 24)
         btnDownload.Text = "Descargar PDF"
         ' 
         ' pbPicture

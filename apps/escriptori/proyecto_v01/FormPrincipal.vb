@@ -35,4 +35,10 @@ Public Class FormPrincipal
             f.Show()
         End If
     End Sub
+
+    Private Sub btnOrlas_Click(sender As Object, e As EventArgs) Handles btnOrlas.Click
+        Dim f As New OrlaProfesores()
+        Me.Hide()
+        f.Show()
+    End Sub
 End Class
