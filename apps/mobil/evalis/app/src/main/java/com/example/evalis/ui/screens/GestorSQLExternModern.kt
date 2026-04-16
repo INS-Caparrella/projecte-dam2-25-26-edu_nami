@@ -1,5 +1,6 @@
 package com.example.evalis
 
+import com.example.evalis.ui.screens.login.SessionData
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -31,6 +32,14 @@ class GestorSQLExternModern{
                 reader.use{
                     it.forEachLine{line->resultat.append(line)}
                 }
+
+                if (resultat.toString().contains("Token expirado")) {
+                    SessionData.token = ""
+                    SessionData.dni = ""
+                    lastError = "Token expirado"
+                    return null
+                }
+
                 JSONArray(resultat.toString())
             }else{
                 lastError="HTTP $responseCode (URL=$urlString)"
@@ -67,6 +76,14 @@ class GestorSQLExternModern{
                     it.forEachLine{line->resultat.append(line)}
                 }
                 try{
+
+                    if (resultat.toString().contains("Token expirado")) {
+                        SessionData.token = ""
+                        SessionData.dni = ""
+                        lastError = "Token expirado"
+                        return null
+                    }
+
                     JSONObject(resultat.toString())
                 }catch(e:Exception){
                     lastError="JSON invàlid des de $urlString -> ${e.message}"
@@ -117,7 +134,17 @@ class GestorSQLExternModern{
                     it.forEachLine{line->resultat.append(line)}
                 }
                 try{
-                    JSONObject(resultat.toString())
+                    val obj=JSONObject(resultat.toString())
+
+                    if (obj.optString("error") == "Token expirado") {
+                        SessionData.token = ""
+                        SessionData.dni = ""
+                        lastError = "Token expirado"
+                        return null
+                    }
+
+                    obj
+
                 }catch(e:Exception){
                     lastError="JSON invàlid des de $urlString -> ${e.message}"
                     null

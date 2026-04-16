@@ -40,6 +40,7 @@ import kotlin.jvm.java
 
 object SessionData {
     var dni: String =""
+    var token:String=""
 }
 
 
@@ -158,6 +159,8 @@ fun LoginButton(user: String, pass: String, onSuccess: () -> Unit, modifier: Mod
                         } else {
                             val potEntrar = obj.optBoolean("pot_entrar", false)
                             SessionData.dni = obj.optString("dni")
+                            SessionData.token = obj.optString("token")
+
 
                             if (potEntrar) {
                                 onSuccess()
