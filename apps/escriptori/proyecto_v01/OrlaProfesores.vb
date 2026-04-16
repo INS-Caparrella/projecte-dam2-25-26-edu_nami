@@ -56,7 +56,7 @@ Public Class OrlaProfesores
 
         Dim lblJob As New Label With {
             .Text = prof("carrec").ToString(),
-            .Top = 215,
+            .Top = 220,
             .Left = 10,
             .Width = 180,
             .Height = 20,
@@ -64,9 +64,20 @@ Public Class OrlaProfesores
             .TextAlign = ContentAlignment.MiddleCenter
         }
 
+        Dim lblEmail As New Label With {
+            .Text = prof("email").ToString(),
+            .Top = 240,
+            .Left = 10,
+            .Width = 180,
+            .Height = 20,
+            .ForeColor = Color.DarkGray,
+            .TextAlign = ContentAlignment.MiddleCenter
+        }
+
+
         Dim lblDept As New Label With {
             .Text = prof("departament").ToString(),
-            .Top = 235,
+            .Top = 260,
             .Left = 10,
             .Width = 180,
             .Height = 20,
@@ -77,6 +88,7 @@ Public Class OrlaProfesores
         card.Controls.Add(pic)
         card.Controls.Add(lblName)
         card.Controls.Add(lblJob)
+        card.Controls.Add(lblEmail)
         card.Controls.Add(lblDept)
 
         Return card
