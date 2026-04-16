@@ -23,6 +23,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.concurrent.thread
 import com.example.evalis.R
+import com.example.evalis.ui.screens.login.SessionData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -49,7 +50,7 @@ fun ProfsDetail(dni: String, profId: String, onClose: () -> Unit = {}) {
         val result = withContext(Dispatchers.IO) {
             try {
                 val gestor = GestorSQLExternModern()
-                gestor.connectar("$BASE_URL/get_prof.php?dni=$dni&codi_prof=$profId")
+                gestor.connectar("$BASE_URL/get_prof.php?dni=$dni&codi_prof=$profId&token=${SessionData.token}")
             } catch (e: Exception) {
                 null
             }

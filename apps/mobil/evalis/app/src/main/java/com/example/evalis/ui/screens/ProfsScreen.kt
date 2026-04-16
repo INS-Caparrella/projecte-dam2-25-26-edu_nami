@@ -121,7 +121,7 @@ fun ProfsScreen(navController: NavController) {
     profState.clear()
     profState.addAll(ProfsList.placeholders())
 
-    carregarProfDesDeServidor(SessionData.dni)
+    carregarProfDesDeServidor(SessionData.dni,navController)
 
     Scaffold(modifier = Modifier.fillMaxWidth()) { inner ->
         Column(
@@ -147,14 +147,19 @@ fun ProfsScreen(navController: NavController) {
 
 }
 
-private fun carregarProfDesDeServidor(dniAlumne: String) {
+private fun carregarProfDesDeServidor(dniAlumne: String,navController: NavController) {
     isLoading = true
     thread {
         try {
             val gestor = GestorSQLExternModern()
-            val arr: JSONArray? = gestor.connectar("$BASE_URL/get_profs.php?dni=$dniAlumne")
+            val arr: JSONArray? = gestor.connectar("$BASE_URL/get_profs.php?dni=$dniAlumne&token=${SessionData.token}")
 
             android.os.Handler(Looper.getMainLooper()).post {
+
+                if (arr == null && gestor.lastError == "Token expirado") {
+                    navController.navigate("login")
+                    return@post
+                }
 
                 if (arr == null) {
                     profState.clear()
@@ -180,6 +185,8 @@ private fun carregarProfDesDeServidor(dniAlumne: String) {
                     if (id != "") {
                         profState.add(Prof(id, name, surname, urlFoto, email))
                     }
+
+
                 }
 
                 if (profState.isEmpty()) {
