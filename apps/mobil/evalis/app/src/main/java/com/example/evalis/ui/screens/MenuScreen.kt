@@ -26,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.evalis.HomeScreen
 import com.example.evalis.ThemeMode
 import com.example.evalis.ui.components.Option
+import com.example.evalis.ui.screens.expedient.ExpedientScreen
 import kotlinx.coroutines.launch
 
 
@@ -102,6 +103,12 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
                         profId = profId,
                         onClose = { navController.popBackStack() }
                     )
+                }
+                composable("butlleti") { EstudiScreen(navController) }
+
+                composable("expedientPDF/{success}") { backStackEntry ->
+                    val success = backStackEntry.arguments?.getString("success") == "true"
+                    ExpedientScreen(success = success, navController = navController)
                 }
 
 

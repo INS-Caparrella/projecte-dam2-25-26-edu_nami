@@ -29,14 +29,15 @@ import com.example.evalis.R
 data class Option(
     val name: String,
     val icon: Int,
+    val route: String
 )
 
 object OptionsList {
     fun all(): List<Option> {
 
         return listOf(
-            Option("Butlletí", R.drawable.prof_icon),
-            Option("Els meus professors", R.drawable.butlleti_icon),
+            Option("Butlletí", R.drawable.prof_icon,"butlleti"),
+            Option("Els meus professors", R.drawable.butlleti_icon,"profs"),
         )
     }
 }
@@ -48,7 +49,7 @@ fun OptionsListItem(option: Option,navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                navController.navigate("profs")
+                navController.navigate(option.route)
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
 

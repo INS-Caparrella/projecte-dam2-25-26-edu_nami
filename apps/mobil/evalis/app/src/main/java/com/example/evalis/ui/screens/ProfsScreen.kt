@@ -1,10 +1,6 @@
 package com.example.evalis.ui.screens
 
-import android.content.Intent
-import android.os.Bundle
 import android.os.Looper
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,17 +34,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.example.evalis.GestorSQLExternModern
+import com.example.evalis.model.GestorSQLExternModern
 import com.example.evalis.R
+import com.example.evalis.model.GestorSQLExternModern.SqlInfo.BASE_URL
 import com.example.evalis.ui.screens.login.SessionData
 import org.json.JSONArray
 import kotlin.concurrent.thread
 
 var isLoading by mutableStateOf(true)
 val profState = mutableStateListOf<Prof>()
-private const val BASE_URL = "http://192.168.1.15"
 
 data class Prof(
     val id: String,
@@ -152,7 +147,7 @@ private fun carregarProfDesDeServidor(dniAlumne: String,navController: NavContro
     thread {
         try {
             val gestor = GestorSQLExternModern()
-            val arr: JSONArray? = gestor.connectar("$BASE_URL/get_profs.php?dni=$dniAlumne&token=${SessionData.token}")
+            val arr: JSONArray? = gestor.connectar("${BASE_URL}/get_profs.php?dni=$dniAlumne&token=${SessionData.token}")
 
             android.os.Handler(Looper.getMainLooper()).post {
 

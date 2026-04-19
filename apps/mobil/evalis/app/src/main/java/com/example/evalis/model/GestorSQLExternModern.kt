@@ -1,4 +1,4 @@
-package com.example.evalis
+package com.example.evalis.model
 
 import com.example.evalis.ui.screens.login.SessionData
 import org.json.JSONArray
@@ -10,15 +10,19 @@ import java.net.URL
 
 class GestorSQLExternModern{
 
+    object SqlInfo {
+        var BASE_URL: String ="http://192.168.1.47"
+    }
+
     // Guardem aquí l'últim error per poder-lo mostrar a la UI si cal
     var lastError:String?=null
 
-    fun connectar(urlString:String):JSONArray?{
+    fun connectar(urlString:String): JSONArray?{
         val resultat=StringBuilder()
         lastError=null
 
         return try{
-            val url=URL(urlString)
+            val url= URL(urlString)
             val connection=url.openConnection() as HttpURLConnection
             connection.requestMethod="GET"
             connection.connectTimeout=5000
@@ -26,19 +30,20 @@ class GestorSQLExternModern{
             connection.connect()
 
             val responseCode=connection.responseCode
-            if(responseCode==HttpURLConnection.HTTP_OK){
+            if(responseCode== HttpURLConnection.HTTP_OK){
                 val inputStream=connection.inputStream
-                val reader=BufferedReader(InputStreamReader(inputStream))
+                val reader= BufferedReader(InputStreamReader(inputStream))
                 reader.use{
                     it.forEachLine{line->resultat.append(line)}
                 }
 
                 if (resultat.toString().contains("Token expirado")) {
-                    SessionData.token = ""
-                    SessionData.dni = ""
                     lastError = "Token expirado"
                     return null
                 }
+
+
+
 
                 JSONArray(resultat.toString())
             }else{
@@ -56,12 +61,12 @@ class GestorSQLExternModern{
     // respostes JSON de tipus:
     // {"pot_entrar":true}
     // per l'exemple del login
-    fun connectarObj(urlString:String):JSONObject?{
+    fun connectarObj(urlString:String): JSONObject?{
         val resultat=StringBuilder()
         lastError=null
 
         return try{
-            val url=URL(urlString)
+            val url= URL(urlString)
             val connection=url.openConnection() as HttpURLConnection
             connection.requestMethod="GET"
             connection.connectTimeout=5000
@@ -69,20 +74,20 @@ class GestorSQLExternModern{
             connection.connect()
 
             val responseCode=connection.responseCode
-            if(responseCode==HttpURLConnection.HTTP_OK){
+            if(responseCode== HttpURLConnection.HTTP_OK){
                 val inputStream=connection.inputStream
-                val reader=BufferedReader(InputStreamReader(inputStream))
+                val reader= BufferedReader(InputStreamReader(inputStream))
                 reader.use{
                     it.forEachLine{line->resultat.append(line)}
                 }
                 try{
 
                     if (resultat.toString().contains("Token expirado")) {
-                        SessionData.token = ""
-                        SessionData.dni = ""
                         lastError = "Token expirado"
                         return null
                     }
+                    println("RESPUESTA SERVIDOR: '${resultat.toString()}'")
+
 
                     JSONObject(resultat.toString())
                 }catch(e:Exception){
@@ -102,12 +107,12 @@ class GestorSQLExternModern{
     }
 
     // Versió per POST: enviem user i pass al body, format x-www-form-urlencoded
-    fun connectarObjPOST(urlString:String,params:String):JSONObject?{
+    fun connectarObjPOST(urlString:String,params:String): JSONObject?{
         val resultat=StringBuilder()
         lastError=null
 
         return try{
-            val url=URL(urlString)
+            val url= URL(urlString)
             val connection=url.openConnection() as HttpURLConnection
             connection.requestMethod="POST"
             connection.connectTimeout=5000
@@ -127,18 +132,18 @@ class GestorSQLExternModern{
             }
 
             val responseCode=connection.responseCode
-            if(responseCode==HttpURLConnection.HTTP_OK){
+            if(responseCode== HttpURLConnection.HTTP_OK){
                 val inputStream=connection.inputStream
-                val reader=BufferedReader(InputStreamReader(inputStream))
+                val reader= BufferedReader(InputStreamReader(inputStream))
                 reader.use{
                     it.forEachLine{line->resultat.append(line)}
                 }
                 try{
-                    val obj=JSONObject(resultat.toString())
+                    println("RESPUESTA SERVIDOR: >>>${resultat.toString()}<<<")
+
+                    val obj= JSONObject(resultat.toString())
 
                     if (obj.optString("error") == "Token expirado") {
-                        SessionData.token = ""
-                        SessionData.dni = ""
                         lastError = "Token expirado"
                         return null
                     }

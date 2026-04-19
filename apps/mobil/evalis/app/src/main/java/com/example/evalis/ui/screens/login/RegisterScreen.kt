@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.evalis.GestorSQLExternModern
+import com.example.evalis.model.GestorSQLExternModern
 import com.example.evalis.R
 import com.example.evalis.UnsafeSSL
 import com.example.evalis.ui.theme.EvalisTheme
