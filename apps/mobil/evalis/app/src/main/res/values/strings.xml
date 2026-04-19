@@ -38,5 +38,6 @@
     <string name="aula_label">aula</string>
 
     <string name="button_label">Atrás</string>
+    <string name="estudi_label">Els meus expedients</string>
 
 </resources>

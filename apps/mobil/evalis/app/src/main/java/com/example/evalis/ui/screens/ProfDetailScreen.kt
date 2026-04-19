@@ -16,19 +16,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.evalis.GestorSQLExternModern
+import com.example.evalis.model.GestorSQLExternModern
 import com.example.evalis.ui.components.Assignatures
 import com.example.evalis.ui.theme.EvalisTheme
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.concurrent.thread
 import com.example.evalis.R
+import com.example.evalis.model.GestorSQLExternModern.SqlInfo.BASE_URL
 import com.example.evalis.ui.screens.login.SessionData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 
-private const val BASE_URL = "http://192.168.1.15"
 
 data class AssigAlumne(
     val nom: String,
@@ -50,7 +50,7 @@ fun ProfsDetail(dni: String, profId: String, onClose: () -> Unit = {}) {
         val result = withContext(Dispatchers.IO) {
             try {
                 val gestor = GestorSQLExternModern()
-                gestor.connectar("$BASE_URL/get_prof.php?dni=$dni&codi_prof=$profId&token=${SessionData.token}")
+                gestor.connectar("${BASE_URL}/get_prof.php?dni=$dni&codi_prof=$profId&token=${SessionData.token}")
             } catch (e: Exception) {
                 null
             }

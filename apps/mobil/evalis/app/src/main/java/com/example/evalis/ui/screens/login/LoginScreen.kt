@@ -29,9 +29,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.evalis.GestorSQLExternModern
+import com.example.evalis.model.GestorSQLExternModern
 import com.example.evalis.R
 import com.example.evalis.UnsafeSSL
+import com.example.evalis.model.GestorSQLExternModern.SqlInfo
+import com.example.evalis.model.GestorSQLExternModern.SqlInfo.BASE_URL
 import com.example.evalis.ui.theme.EvalisTheme
 import org.json.JSONObject
 import java.net.URLEncoder
@@ -124,7 +126,6 @@ fun LoginButton(user: String, pass: String, onSuccess: () -> Unit, modifier: Mod
     Button(
         modifier = modifier,
         onClick = {
-            val baseUrl = "https://192.168.1.15" //cambiar cada que se reinicie el pc
             val method = "POST"
 
             val u = URLEncoder.encode(user, "UTF-8")
@@ -133,9 +134,9 @@ fun LoginButton(user: String, pass: String, onSuccess: () -> Unit, modifier: Mod
             val params = "username=$u&password=$p"
 
             if (method == "GET") {
-                url = "$baseUrl/login.php?username=$u&password=$p"
+                url = "${BASE_URL}/login.php?username=$u&password=$p"
             } else if (method == "POST") {
-                url = "$baseUrl/login.php"
+                url = "${BASE_URL}/login.php"
             }
             thread {
                 try {
@@ -155,7 +156,9 @@ fun LoginButton(user: String, pass: String, onSuccess: () -> Unit, modifier: Mod
                                 context,
                                 context.getString(R.string.error_aviso2, missatgeError),
                                 Toast.LENGTH_LONG
+
                             ).show()
+
                         } else {
                             val potEntrar = obj.optBoolean("pot_entrar", false)
                             SessionData.dni = obj.optString("dni")

@@ -39,4 +39,7 @@
     <string name="aula_label">salle de classe</string>
 
     <string name="button_label">Retour</string>
+
+    <string name="estudi_label">Els meus expedients</string>
+
 </resources>
