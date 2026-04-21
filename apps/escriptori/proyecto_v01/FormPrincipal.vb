@@ -10,6 +10,7 @@ Public Class FormPrincipal
         lblRol.Text = $"{result.rol}"
         lblName.Text = _nomProf
 
+
         Me.dni = result.dni
     End Sub
 
@@ -30,7 +31,7 @@ Public Class FormPrincipal
         Dim sel As New SeleccionarAsignatura(dni)
 
         If sel.ShowDialog = DialogResult.OK Then
-            Dim f As New FormNotas(Me, dni, sel.asignaturaId, sel.asignaturaNom, _nomProf, lblRol.Text)
+            Dim f As New FormNotas(Me, dni, sel.asignaturaId, sel.asignaturaNom, _nomProf, lblRol.Text, sel.grup)
             Me.Hide()
             f.Show()
         End If

@@ -4,7 +4,7 @@ Imports Newtonsoft.Json.Linq
 Public Class AbrirEvaluacion
     Private ReadOnly dni As String
     Private ReadOnly client As HttpClient = UnsafeSSL.createUnsafeClient()
-    Private Const BASE_URL As String = "https://192.168.1.134/periode.php"
+    Private Const BASE_URL As String = "https://192.168.17.6/periode.php"
     Private id As New List(Of Integer)
 
     Public Sub New(dni As String)
@@ -149,5 +149,9 @@ Public Class AbrirEvaluacion
     ''actualizar
     Private Async Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
         Await LoadOpenNotesAsync()
+    End Sub
+
+    Private Sub dgvPeriodes_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvPeriodes.CellContentClick
+
     End Sub
 End Class

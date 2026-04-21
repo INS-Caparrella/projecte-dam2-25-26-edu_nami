@@ -10,7 +10,7 @@ Public Class OrlaProfesores
 
     Private Async Function loadOrlaAsync() As Task
         Try
-            Dim json As String = Await _client.GetStringAsync("https://192.168.1.134/orla.php")
+            Dim json As String = Await _client.GetStringAsync("https://192.168.17.6/orla.php")
             Dim obj As JObject = JObject.Parse(json)
 
             If Not obj.Value(Of Boolean)("ok") Then
@@ -33,7 +33,8 @@ Public Class OrlaProfesores
         .Width = 200,
         .Height = 280,
         .BackColor = Color.White,
-        .Margin = New Padding(10)
+        .Margin = New Padding(10),
+        .Top = 60
         }
 
         Dim pic As New PictureBox With {
@@ -93,4 +94,8 @@ Public Class OrlaProfesores
 
         Return card
     End Function
+
+    Private Sub lblGoBack_Click(sender As Object, e As EventArgs) Handles lblGoBack.Click
+
+    End Sub
 End Class

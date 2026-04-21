@@ -9,7 +9,7 @@ Imports MySqlConnector
 Imports Newtonsoft.Json.Linq
 
 Public Class LogIn
-    Private Const BASE_URL As String = "https://192.168.1.134/login.php"
+    Private Const BASE_URL As String = "https://192.168.17.6/login.php"
 
     Private Shared ReadOnly _client As HttpClient = UnsafeSSL.createUnsafeClient()
 
@@ -70,14 +70,16 @@ Public Class LogIn
     ''POST
     Private Async Function loginAsync(user As String, pass As String) As Task(Of LoginResult)
         Dim data = New FormUrlEncodedContent(New Dictionary(Of String, String) From {
-                                             {"username", user},
-                                             {"password", pass}
-                                             })
+            {"username", user},
+            {"password", pass}
+        })
 
         Dim response As HttpResponseMessage = Await _client.PostAsync(BASE_URL, data)
         response.EnsureSuccessStatusCode()
 
+
         Dim jsonSt = Await response.Content.ReadAsStringAsync()
+
         Dim obj = JObject.Parse(jsonSt)
 
         Return New LoginResult With {
@@ -86,7 +88,9 @@ Public Class LogIn
             .dni = obj.Value(Of String)("dni"),
             .name = obj.Value(Of String)("nom"),
             .surname = obj.Value(Of String)("cognom"),
-            .typeError = obj.Value(Of String)("tipus_error")
+            .typeError = obj.Value(Of String)("tipus_error"),
+            .grup = obj.Value(Of String)("grup"),
+            .grups = If(obj("grups") IsNot Nothing, obj("grups").ToObject(Of List(Of String))(), New List(Of String))
         }
     End Function
 
@@ -99,4 +103,6 @@ Public Class LoginResult
     Public Property typeError As String
     Public Property name As String
     Public Property surname As String
+    Public Property grup As String
+    Public Property grups As List(Of String)
 End Class

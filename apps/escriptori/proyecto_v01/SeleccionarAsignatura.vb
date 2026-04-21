@@ -2,12 +2,13 @@
 Imports Newtonsoft.Json.Linq
 
 Public Class SeleccionarAsignatura
-    Private Const BASE_URL As String = "https://192.168.1.134/notes.php"
+    Private Const BASE_URL As String = "https://192.168.17.6/notes.php"
     Private ReadOnly _client As HttpClient = UnsafeSSL.createUnsafeClient()
     Private ReadOnly _dni As String
 
     Public Property asignaturaId As String = ""
     Public Property asignaturaNom As String = ""
+    Public Property grup As String = ""
 
     Public Sub New(dni As String)
         InitializeComponent()
@@ -36,7 +37,11 @@ Public Class SeleccionarAsignatura
             cbAsignaturas.SelectedIndex = 0
 
             For Each a As JToken In obj("assignatures")
-                cbAsignaturas.Items.Add(New ComboItem(a.Value(Of String)("id_assignatura"), a.Value(Of String)("nom")))
+                cbAsignaturas.Items.Add(New ComboItem(
+                                        a.Value(Of String)("id_assignatura"),
+                                        a.Value(Of String)("nom"),
+                                        a.Value(Of String)("nom_grup")
+                                        ))
             Next
 
             cbAsignaturas.DisplayMember = "Text"
@@ -64,6 +69,7 @@ Public Class SeleccionarAsignatura
 
         asignaturaId = item.Value
         asignaturaNom = item.Display
+        grup = item.Grup
 
         Me.DialogResult = DialogResult.OK
         Me.Close()
@@ -78,10 +84,12 @@ End Class
 Public Class ComboItem
     Public Property Value As String
     Public Property Display As String
+    Public Property Grup As String
 
-    Public Sub New(value As String, display As String)
+    Public Sub New(value As String, display As String, Optional grup As String = "")
         Me.Value = value
         Me.Display = display
+        Me.Grup = grup
     End Sub
 
     Public Overrides Function ToString() As String
