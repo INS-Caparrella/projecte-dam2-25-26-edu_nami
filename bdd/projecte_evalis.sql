@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3307
--- Temps de generació: 03-04-2026 a les 20:14:44
+-- Temps de generació: 21-04-2026 a les 16:23:28
 -- Versió del servidor: 10.4.32-MariaDB
 -- Versió de PHP: 8.2.12
 
@@ -74,6 +74,53 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Estructura de la taula `acta_avaluacio`
+--
+
+CREATE TABLE `acta_avaluacio` (
+  `id` int(11) NOT NULL,
+  `id_assignatura` varchar(20) NOT NULL,
+  `nom_grup` varchar(20) NOT NULL,
+  `trimestre` int(11) NOT NULL,
+  `curs` varchar(9) NOT NULL,
+  `obert_per` varchar(9) NOT NULL,
+  `data_obertura` datetime NOT NULL,
+  `data_tancament` datetime NOT NULL,
+  `corregida` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `acta_avaluacio`
+--
+
+INSERT INTO `acta_avaluacio` (`id`, `id_assignatura`, `nom_grup`, `trimestre`, `curs`, `obert_per`, `data_obertura`, `data_tancament`, `corregida`) VALUES
+(3, 'ASIG010', 'SMX2A', 2, '2026-2027', '11223344K', '2026-04-20 23:36:47', '2026-04-20 23:36:47', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `acta_notes`
+--
+
+CREATE TABLE `acta_notes` (
+  `id` int(11) NOT NULL,
+  `id_acta` int(11) NOT NULL,
+  `nia` int(11) NOT NULL,
+  `nota_final` decimal(10,0) NOT NULL,
+  `repetidor` tinyint(1) NOT NULL,
+  `treballant` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `acta_notes`
+--
+
+INSERT INTO `acta_notes` (`id`, `id_acta`, `nia`, `nota_final`, `repetidor`, `treballant`) VALUES
+(1, 3, 10009, 5, 1, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de la taula `administradors`
 --
 
@@ -138,24 +185,25 @@ INSERT INTO `admin_centre` (`id`, `admin_id`, `codi_centre`, `backup`) VALUES
 
 CREATE TABLE `assignatures` (
   `codi` varchar(25) NOT NULL,
-  `nom` varchar(50) NOT NULL
+  `nom` varchar(50) NOT NULL,
+  `departament` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Bolcament de dades per a la taula `assignatures`
 --
 
-INSERT INTO `assignatures` (`codi`, `nom`) VALUES
-('ASIG001', 'Programació'),
-('ASIG002', 'Bases de Dades'),
-('ASIG003', 'Gestió Empresarial'),
-('ASIG004', 'Disseny Gràfic'),
-('ASIG005', 'Mecànica Aplicada'),
-('ASIG006', 'Ofimàtica'),
-('ASIG007', 'Serveis i Atenció al Client'),
-('ASIG008', 'Matemàtiques'),
-('ASIG009', 'Informàtica Bàsica'),
-('ASIG010', 'Ciències Naturals');
+INSERT INTO `assignatures` (`codi`, `nom`, `departament`) VALUES
+('ASIG001', 'Programació', 'Informàtica'),
+('ASIG002', 'Bases de Dades', 'Informàtica'),
+('ASIG003', 'Gestió Empresarial', 'Administració'),
+('ASIG004', 'Disseny Gràfic', 'Arts Gràfiques'),
+('ASIG005', 'Mecànica Aplicada', 'Tecnologia'),
+('ASIG006', 'Ofimàtica', 'Informàtica'),
+('ASIG007', 'Serveis i Atenció al Client', 'Administració'),
+('ASIG008', 'Matemàtiques', 'Matemàtiques'),
+('ASIG009', 'Informàtica Bàsica', 'Informàtica'),
+('ASIG010', 'Ciències Naturals', 'Ciències');
 
 -- --------------------------------------------------------
 
@@ -415,7 +463,9 @@ INSERT INTO `estudiants_ras` (`id`, `id_ra`, `nia`, `nota`) VALUES
 (7, 7, 10007, 8),
 (8, 8, 10008, 7),
 (9, 9, 10009, 10),
-(10, 10, 10010, 9);
+(10, 10, 10010, 9),
+(11, 13, 10001, 7),
+(12, 10, 10009, 4);
 
 --
 -- Disparadors `estudiants_ras`
@@ -493,6 +543,31 @@ INSERT INTO `grup_classe` (`nom`, `aula`) VALUES
 ('FPB2A', 'A502'),
 ('SMX1A', 'A301'),
 ('SMX2A', 'A302');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de la taula `historic_actes`
+--
+
+CREATE TABLE `historic_actes` (
+  `id` int(11) NOT NULL,
+  `id_acta` int(11) NOT NULL,
+  `dni_professor` varchar(9) NOT NULL,
+  `camp_mod` varchar(50) NOT NULL,
+  `valor_anterior` varchar(255) NOT NULL,
+  `valor_nou` varchar(255) NOT NULL,
+  `motiu` varchar(255) NOT NULL,
+  `data_mod` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Bolcament de dades per a la taula `historic_actes`
+--
+
+INSERT INTO `historic_actes` (`id`, `id_acta`, `dni_professor`, `camp_mod`, `valor_anterior`, `valor_nou`, `motiu`, `data_mod`) VALUES
+(1, 3, '11223344K', 'nota_final', '', '6', 'prova', '2026-04-20 21:57:58'),
+(2, 3, '11223344K', 'nota_final', '6', '6', 'prova', '2026-04-20 22:00:10');
 
 -- --------------------------------------------------------
 
@@ -597,7 +672,7 @@ INSERT INTO `historic_professors` (`id`, `codi_prof`, `tipus`, `motius`, `justif
 
 CREATE TABLE `logs_consultes` (
   `id` int(11) NOT NULL,
-  `token` int(11) NOT NULL,
+  `dni_user` varchar(20) NOT NULL,
   `consulta` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -605,32 +680,75 @@ CREATE TABLE `logs_consultes` (
 -- Bolcament de dades per a la taula `logs_consultes`
 --
 
-INSERT INTO `logs_consultes` (`id`, `token`, `consulta`) VALUES
-(1, 1, 'Visualizó datos del estudiante 10001'),
-(2, 2, 'Intentó acceso a notas del estudiante 10002'),
-(3, 3, 'Actualizó asignatura ASIG003'),
-(4, 4, 'Descargó informe de asistencia grupo 1rA'),
-(5, 5, 'Consultó horario de DAM1A'),
-(6, 6, 'Registró sesión FCT del estudiante 10006'),
-(7, 7, 'Modificó contrato del profesor PROF007'),
-(8, 8, 'Visualizó histórico de estudiantes repetidores'),
-(9, 9, 'Consultó notas de la asignatura ASIG009'),
-(10, 10, 'Registró incidencia en prácticas del estudiante 10010'),
-(11, 11, 'Visualizó lista de usuarios activos'),
-(12, 12, 'Intentó acceso a datos confidenciales'),
-(13, 13, 'Actualizó asignatura ASIG013'),
-(14, 14, 'Descargó informe de asistencia grupo DAW2A'),
-(15, 15, 'Consultó horario de CFGM Informàtica'),
-(16, 16, 'Registró sesión FCT del estudiante 10016'),
-(17, 17, 'Modificó contrato del profesor PROF017'),
-(18, 18, 'Visualizó histórico de estudiantes repetidores'),
-(19, 19, 'Consultó notas de la asignatura ASIG019'),
-(20, 20, 'Registró incidencia en prácticas del estudiante 10020'),
-(21, 21, 'Visualizó lista de usuarios activos'),
-(22, 22, 'Intentó acceso a datos confidenciales'),
-(23, 23, 'Actualizó asignatura ASIG023'),
-(24, 24, 'Descargó informe de asistencia grupo 1rB'),
-(25, 25, 'Consultó horario de DAW1A');
+INSERT INTO `logs_consultes` (`id`, `dni_user`, `consulta`) VALUES
+(1, '55548601J', 'Visualizó datos del estudiante 10001'),
+(2, '55548601J', 'Intentó acceso a notas del estudiante 10002'),
+(26, '33445566M', '/get_profs.php?dni=33445566M&token=8d140dc75e797f94f1872df04b6fb291f2bc21009cf3c9e3df4734c12d2b0ff5'),
+(27, '33445566M', '/get_profs.php?dni=33445566M&token=19a66677ad5dfa9a7df4846461891c8f133d6ac274333f2ee17598fa9adf79a8'),
+(28, '33445566M', '/get_profs.php?dni=33445566M&token=19a66677ad5dfa9a7df4846461891c8f133d6ac274333f2ee17598fa9adf79a8'),
+(29, '33445566M', '/get_prof.php?dni=33445566M&codi_prof=PROF002&token=19a66677ad5dfa9a7df4846461891c8f133d6ac274333f2ee17598fa9adf79a8'),
+(30, '33445566M', '/get_profs.php?dni=33445566M&token=19a66677ad5dfa9a7df4846461891c8f133d6ac274333f2ee17598fa9adf79a8'),
+(31, '33445566M', '/get_profs.php?dni=33445566M&token=19a66677ad5dfa9a7df4846461891c8f133d6ac274333f2ee17598fa9adf79a8'),
+(32, '33445566M', '/get_estudis.php?dni=33445566M&token=19a66677ad5dfa9a7df4846461891c8f133d6ac274333f2ee17598fa9adf79a8'),
+(33, '33445566M', '/get_estudis.php?dni=33445566M&token=19a66677ad5dfa9a7df4846461891c8f133d6ac274333f2ee17598fa9adf79a8'),
+(34, '33445566M', '/get_profs.php?dni=33445566M&token=dba2a1eb8abc54723361f32f8627ce5761498ca45f1173e13cac3b3cb967e674'),
+(35, '33445566M', '/get_estudis.php?dni=33445566M&token=dba2a1eb8abc54723361f32f8627ce5761498ca45f1173e13cac3b3cb967e674'),
+(36, '33445566M', '/get_estudis.php?dni=33445566M&token=dba2a1eb8abc54723361f32f8627ce5761498ca45f1173e13cac3b3cb967e674'),
+(37, '33445566M', '/get_estudis.php?dni=33445566M&token=dba2a1eb8abc54723361f32f8627ce5761498ca45f1173e13cac3b3cb967e674'),
+(38, '33445566M', '/get_profs.php?dni=33445566M&token=f4c1060561cbf29aa1a42587dc91da2e84c7c1355c0d3bf774ce34902c90c880'),
+(39, '33445566M', '/get_prof.php?dni=33445566M&codi_prof=PROF002&token=f4c1060561cbf29aa1a42587dc91da2e84c7c1355c0d3bf774ce34902c90c880'),
+(40, '33445566M', '/get_profs.php?dni=33445566M&token=f4c1060561cbf29aa1a42587dc91da2e84c7c1355c0d3bf774ce34902c90c880'),
+(41, '33445566M', '/get_estudis.php?dni=33445566M&token=cb4cbd7d5ef8bd877ef1584e85592085da04c38c2f899a386ad42c84b67cfc0d'),
+(42, '33445566M', '/get_estudis.php?dni=33445566M&token=9d1f5d58262b4a9767f59bdd5b61b9296039cf08cc93dd12359e0d2a5dab01b9'),
+(43, '33445566M', '/get_estudis.php?dni=33445566M&token=e42db7da55010b55a4b7024b1a4af0eb7016598ae8f62208f306d5ac2fb49ea2'),
+(44, '33445566M', '/get_estudis.php?dni=33445566M&token=5b91949539fae966844511bfe784ea821bd4ef5fcd38eec24053d2761fca27a7'),
+(45, '33445566M', '/get_profs.php?dni=33445566M&token=5b91949539fae966844511bfe784ea821bd4ef5fcd38eec24053d2761fca27a7'),
+(46, '33445566M', '/get_estudis.php?dni=33445566M&token=5a1b653d7407a62abeee784d2e63a489b10d834ffad8daf834d1af87bfbcf8a3'),
+(47, '33445566M', '/get_estudis.php?dni=33445566M&token=5a1b653d7407a62abeee784d2e63a489b10d834ffad8daf834d1af87bfbcf8a3'),
+(48, '33445566M', '/get_profs.php?dni=33445566M&token=5a1b653d7407a62abeee784d2e63a489b10d834ffad8daf834d1af87bfbcf8a3'),
+(49, '33445566M', '/get_prof.php?dni=33445566M&codi_prof=PROF002&token=5a1b653d7407a62abeee784d2e63a489b10d834ffad8daf834d1af87bfbcf8a3'),
+(50, '33445566M', '/get_profs.php?dni=33445566M&token=5a1b653d7407a62abeee784d2e63a489b10d834ffad8daf834d1af87bfbcf8a3'),
+(51, '33445566M', '/get_prof.php?dni=33445566M&codi_prof=PROF002&token=5a1b653d7407a62abeee784d2e63a489b10d834ffad8daf834d1af87bfbcf8a3'),
+(52, '33445566M', '/get_profs.php?dni=33445566M&token=5a1b653d7407a62abeee784d2e63a489b10d834ffad8daf834d1af87bfbcf8a3'),
+(53, '33445566M', '/get_profs.php?dni=33445566M&token=8b4ddec03d757c2cd7986b8e60e67ce83567eed1b42f1af438199985f964df8f'),
+(54, '33445566M', '/get_estudis.php?dni=33445566M&token=8b4ddec03d757c2cd7986b8e60e67ce83567eed1b42f1af438199985f964df8f'),
+(55, '33445566M', '/get_profs.php?dni=33445566M&token=fedbbe7fcd86e8a7e378c726ee0b4eb26eda35d58c5926351b2c2a8a1f2c7628'),
+(56, '33445566M', '/get_estudis.php?dni=33445566M&token=fedbbe7fcd86e8a7e378c726ee0b4eb26eda35d58c5926351b2c2a8a1f2c7628'),
+(57, '33445566M', '/get_profs.php?dni=33445566M&token=b2cf512e94a5ce7c6d388c634deaa54046d489b9c34192c67ff1ed29bbb9a509'),
+(58, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=b2cf512e94a5ce7c6d388c634deaa54046d489b9c34192c67ff1ed29bbb9a509'),
+(59, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=b2cf512e94a5ce7c6d388c634deaa54046d489b9c34192c67ff1ed29bbb9a509'),
+(60, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=6ccbce52e5c94751c5f398862fad3c490bddc376747cfbfaec16c7fc83bb8de3'),
+(61, '33445566M', '/get_estudis.php?dni=33445566M&token=6ccbce52e5c94751c5f398862fad3c490bddc376747cfbfaec16c7fc83bb8de3'),
+(62, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=6ccbce52e5c94751c5f398862fad3c490bddc376747cfbfaec16c7fc83bb8de3'),
+(63, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=6ccbce52e5c94751c5f398862fad3c490bddc376747cfbfaec16c7fc83bb8de3'),
+(64, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=6ccbce52e5c94751c5f398862fad3c490bddc376747cfbfaec16c7fc83bb8de3'),
+(65, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=6ccbce52e5c94751c5f398862fad3c490bddc376747cfbfaec16c7fc83bb8de3'),
+(66, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=6ccbce52e5c94751c5f398862fad3c490bddc376747cfbfaec16c7fc83bb8de3'),
+(67, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=6ccbce52e5c94751c5f398862fad3c490bddc376747cfbfaec16c7fc83bb8de3'),
+(68, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=6ccbce52e5c94751c5f398862fad3c490bddc376747cfbfaec16c7fc83bb8de3'),
+(69, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=6ccbce52e5c94751c5f398862fad3c490bddc376747cfbfaec16c7fc83bb8de3'),
+(70, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=6ccbce52e5c94751c5f398862fad3c490bddc376747cfbfaec16c7fc83bb8de3'),
+(71, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=6ccbce52e5c94751c5f398862fad3c490bddc376747cfbfaec16c7fc83bb8de3'),
+(72, '33445566M', '/get_estudis.php?dni=33445566M&token=936933860cc2861d89a8e00f82fc97d89b6df077624ba0c48af37681918743b3'),
+(73, '33445566M', '/get_estudis.php?dni=33445566M&token=936933860cc2861d89a8e00f82fc97d89b6df077624ba0c48af37681918743b3'),
+(74, '33445566M', '/get_estudis.php?dni=33445566M&token=1047bd098e7277af2791643a29a19e18a504c66d434ad47ce222d409225a2652'),
+(75, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=1047bd098e7277af2791643a29a19e18a504c66d434ad47ce222d409225a2652'),
+(76, '33445566M', '/get_estudis.php?dni=33445566M&token=1047bd098e7277af2791643a29a19e18a504c66d434ad47ce222d409225a2652'),
+(77, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=1047bd098e7277af2791643a29a19e18a504c66d434ad47ce222d409225a2652'),
+(78, '33445566M', '/get_estudis.php?dni=33445566M&token=1047bd098e7277af2791643a29a19e18a504c66d434ad47ce222d409225a2652'),
+(79, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=1047bd098e7277af2791643a29a19e18a504c66d434ad47ce222d409225a2652'),
+(80, '33445566M', '/get_estudis.php?dni=33445566M&token=1047bd098e7277af2791643a29a19e18a504c66d434ad47ce222d409225a2652'),
+(81, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=1047bd098e7277af2791643a29a19e18a504c66d434ad47ce222d409225a2652'),
+(82, '33445566M', '/get_estudis.php?dni=33445566M&token=1047bd098e7277af2791643a29a19e18a504c66d434ad47ce222d409225a2652'),
+(83, '33445566M', '/get_profs.php?dni=33445566M&token=1047bd098e7277af2791643a29a19e18a504c66d434ad47ce222d409225a2652'),
+(84, '33445566M', '/get_estudis.php?dni=33445566M&token=1047bd098e7277af2791643a29a19e18a504c66d434ad47ce222d409225a2652'),
+(85, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=1047bd098e7277af2791643a29a19e18a504c66d434ad47ce222d409225a2652'),
+(86, '33445566M', '/get_estudis.php?dni=33445566M&token=144297672cb4cd41faba277b2f88f03a9d47f4f30d343426bff5fe2b3a4f520e'),
+(87, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=144297672cb4cd41faba277b2f88f03a9d47f4f30d343426bff5fe2b3a4f520e'),
+(88, '33445566M', '/get_estudis.php?dni=33445566M&token=144297672cb4cd41faba277b2f88f03a9d47f4f30d343426bff5fe2b3a4f520e'),
+(89, '33445566M', '/get_estudis.php?dni=33445566M&token=8dd9992fdb0bea96e0f4e233862f08cce22ec09317107701dd2011b14ca3a583'),
+(90, '33445566M', '/get_expedient.php?dni=33445566M&cicle=Batxillerat&token=8dd9992fdb0bea96e0f4e233862f08cce22ec09317107701dd2011b14ca3a583'),
+(91, '33445566M', '/get_estudis.php?dni=33445566M&token=8dd9992fdb0bea96e0f4e233862f08cce22ec09317107701dd2011b14ca3a583');
 
 -- --------------------------------------------------------
 
@@ -640,9 +758,9 @@ INSERT INTO `logs_consultes` (`id`, `token`, `consulta`) VALUES
 
 CREATE TABLE `logs_login` (
   `id` int(11) NOT NULL,
-  `id_user` int(11) NOT NULL,
+  `dni_user` varchar(20) NOT NULL,
   `ip` int(12) NOT NULL,
-  `login` tinyint(1) NOT NULL,
+  `exito` tinyint(1) NOT NULL,
   `data` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -650,63 +768,28 @@ CREATE TABLE `logs_login` (
 -- Bolcament de dades per a la taula `logs_login`
 --
 
-INSERT INTO `logs_login` (`id`, `id_user`, `ip`, `login`, `data`) VALUES
-(1, 1, 2147483647, 1, '2025-11-20 08:15:00'),
-(2, 2, 2147483647, 0, '2025-11-20 08:20:00'),
-(3, 3, 2147483647, 1, '2025-11-20 08:25:00'),
-(4, 4, 2147483647, 1, '2025-11-20 08:30:00'),
-(5, 5, 2147483647, 0, '2025-11-20 08:35:00'),
-(6, 6, 2147483647, 1, '2025-11-20 08:40:00'),
-(7, 7, 2147483647, 1, '2025-11-20 08:45:00'),
-(8, 8, 2147483647, 0, '2025-11-20 08:50:00'),
-(9, 9, 2147483647, 1, '2025-11-20 08:55:00'),
-(10, 10, 2147483647, 1, '2025-11-20 09:00:00'),
-(11, 11, 2147483647, 1, '2025-11-20 09:05:00'),
-(12, 12, 2147483647, 0, '2025-11-20 09:10:00'),
-(13, 13, 2147483647, 1, '2025-11-20 09:15:00'),
-(14, 14, 2147483647, 1, '2025-11-20 09:20:00'),
-(15, 15, 2147483647, 0, '2025-11-20 09:25:00'),
-(16, 16, 2147483647, 1, '2025-11-20 09:30:00'),
-(17, 17, 2147483647, 1, '2025-11-20 09:35:00'),
-(18, 18, 2147483647, 0, '2025-11-20 09:40:00'),
-(19, 19, 2147483647, 1, '2025-11-20 09:45:00'),
-(20, 20, 2147483647, 1, '2025-11-20 09:50:00'),
-(21, 21, 2147483647, 1, '2025-11-20 09:55:00'),
-(22, 22, 2147483647, 0, '2025-11-20 10:00:00'),
-(23, 23, 2147483647, 1, '2025-11-20 10:05:00'),
-(24, 24, 2147483647, 1, '2025-11-20 10:10:00'),
-(25, 25, 2147483647, 0, '2025-11-20 10:15:00'),
-(26, 12, 2130706433, 1, '2026-04-01 12:15:59'),
-(27, 12, 2130706433, 1, '2026-04-01 12:16:07'),
-(28, 12, 2130706433, 1, '2026-04-01 12:16:41'),
-(29, 12, 2147483647, 1, '2026-04-01 12:17:38'),
-(30, 12, 2130706433, 1, '2026-04-01 12:21:32'),
-(31, 12, 2130706433, 1, '2026-04-01 12:22:31'),
-(32, 12, 2147483647, 1, '2026-04-01 12:22:42'),
-(33, 12, 2130706433, 1, '2026-04-01 12:24:44'),
-(34, 12, 2147483647, 1, '2026-04-01 12:25:31'),
-(35, 12, 2147483647, 1, '2026-04-01 12:26:17'),
-(36, 12, 2147483647, 1, '2026-04-01 13:09:21'),
-(37, 12, 2147483647, 1, '2026-04-01 13:09:48'),
-(38, 12, 2147483647, 1, '2026-04-01 13:35:29'),
-(39, 12, 2147483647, 1, '2026-04-01 14:42:58'),
-(40, 12, 2147483647, 1, '2026-04-01 14:43:57'),
-(41, 10, 2147483647, 1, '2026-04-01 14:52:15'),
-(42, 10, 2147483647, 1, '2026-04-03 19:07:20'),
-(43, 10, 2147483647, 1, '2026-04-03 19:08:50'),
-(44, 10, 2147483647, 1, '2026-04-03 19:13:20'),
-(45, 10, 2147483647, 1, '2026-04-03 19:14:38'),
-(46, 10, 2147483647, 1, '2026-04-03 19:39:51'),
-(47, 10, 2147483647, 1, '2026-04-03 19:40:28'),
-(48, 10, 2147483647, 1, '2026-04-03 19:40:49'),
-(49, 10, 2147483647, 1, '2026-04-03 19:42:06'),
-(50, 10, 2147483647, 1, '2026-04-03 19:44:52'),
-(51, 10, 2147483647, 1, '2026-04-03 19:46:23'),
-(52, 10, 2147483647, 1, '2026-04-03 19:51:49'),
-(53, 10, 2147483647, 1, '2026-04-03 19:55:50'),
-(54, 12, 2147483647, 1, '2026-04-03 20:00:41'),
-(55, 12, 2147483647, 1, '2026-04-03 20:01:27'),
-(56, 12, 2147483647, 1, '2026-04-03 20:02:04');
+INSERT INTO `logs_login` (`id`, `dni_user`, `ip`, `exito`, `data`) VALUES
+(1, '55548601J', 2147483647, 1, '2025-11-20 08:15:00'),
+(2, '55548601J', 2147483647, 0, '2025-11-20 08:20:00'),
+(26, '33445566M', 192168, 1, '2026-04-17 00:30:39'),
+(27, '33445566M', 192168, 1, '2026-04-17 00:37:04'),
+(28, '33445566M', 192168, 1, '2026-04-17 00:47:21'),
+(29, '33445566M', 10252, 1, '2026-04-17 13:00:48'),
+(30, '33445566M', 10252, 1, '2026-04-17 13:01:43'),
+(31, '33445566M', 10252, 1, '2026-04-17 13:03:09'),
+(32, '33445566M', 10252, 1, '2026-04-17 13:05:04'),
+(33, '33445566M', 10252, 1, '2026-04-17 13:09:47'),
+(34, '33445566M', 10252, 1, '2026-04-17 13:14:18'),
+(35, '33445566M', 10252, 1, '2026-04-17 13:15:58'),
+(36, '33445566M', 10252, 1, '2026-04-17 13:26:50'),
+(37, '33445566M', 10252, 1, '2026-04-17 13:33:40'),
+(38, '33445566M', 192168, 1, '2026-04-19 15:37:58'),
+(39, '33445566M', 192168, 1, '2026-04-19 15:39:44'),
+(40, '33445566M', 192168, 1, '2026-04-19 17:49:01'),
+(41, '33445566M', 192168, 1, '2026-04-19 18:45:22'),
+(42, '33445566M', 192168, 1, '2026-04-19 18:55:11'),
+(43, '33445566M', 192168, 1, '2026-04-19 19:08:43'),
+(44, '33445566M', 192168, 1, '2026-04-19 19:16:38');
 
 -- --------------------------------------------------------
 
@@ -730,7 +813,7 @@ CREATE TABLE `periodes_avaluacio` (
 
 INSERT INTO `periodes_avaluacio` (`id`, `trimestre`, `curs`, `obert`, `data_obertura`, `data_tancament`, `obert_per`) VALUES
 (1, 1, '2026-2027', 0, '2026-04-03 19:55:54', '2026-04-03 19:56:07', '11223344K'),
-(2, 2, '2026-2027', 0, NULL, NULL, NULL),
+(2, 2, '2026-2027', 0, '2026-04-16 13:28:03', '2026-04-20 23:37:09', '11223344K'),
 (3, 3, '2026-2027', 0, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
@@ -752,7 +835,7 @@ CREATE TABLE `persones` (
   `telf_fix` int(9) NOT NULL,
   `email` varchar(50) NOT NULL,
   `ruta_foto` varchar(125) NOT NULL,
-  `rol` enum('professor','alumne','director','administrador') DEFAULT NULL
+  `rol` enum('professor','alumne','director','administrador','tutor') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -763,7 +846,7 @@ INSERT INTO `persones` (`dni`, `nom`, `cognom`, `data_naix`, `poblacio`, `codi_p
 ('10111213U', 'Biel', 'Pascual Serra', '2005-08-02', 'Lleida', 25001, 'Espanyola', 'Lleida', 690112233, 973112233, 'biel.pascual@alumne.com', 'img/alum09.jpg', NULL),
 ('11223344K', 'Eva', 'Torres Prat', '1987-06-14', 'Manresa', 8240, 'Espanyola', 'Manresa', 611223344, 938223344, 'eva.torres@centre.com', 'img/prof10.jpg', 'director'),
 ('12131415V', 'Emma', 'Vidal Torres', '2006-01-30', 'Manresa', 8240, 'Espanyola', 'Manresa', 691223344, 938223344, 'emma.vidal@alumne.com', 'img/alum10.jpg', NULL),
-('12345678A', 'Marc', 'Serra Puig', '1980-04-12', 'Barcelona', 8001, 'Espanyola', 'Barcelona', 612345678, 934567890, 'marc.serra@centre.com', 'img/prof01.jpg', NULL),
+('12345678A', 'Marc', 'Serra Puig', '1980-04-12', 'Barcelona', 8001, 'Espanyola', 'Barcelona', 612345678, 934567890, 'marc.serra@centre.com', 'img/prof01.jpg', 'professor'),
 ('13141516W', 'Joan', 'Garriga Pons', '1970-05-11', 'Barcelona', 8002, 'Espanyola', 'Barcelona', 612334455, 934334455, 'joan.garriga@admin.com', 'img/admin01.jpg', NULL),
 ('14151617X', 'Rosa', 'Molina Casals', '1968-10-08', 'Sabadell', 8203, 'Espanyola', 'Sabadell', 623445566, 937445566, 'rosa.molina@admin.com', 'img/admin02.png', NULL),
 ('15161718Y', 'Albert', 'Ferrer Dalmau', '1972-01-27', 'Terrassa', 8222, 'Espanyola', 'Terrassa', 634556677, 937556677, 'albert.ferrer@admin.com', 'img/admin03.jpg', 'administrador'),
@@ -950,8 +1033,9 @@ DELIMITER ;
 --
 
 CREATE TABLE `sessions` (
-  `token` int(11) NOT NULL,
-  `id_user` int(11) NOT NULL,
+  `id_session` int(11) NOT NULL,
+  `dni_user` varchar(20) NOT NULL,
+  `token` char(64) NOT NULL,
   `username` varchar(11) NOT NULL,
   `data_inici` date NOT NULL,
   `data_fin` date DEFAULT NULL
@@ -961,32 +1045,34 @@ CREATE TABLE `sessions` (
 -- Bolcament de dades per a la taula `sessions`
 --
 
-INSERT INTO `sessions` (`token`, `id_user`, `username`, `data_inici`, `data_fin`) VALUES
-(1, 1, 'MarcS', '2025-11-01', '2025-11-01'),
-(2, 2, 'AnnaR', '2025-11-02', NULL),
-(3, 3, 'JordiC', '2025-11-03', '2025-11-03'),
-(4, 4, 'MartaP', '2025-11-04', NULL),
-(5, 5, 'PereA', '2025-11-05', '2025-11-05'),
-(6, 6, 'LauraS', '2025-11-06', NULL),
-(7, 7, 'CarlesD', '2025-11-07', '2025-11-07'),
-(8, 8, 'NúriaP', '2025-11-08', NULL),
-(9, 9, 'XavierF', '2025-11-09', '2025-11-09'),
-(10, 10, 'EvaT', '2025-11-10', NULL),
-(11, 11, 'PolG', '2025-11-11', '2025-11-11'),
-(12, 12, 'AinaM', '2025-11-12', NULL),
-(13, 13, 'NilC', '2025-11-13', '2025-11-13'),
-(14, 14, 'LaiaR', '2025-11-14', NULL),
-(15, 15, 'JanN', '2025-11-15', '2025-11-15'),
-(16, 16, 'ClaraO', '2025-11-16', NULL),
-(17, 17, 'EricS', '2025-11-17', '2025-11-17'),
-(18, 18, 'IrisR', '2025-11-18', NULL),
-(19, 19, 'BielP', '2025-11-19', '2025-11-19'),
-(20, 20, 'EmmaV', '2025-11-20', NULL),
-(21, 21, 'JoanG', '2025-11-21', '2025-11-21'),
-(22, 22, 'RosaM', '2025-11-22', NULL),
-(23, 23, 'AlbertF', '2025-11-23', '2025-11-23'),
-(24, 24, 'SílviaG', '2025-11-24', NULL),
-(25, 25, 'RamonC', '2025-11-25', '2025-11-25');
+INSERT INTO `sessions` (`id_session`, `dni_user`, `token`, `username`, `data_inici`, `data_fin`) VALUES
+(1, '', '', 'MarcS', '2025-11-01', '2025-11-01'),
+(2, '', '', 'AnnaR', '2025-11-02', NULL),
+(3, '', '', 'JordiC', '2025-11-03', '2025-11-03'),
+(4, '', '', 'MartaP', '2025-11-04', NULL),
+(5, '', '', 'PereA', '2025-11-05', '2025-11-05'),
+(6, '', '', 'LauraS', '2025-11-06', NULL),
+(7, '', '', 'CarlesD', '2025-11-07', '2025-11-07'),
+(8, '', '', 'NúriaP', '2025-11-08', NULL),
+(9, '', '', 'XavierF', '2025-11-09', '2025-11-09'),
+(10, '', '', 'EvaT', '2025-11-10', NULL),
+(11, '', '', 'PolG', '2025-11-11', '2025-11-11'),
+(12, '', '', 'AinaM', '2025-11-12', NULL),
+(13, '', '', 'NilC', '2025-11-13', '2025-11-13'),
+(14, '', '', 'LaiaR', '2025-11-14', NULL),
+(15, '', '', 'JanN', '2025-11-15', '2025-11-15'),
+(16, '', '', 'ClaraO', '2025-11-16', NULL),
+(17, '', '', 'EricS', '2025-11-17', '2025-11-17'),
+(18, '', '', 'IrisR', '2025-11-18', NULL),
+(19, '', '', 'BielP', '2025-11-19', '2025-11-19'),
+(20, '', '', 'EmmaV', '2025-11-20', NULL),
+(21, '', '', 'JoanG', '2025-11-21', '2025-11-21'),
+(22, '', '', 'RosaM', '2025-11-22', NULL),
+(23, '', '', 'AlbertF', '2025-11-23', '2025-11-23'),
+(24, '', '', 'SílviaG', '2025-11-24', NULL),
+(25, '', '', 'RamonC', '2025-11-25', '2025-11-25'),
+(26, '11223344K', 'd7f7981ee9a9e0e92dfdacc55394240d8244ca662e9364c2668677a9168312dc', '', '2026-04-21', '2026-04-21'),
+(27, '11223344K', 'b2067f7efe8064e8717cd83eb4a60feec6ab1c44e22b6bf24aa4c53467b56fc9', '', '2026-04-21', '2026-04-21');
 
 -- --------------------------------------------------------
 
@@ -1006,7 +1092,7 @@ CREATE TABLE `usuaris` (
 --
 
 INSERT INTO `usuaris` (`id_user`, `dni`, `username`, `password`) VALUES
-(1, '12345678A', 'MarcS', NULL),
+(1, '12345678A', 'MarcS', '$2y$10$.pdrW2dT1f0gkDYiuMwfcua8vps4/jr850cBKmifFsDzgWLPPHd/a'),
 (2, '23456789B', 'AnnaR', NULL),
 (3, '34567890C', 'JordiC', NULL),
 (4, '45678901D', 'MartaP', NULL),
@@ -1041,6 +1127,22 @@ INSERT INTO `usuaris` (`id_user`, `dni`, `username`, `password`) VALUES
 --
 -- Índexs per a les taules bolcades
 --
+
+--
+-- Índexs per a la taula `acta_avaluacio`
+--
+ALTER TABLE `acta_avaluacio`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_acta_assignatura` (`id_assignatura`),
+  ADD KEY `fk_acta_grup` (`nom_grup`);
+
+--
+-- Índexs per a la taula `acta_notes`
+--
+ALTER TABLE `acta_notes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_notes_acta` (`id_acta`),
+  ADD KEY `fk_notes_estudiant` (`nia`);
 
 --
 -- Índexs per a la taula `administradors`
@@ -1132,6 +1234,14 @@ ALTER TABLE `grup_classe`
   ADD PRIMARY KEY (`nom`);
 
 --
+-- Índexs per a la taula `historic_actes`
+--
+ALTER TABLE `historic_actes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_hist_acta` (`id_acta`),
+  ADD KEY `fk_hist_professor` (`dni_professor`);
+
+--
 -- Índexs per a la taula `historic_estudiants`
 --
 ALTER TABLE `historic_estudiants`
@@ -1158,14 +1268,14 @@ ALTER TABLE `historic_professors`
 --
 ALTER TABLE `logs_consultes`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_token` (`token`);
+  ADD KEY `fk_logs_consultes_dni` (`dni_user`);
 
 --
 -- Índexs per a la taula `logs_login`
 --
 ALTER TABLE `logs_login`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_iduserl` (`id_user`);
+  ADD KEY `fk_logs_login_dni` (`dni_user`);
 
 --
 -- Índexs per a la taula `periodes_avaluacio`
@@ -1208,8 +1318,7 @@ ALTER TABLE `ras`
 -- Índexs per a la taula `sessions`
 --
 ALTER TABLE `sessions`
-  ADD PRIMARY KEY (`token`),
-  ADD KEY `fk_iduser` (`id_user`);
+  ADD PRIMARY KEY (`id_session`);
 
 --
 -- Índexs per a la taula `usuaris`
@@ -1223,6 +1332,18 @@ ALTER TABLE `usuaris`
 --
 -- AUTO_INCREMENT per les taules bolcades
 --
+
+--
+-- AUTO_INCREMENT per la taula `acta_avaluacio`
+--
+ALTER TABLE `acta_avaluacio`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT per la taula `acta_notes`
+--
+ALTER TABLE `acta_notes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT per la taula `administradors`
@@ -1258,7 +1379,13 @@ ALTER TABLE `contractes`
 -- AUTO_INCREMENT per la taula `estudiants_ras`
 --
 ALTER TABLE `estudiants_ras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT per la taula `historic_actes`
+--
+ALTER TABLE `historic_actes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT per la taula `historic_estudiants`
@@ -1282,13 +1409,13 @@ ALTER TABLE `historic_professors`
 -- AUTO_INCREMENT per la taula `logs_consultes`
 --
 ALTER TABLE `logs_consultes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT per la taula `logs_login`
 --
 ALTER TABLE `logs_login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT per la taula `periodes_avaluacio`
@@ -1309,6 +1436,12 @@ ALTER TABLE `ras`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
+-- AUTO_INCREMENT per la taula `sessions`
+--
+ALTER TABLE `sessions`
+  MODIFY `id_session` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+--
 -- AUTO_INCREMENT per la taula `usuaris`
 --
 ALTER TABLE `usuaris`
@@ -1317,6 +1450,20 @@ ALTER TABLE `usuaris`
 --
 -- Restriccions per a les taules bolcades
 --
+
+--
+-- Restriccions per a la taula `acta_avaluacio`
+--
+ALTER TABLE `acta_avaluacio`
+  ADD CONSTRAINT `fk_acta_assignatura` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`),
+  ADD CONSTRAINT `fk_acta_grup` FOREIGN KEY (`nom_grup`) REFERENCES `grup_classe` (`nom`);
+
+--
+-- Restriccions per a la taula `acta_notes`
+--
+ALTER TABLE `acta_notes`
+  ADD CONSTRAINT `fk_notes_acta` FOREIGN KEY (`id_acta`) REFERENCES `acta_avaluacio` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_notes_estudiant` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`);
 
 --
 -- Restriccions per a la taula `administradors`
@@ -1376,6 +1523,13 @@ ALTER TABLE `estudiants_ras`
   ADD CONSTRAINT `fk_niaa` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`) ON UPDATE CASCADE;
 
 --
+-- Restriccions per a la taula `historic_actes`
+--
+ALTER TABLE `historic_actes`
+  ADD CONSTRAINT `fk_hist_acta` FOREIGN KEY (`id_acta`) REFERENCES `acta_avaluacio` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_hist_professor` FOREIGN KEY (`dni_professor`) REFERENCES `persones` (`dni`);
+
+--
 -- Restriccions per a la taula `historic_estudiants`
 --
 ALTER TABLE `historic_estudiants`
@@ -1398,13 +1552,13 @@ ALTER TABLE `historic_professors`
 -- Restriccions per a la taula `logs_consultes`
 --
 ALTER TABLE `logs_consultes`
-  ADD CONSTRAINT `fk_token` FOREIGN KEY (`token`) REFERENCES `sessions` (`token`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_logs_consultes_dni` FOREIGN KEY (`dni_user`) REFERENCES `usuaris` (`dni`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Restriccions per a la taula `logs_login`
 --
 ALTER TABLE `logs_login`
-  ADD CONSTRAINT `fk_iduserl` FOREIGN KEY (`id_user`) REFERENCES `usuaris` (`id_user`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_logs_login_dni` FOREIGN KEY (`dni_user`) REFERENCES `usuaris` (`dni`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Restriccions per a la taula `periodes_avaluacio`
@@ -1430,12 +1584,6 @@ ALTER TABLE `prof_assignatura`
 --
 ALTER TABLE `ras`
   ADD CONSTRAINT `fk_assignaturaid` FOREIGN KEY (`codi_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE;
-
---
--- Restriccions per a la taula `sessions`
---
-ALTER TABLE `sessions`
-  ADD CONSTRAINT `fk_iduser` FOREIGN KEY (`id_user`) REFERENCES `usuaris` (`id_user`) ON UPDATE CASCADE;
 
 --
 -- Restriccions per a la taula `usuaris`
