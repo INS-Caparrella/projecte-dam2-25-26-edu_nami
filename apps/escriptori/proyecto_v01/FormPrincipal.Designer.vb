@@ -33,6 +33,8 @@ Partial Class FormPrincipal
         tlpInfoP = New TableLayoutPanel()
         lblName = New Label()
         lblRol = New Label()
+        btnFicha = New ToolStripButton()
+        btnConfig = New ToolStripButton()
         tsMenuPrincipal.SuspendLayout()
         CType(pbPicture, ComponentModel.ISupportInitialize).BeginInit()
         tlpInfoP.SuspendLayout()
@@ -50,10 +52,10 @@ Partial Class FormPrincipal
         ' 
         tsMenuPrincipal.Dock = DockStyle.Left
         tsMenuPrincipal.ImageScalingSize = New Size(20, 20)
-        tsMenuPrincipal.Items.AddRange(New ToolStripItem() {btnGrades, btnOpenT, btnOrlas, btnDownload})
+        tsMenuPrincipal.Items.AddRange(New ToolStripItem() {btnFicha, btnGrades, btnOpenT, btnOrlas, btnDownload, btnConfig})
         tsMenuPrincipal.Location = New Point(0, 0)
         tsMenuPrincipal.Name = "tsMenuPrincipal"
-        tsMenuPrincipal.Size = New Size(40, 450)
+        tsMenuPrincipal.Size = New Size(30, 450)
         tsMenuPrincipal.TabIndex = 14
         tsMenuPrincipal.Text = "Menú"
         tsMenuPrincipal.TextDirection = ToolStripTextDirection.Vertical90
@@ -64,7 +66,7 @@ Partial Class FormPrincipal
         btnGrades.Image = CType(resources.GetObject("btnGrades.Image"), Image)
         btnGrades.ImageTransparentColor = Color.Magenta
         btnGrades.Name = "btnGrades"
-        btnGrades.Size = New Size(37, 24)
+        btnGrades.Size = New Size(27, 24)
         btnGrades.Text = "Introducir notas"
         ' 
         ' btnOpenT
@@ -73,7 +75,7 @@ Partial Class FormPrincipal
         btnOpenT.Image = CType(resources.GetObject("btnOpenT.Image"), Image)
         btnOpenT.ImageTransparentColor = Color.Magenta
         btnOpenT.Name = "btnOpenT"
-        btnOpenT.Size = New Size(37, 24)
+        btnOpenT.Size = New Size(27, 24)
         btnOpenT.Text = "Gestionar período evaluación"
         ' 
         ' btnOrlas
@@ -82,7 +84,7 @@ Partial Class FormPrincipal
         btnOrlas.Image = CType(resources.GetObject("btnOrlas.Image"), Image)
         btnOrlas.ImageTransparentColor = Color.Magenta
         btnOrlas.Name = "btnOrlas"
-        btnOrlas.Size = New Size(37, 24)
+        btnOrlas.Size = New Size(27, 24)
         btnOrlas.Text = "Ver la orla de profesores"
         ' 
         ' btnDownload
@@ -91,7 +93,7 @@ Partial Class FormPrincipal
         btnDownload.Image = CType(resources.GetObject("btnDownload.Image"), Image)
         btnDownload.ImageTransparentColor = Color.Magenta
         btnDownload.Name = "btnDownload"
-        btnDownload.Size = New Size(37, 24)
+        btnDownload.Size = New Size(27, 24)
         btnDownload.Text = "Descargar PDF"
         ' 
         ' pbPicture
@@ -124,7 +126,7 @@ Partial Class FormPrincipal
         lblName.Anchor = AnchorStyles.None
         lblName.AutoSize = True
         lblName.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        lblName.ForeColor = Color.RoyalBlue
+        lblName.ForeColor = Color.MidnightBlue
         lblName.Location = New Point(61, 5)
         lblName.Name = "lblName"
         lblName.Size = New Size(89, 28)
@@ -135,12 +137,30 @@ Partial Class FormPrincipal
         ' 
         lblRol.Anchor = AnchorStyles.None
         lblRol.AutoSize = True
-        lblRol.ForeColor = Color.CornflowerBlue
+        lblRol.ForeColor = Color.DarkBlue
         lblRol.Location = New Point(90, 39)
         lblRol.Name = "lblRol"
         lblRol.Size = New Size(31, 20)
         lblRol.TabIndex = 2
         lblRol.Text = "Rol"
+        ' 
+        ' btnFicha
+        ' 
+        btnFicha.DisplayStyle = ToolStripItemDisplayStyle.Image
+        btnFicha.Image = CType(resources.GetObject("btnFicha.Image"), Image)
+        btnFicha.ImageTransparentColor = Color.Magenta
+        btnFicha.Name = "btnFicha"
+        btnFicha.Size = New Size(27, 24)
+        btnFicha.Text = "Generar ficha de profesor"
+        ' 
+        ' btnConfig
+        ' 
+        btnConfig.DisplayStyle = ToolStripItemDisplayStyle.Image
+        btnConfig.Image = CType(resources.GetObject("btnConfig.Image"), Image)
+        btnConfig.ImageTransparentColor = Color.Magenta
+        btnConfig.Name = "btnConfig"
+        btnConfig.Size = New Size(27, 24)
+        btnConfig.Text = "Configurar centro"
         ' 
         ' FormPrincipal
         ' 
@@ -172,4 +192,6 @@ Partial Class FormPrincipal
     Friend WithEvents tlpInfoP As TableLayoutPanel
     Friend WithEvents lblName As Label
     Friend WithEvents lblRol As Label
+    Friend WithEvents btnFicha As ToolStripButton
+    Friend WithEvents btnConfig As ToolStripButton
 End Class
