@@ -1,13 +1,6 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-// Validació bàsica
-$dni = isset($_GET['dni']) ? trim($_GET['dni']) : "";
-if ($dni === "") {
-    echo json_encode([]);
-    exit;
-}
-
 // Connexió
 $mysqli = new mysqli("localhost", "root", "", "projecte_evalis", 3307);
 if ($mysqli->connect_errno) {
@@ -15,6 +8,15 @@ if ($mysqli->connect_errno) {
     exit;
 }
 $mysqli->set_charset("utf8mb4");
+
+include "validar_token.php";
+
+// Validació bàsica
+$dni = isset($_GET['dni']) ? trim($_GET['dni']) : "";
+if ($dni === "") {
+    echo json_encode([]);
+    exit;
+}
 
 // CONSULTA
 $sql = "SELECT 
