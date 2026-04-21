@@ -19,6 +19,7 @@
     <PackageReference Include="MySql.Data" Version="9.6.0" />
     <PackageReference Include="MySqlConnector" Version="2.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="PuppeteerSharp" Version="24.40.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.4" />
   </ItemGroup>
 

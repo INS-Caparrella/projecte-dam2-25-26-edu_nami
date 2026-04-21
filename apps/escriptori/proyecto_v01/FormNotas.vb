@@ -7,16 +7,23 @@ Public Class FormNotas
     End Sub
     ''falta imágen, que funcione para volver a inicio,
     ''y que salga en estado si el periodo de evaluación está abierto o cerrado
-    Private Const BASE_URL = "https://192.168.1.134/notes.php"
+    Private Const BASE_URL = "https://192.168.17.6/notes.php"
+    Private Const ACTA_URL = "https://192.168.17.6/acta.php"
+    Private Const NOTA_FINAL_URL = "https://192.168.17.6/nota_final.php"
+    Private Const CREAR_ACTA_URL = "https://192.168.17.6/crear_acta.php"
+    Private Const PERIODE_URL = "https://192.168.17.6/periode.php"
+
     Private ReadOnly _client As HttpClient = UnsafeSSL.createUnsafeClient()
     Private ReadOnly _parent As FormPrincipal
-
     Private ReadOnly _dni As String
     Private ReadOnly _idAssignatura As String
     Private ReadOnly _nomAssignatura As String
     Private ReadOnly _nomProf As String
     Private ReadOnly _rol As String
-    Private _idActa As Integer
+    Private ReadOnly _grup As String
+
+    Private _trimestreActual As Integer = 0
+    Private _idActa As Integer = -1
 
     ''lista de ras
     Private _ras As New List(Of (id As Integer, ra As Integer))
@@ -27,7 +34,7 @@ Public Class FormNotas
     Private _selectedNia As Integer
     Private _selectedCamp As String = "nota_final"
 
-    Public Sub New(parent As FormPrincipal, dni As String, idAssignatura As String, nomAssignatura As String, nomProf As String, rol As String)
+    Public Sub New(parent As FormPrincipal, dni As String, idAssignatura As String, nomAssignatura As String, nomProf As String, rol As String, grup As String)
         InitializeComponent()
         _parent = parent
         _dni = dni
@@ -35,44 +42,39 @@ Public Class FormNotas
         _nomAssignatura = nomAssignatura
         _nomProf = nomProf
         _rol = rol
+        _grup = grup
     End Sub
 
     Private Async Sub IntroducirNotas_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         lblName.Text = _nomProf
         lblAsig.Text = _nomAssignatura
 
+        Await loadPeriodAsync()
+
         _idActa = Await createActa()
 
-
-        Await loadPeriodAsync()
         Await loadStudentsAsync()
 
-        ''??
-        ''        If _rol <> "tutor" AndAlso _rol <> "director" Then
-        ''  For Each col As DataGridViewColumn In dgvEstudiants.Columns
-        ''If col.Name.StartsWith("RA_") Then
-        ''col.ReadOnly = True
-        ''End If
-        ''Next
-        ''btnSave.Enabled = False
-        ''btnClose.Enabled = False
-        ''lblStatus.Text &= " · Modo lectura. No tiene permisos para modificar las notas. ·"
-        ''End If
+        btnDownload.Visible = (_rol = "director" OrElse _rol = "administrador")
     End Sub
 
     ''comprobar si el periodo de evaluación está abierto
     Private Async Function loadPeriodAsync() As Task
         Try
-            Dim json As String = Await _client.GetStringAsync($"https://192.168.1.134/periode.php?curs={Date.Now.Year}-{Date.Now.Year + 1}")
+            Dim json As String = Await _client.GetStringAsync($"https://192.168.17.6/periode.php?curs={Date.Now.Year}-{Date.Now.Year + 1}")
             Dim obj As JObject = JObject.Parse(json)
-            Dim obert As Boolean = False
+
+            _trimestreActual = 0
 
             For Each p As JToken In obj("periodes")
-                If p.Value(Of Boolean)("obert") Then obert = True
-                lblStatus.Text = "Estado: Periodo de evaluación abierto - puede introducir notas."
+                If p.Value(Of Boolean)("obert") Then
+                    _trimestreActual = p.Value(Of Integer)("trimestre")
+                End If
             Next
 
-            If Not obert Then
+            If _trimestreActual > 0 Then
+                lblStatus.Text = "Estado: Periodo de evaluación abierto - puede introducir notas."
+            Else
                 lblStatus.Text = "Estado: Periodo de evaluación cerrado - no se pueden introducir notas."
                 btnSave.Enabled = False
             End If
@@ -83,23 +85,31 @@ Public Class FormNotas
     End Function
 
     Private Async Function createActa() As Task(Of Integer)
-        Dim data As New MultipartFormDataContent()
-        data.Add(New StringContent(_idAssignatura), "id_assignatura")
-        data.Add(New StringContent(_dni), "dni_prof")
-        data.Add(New StringContent($"{Date.Now.Year}-{Date.Now.Year + 1}"), "curs")
-        ''data.Add(New StringContent("2"), "trimestre")
-        ''data.Add(New StringContent("A"), "grup")'' error. cambiar constructor y enva¡iar v¡grupo
+        Try
+            Dim trimestre As Integer = If(_trimestreActual > 0, _trimestreActual, 1)
 
-        Dim res = Await _client.PostAsync("https://192.168.1.134/crear_acta.php", data)
-        Dim raw = Await res.Content.ReadAsStringAsync()
-        Dim json = JObject.Parse(raw)
+            Dim data As New FormUrlEncodedContent(New Dictionary(Of String, String) From {
+                                                  {"id_assignatura", _idAssignatura},
+                                                  {"dni_prof", _dni},
+                                                  {"curs", $"{Date.Now.Year}-{Date.Now.Year + 1}"},
+                                                  {"trimestre", _trimestreActual.ToString()},
+                                                  {"grup", _grup}
+                                                  })
 
-        If json("ok") Then
-            Return CInt(json("id_acta"))
-        Else
-            MessageBox.Show("No se pudo crear/obtener el acta: " & json("error").ToString())
-            Return -1
-        End If
+            Dim res As HttpResponseMessage = Await _client.PostAsync(CREAR_ACTA_URL, data)
+            Dim raw As String = Await res.Content.ReadAsStringAsync()
+            MessageBox.Show("Resposta: " & raw)
+
+            Dim json As JObject = JObject.Parse(raw)
+            If json.Value(Of Boolean)("ok") Then
+                Return json.Value(Of Integer)("id_acta")
+            Else
+                MessageBox.Show("No se pudo crear el acta." & json.Value(Of String)("error"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return -1
+            End If
+        Catch ex As Exception
+            MessageBox.Show("Error al crear el acta: " & ex.Message)
+        End Try
     End Function
     Private Async Function loadIdActaAsync() As Task(Of Integer)
         Dim json As String = Await _client.GetStringAsync($"https://192.168.1.134/acta.php?id_assignatura={_idAssignatura}")
@@ -127,7 +137,6 @@ Public Class FormNotas
 
             ''poner las columnas de todos los ras
             columnsRa(obj("ras"))
-
             dgvEstudiants.Rows.Clear()
             nies.Clear()
 
@@ -145,11 +154,12 @@ Public Class FormNotas
                 For Each raInfo In _ras
                     Dim key As String = $"ra_{raInfo.id}"
                     Dim token As JToken = est(key)
-                    Dim note As String = If(token IsNot Nothing AndAlso token.Type <> JTokenType.Null, token.ToString(), "")
+                    Dim note As String = If(token IsNot Nothing AndAlso
+                        token.Type <> JTokenType.Null, token.ToString(), "")
 
                     fil.Add(note)
                     If note <> "" Then
-                        notesValue.Add(Double.Parse(note))
+                        notesValue.Add(Double.Parse(note, Globalization.CultureInfo.InvariantCulture))
                     Else
                         complete = False
                     End If
@@ -170,15 +180,6 @@ Public Class FormNotas
 
                 Dim idx As Integer = dgvEstudiants.Rows.Add(fil.ToArray())
 
-                ''si la nota ya está introducida la celda es readonly
-                '' For Each raInfo In _ras
-                '' Dim col As String = $"RA_{raInfo.id}"
-                '' Dim cell As DataGridViewCell = dgvEstudiants.Rows(idx).Cells(col)
-                '' If cell.Value?.ToString() <> "" Then
-                '' cell.ReadOnly = True
-                '' End If
-                '' Next
-
                 colorStatus(dgvEstudiants.Rows(idx).Cells("Estado"), statusTxt)
 
                 If complete Then notesComplete += 1
@@ -191,17 +192,24 @@ Public Class FormNotas
             lblStatus.Text = $"Estado: {stStatus}  ·  {totalStudents} alumnos  ·  {pend} pendientes"
 
             If Not ended Then
-                btnSave.Enabled = (pend > 0)
-                btnClose.Enabled = (pend = 0)
+                btnSave.Enabled = (pend > 0 AndAlso _trimestreActual > 0)
+                btnClose.Enabled = (pend = 0 AndAlso _trimestreActual > 0)
             End If
 
-            If Not dgvEstudiants.Columns.Contains("Corregir") Then
-                If Not btnSave.Enabled AndAlso puedeCorregir() Then
+            btnJunta.Enabled = (totalStudents > 0)
+
+            If dgvEstudiants.Columns.Contains("Corregir") Then
+                dgvEstudiants.Columns.Remove("Corregir")
+            End If
+
+            If ended OrElse (pend = 0 AndAlso Not btnClose.Enabled) Then
+                If puedeCorregir() Then
                     Dim btnCol As New DataGridViewButtonColumn With {
                         .Name = "Corregir",
                         .HeaderText = "Corregir",
                         .Text = "Corregir",
-                        .UseColumnTextForButtonValue = True
+                        .UseColumnTextForButtonValue = True,
+                        .FillWeight = 60
                     }
                     dgvEstudiants.Columns.Add(btnCol)
                 End If
@@ -339,26 +347,29 @@ Public Class FormNotas
             End Try
         Next
 
+        If _idActa > 0 Then
+            For Each row As DataGridViewRow In dgvEstudiants.Rows
+                Dim avg As String = row.Cells("Media").Value?.ToString()
+                If String.IsNullOrEmpty(avg) Then Continue For
+                Try
+                    Dim data As New FormUrlEncodedContent(New Dictionary(Of String, String) From {
+                                                          {"id_acta", _idActa.ToString()},
+                                                          {"nia", CInt(row.Cells("NIA").Value).ToString()},
+                                                          {"nota", avg}
+                                                          })
+                    Await _client.PostAsync(NOTA_FINAL_URL, data)
+                Catch ex As Exception
+                    MessageBox.Show("Error: " & ex.Message)
+                End Try
+            Next
+        End If
+
         If errors.Count > 0 Then
-            MessageBox.Show(String.Join(Environment.NewLine, errors), "Errores", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show(String.Join(Environment.NewLine, errors), "Errores parciales", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+
         Else
             MessageBox.Show($"{filToSave.Count} notas guardadas correctamente.", "Hecho", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End If
-
-        'guardar la nota en acta
-        For Each row As DataGridViewRow In dgvEstudiants.Rows
-            Dim nia As Integer = CInt(row.Cells("NIA").Value)
-            Dim media As String = row.Cells("Media").Value?.ToString()
-
-            If Not String.IsNullOrEmpty(media) Then
-                Dim final As New MultipartFormDataContent()
-                final.Add(New StringContent(_idActa.ToString()), "id_acta")
-                final.Add(New StringContent(nia.ToString()), "nia")
-                final.Add(New StringContent(media), "nota")
-
-                Await _client.PostAsync("https://192.168.1.134/nota_final.php", final)
-            End If
-        Next
 
         Await loadStudentsAsync()
     End Sub
@@ -391,6 +402,7 @@ Public Class FormNotas
 
                 MessageBox.Show("Proceso terminado. Las notas están registradas.", "Finalizado", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
+                Await loadStudentsAsync()
             Else
                 MessageBox.Show(obj.Value(Of String)("error"), "No se puede cerrar.", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 btnClose.Enabled = True
@@ -402,7 +414,7 @@ Public Class FormNotas
     End Sub
 
     Private Function puedeCorregir() As Boolean
-        Return _rol = "director"
+        Return _rol = "director" OrElse _rol = "administrador"
     End Function
 
     Private Sub lblLogOut_Click(sender As Object, e As EventArgs) Handles lblLogOut.Click
@@ -422,9 +434,9 @@ Public Class FormNotas
     End Sub
 
     Private Sub lblHome_Click(sender As Object, e As EventArgs) Handles lblHome.Click
-        Dim result As LoginResult
-
-        Dim confirm = MessageBox.Show("Si vuelve al inicio se perderán los datos que no haya guardado." & Environment.NewLine & "¿Seguro que desea volver?", "Volver a inicio", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        Dim confirm = MessageBox.Show("Si vuelve al inicio se perderán los datos que no haya guardado." & Environment.NewLine &
+                                      "¿Seguro que desea volver?", "Volver a inicio",
+                                       MessageBoxButtons.YesNo, MessageBoxIcon.Question)
         If confirm = DialogResult.Yes Then
             _parent.Show()
             Me.Close()
@@ -453,38 +465,148 @@ Public Class FormNotas
 
     ''guardar correción, POST 
     Private Async Sub btnSaveC_Click(sender As Object, e As EventArgs) Handles btnSaveC.Click
-        If txtValue.Text.Trim() = "" OrElse txtMotive.Text.Trim() = "" Then
-            MessageBox.Show("Debe introducir el nuevo valor y el motivo de su cambio.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        If String.IsNullOrWhiteSpace(txtValue.Text) OrElse String.IsNullOrWhiteSpace(txtMotive.Text) Then
+            MessageBox.Show("Debe introducir la nueva nota y el motivo del cambio.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
-        Dim data As New MultipartFormDataContent()
-        data.Add(New StringContent(_idActa.ToString()), "id_acta")
-        data.Add(New StringContent(_dni), "dni_prof")
-        data.Add(New StringContent(_selectedNia), "nia")
-        data.Add(New StringContent(txtValue.Text), "valor_nou")
-        data.Add(New StringContent(txtMotive.Text), "motiu")
-
-
-
-        Dim res = Await _client.PostAsync("https://192.168.1.134/acta.php", data)
-
-        Dim raw = Await res.Content.ReadAsStringAsync()
-        MessageBox.Show(raw, "Respuesta del servidor")
-        Dim json = JObject.Parse(raw)
-
-        'Dim json = JObject.Parse(Await res.Content.ReadAsStringAsync())
-
-        If json("ok") Then
-            MessageBox.Show("Corrección registrada correctamente.", "Corrección registrada.", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            tlpCorrecion.Visible = False
-            Await loadStudentsAsync()
-        Else
-            MessageBox.Show("Error: " & json("error").ToString())
+        If _idActa <= 0 Then
+            _idActa = Await createActa()
         End If
+
+        If _idActa <= 0 Then
+            MessageBox.Show("No se pudo obtener el acta. Comprueba que el grupo es correcto.",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
+
+        Try
+            btnSaveC.Enabled = False
+            Dim data As New FormUrlEncodedContent(New Dictionary(Of String, String) From {
+                                                  {"id_acta", _idActa.ToString()},
+                                                  {"dni_prof", _dni},
+                                                  {"nia", _selectedNia.ToString()},
+                                                  {"valor_nou", txtValue.Text.Trim()},
+                                                  {"motiu", txtMotive.Text.Trim()}
+                                                  })
+
+            Dim res As HttpResponseMessage = Await _client.PostAsync(ACTA_URL, data)
+            Dim obj As JObject = JObject.Parse(Await res.Content.ReadAsStringAsync())
+
+            If obj.Value(Of Boolean)("ok") Then
+                MessageBox.Show("Corrección registrada correctamente.", "Corrección aplicada", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                tlpCorrecion.Visible = False
+                Await loadStudentsAsync()
+
+            Else
+                MessageBox.Show("Error: " & obj.Value(Of String)("error"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+        Catch ex As Exception
+            MessageBox.Show("Error: " & ex.Message)
+        Finally
+            btnSaveC.Enabled = True
+        End Try
     End Sub
 
     Private Sub btnCancelC_Click(sender As Object, e As EventArgs) Handles btnCancelC.Click
         tlpCorrecion.Visible = False
     End Sub
+
+    Private Sub btnJunta_Click(sender As Object, e As EventArgs) Handles btnJunta.Click
+        Dim sb As New System.Text.StringBuilder()
+        sb.AppendLine($"JUNTA DE EVALUACIÓN - {_nomAssignatura} - {_grup}")
+        sb.AppendLine($"Trimestre: {_trimestreActual}  ·  Curso: {Date.Now.Year}-{Date.Now.Year + 1}")
+
+        sb.AppendLine(New String("-"c, 60))
+        sb.AppendLine($"{"Alumno",-30} {"Nota",-8} {"Estado"}")
+        sb.AppendLine(New String("-"c, 60))
+
+        For Each row As DataGridViewRow In dgvEstudiants.Rows
+            Dim nom As String = row.Cells("Alumno").Value?.ToString()
+            Dim media As String = row.Cells("Media").Value?.ToString()
+            Dim estado As String = row.Cells("Estado").Value?.ToString()
+            sb.AppendLine($"{nom,-30} {media,-8}, {estado}")
+        Next
+
+        sb.AppendLine(New String("-"c, 60))
+
+        Dim FormJunta As New Form With {
+            .Text = "Junta d'avaluació",
+            .Size = New Size(600, 500),
+            .StartPosition = FormStartPosition.CenterParent,
+            .MinimizeBox = False
+        }
+
+        Dim txt As New RichTextBox With {
+            .Dock = DockStyle.Fill,
+            .Font = New Font("Courier New", 10),
+            .ReadOnly = True,
+            .Text = sb.ToString(),
+            .BackColor = Color.White
+        }
+
+        Dim pnlBotns As New FlowLayoutPanel With {
+            .Dock = DockStyle.Bottom,
+            .Height = 48,
+            .FlowDirection = FlowDirection.RightToLeft,
+            .Padding = New Padding(8)
+        }
+
+        Dim btnImprimir As New Button With {
+            .Text = "Imprimir",
+            .Width = 100,
+            .Height = 32,
+            .FlatStyle = FlatStyle.Flat
+        }
+        AddHandler btnImprimir.Click, Sub(s, ev)
+                                          Dim pd As New System.Drawing.Printing.PrintDocument()
+                                          Dim content As String = txt.Text
+                                          AddHandler pd.PrintPage, Sub(ps, pe)
+                                                                       pe.Graphics.DrawString(content,
+                                                                        New Font("Courier New", 10), Brushes.Black, pe.MarginBounds)
+                                                                   End Sub
+                                          Dim preview As New System.Windows.Forms.PrintPreviewDialog With {
+                                          .Document = pd
+                                          }
+                                          preview.ShowDialog()
+                                      End Sub
+
+        Dim btnTancar As New Button With {
+            .Text = "Tancar",
+            .Width = 100,
+            .Height = 32,
+            .FlatStyle = FlatStyle.Flat
+        }
+        AddHandler btnTancar.Click, Sub(s, ev) FormJunta.Close()
+
+        pnlBotns.Controls.AddRange({btnTancar, btnImprimir})
+        FormJunta.Controls.Add(txt)
+        FormJunta.Controls.Add(pnlBotns)
+        FormJunta.ShowDialog()
+    End Sub
+
+    Private Async Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
+        If _idActa <= 0 Then
+            MessageBox.Show("No hay ninguna acta asociada a esta sesión.", "Sin acta", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        Try
+            btnDownload.Enabled = False
+            btnDownload.Text = "Generando PDF..."
+
+            Dim gen As New GenerarActaPDF(_dni)
+            Dim ruta As String = Await gen.generarAsync(_idActa)
+
+            MessageBox.Show($"PDF generado correctamente.{Environment.NewLine}{ruta}", "PDF generado", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+            Process.Start("explorer.exe", $"/select,""{ruta}""")
+        Catch ex As Exception
+            MessageBox.Show("Error al generar el PDF: " & ex.Message)
+        Finally
+            btnDownload.Enabled = True
+            btnDownload.Text = "Generar acta de evaluación (.pdf)"
+        End Try
+    End Sub
+
 End Class

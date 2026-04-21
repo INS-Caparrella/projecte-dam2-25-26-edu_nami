@@ -23,15 +23,27 @@ Partial Class OrlaProfesores
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         flpOrla = New FlowLayoutPanel()
+        lblGoBack = New Label()
+        flpOrla.SuspendLayout()
         SuspendLayout()
         ' 
         ' flpOrla
         ' 
+        flpOrla.Controls.Add(lblGoBack)
         flpOrla.Dock = DockStyle.Fill
         flpOrla.Location = New Point(0, 0)
         flpOrla.Name = "flpOrla"
         flpOrla.Size = New Size(800, 450)
         flpOrla.TabIndex = 0
+        ' 
+        ' lblGoBack
+        ' 
+        lblGoBack.AutoSize = True
+        lblGoBack.Location = New Point(3, 0)
+        lblGoBack.Name = "lblGoBack"
+        lblGoBack.Size = New Size(67, 20)
+        lblGoBack.TabIndex = 1
+        lblGoBack.Text = "← Volver"
         ' 
         ' OrlaProfesores
         ' 
@@ -41,8 +53,11 @@ Partial Class OrlaProfesores
         Controls.Add(flpOrla)
         Name = "OrlaProfesores"
         Text = "Orla profesores"
+        flpOrla.ResumeLayout(False)
+        flpOrla.PerformLayout()
         ResumeLayout(False)
     End Sub
 
     Friend WithEvents flpOrla As FlowLayoutPanel
+    Friend WithEvents lblGoBack As Label
 End Class

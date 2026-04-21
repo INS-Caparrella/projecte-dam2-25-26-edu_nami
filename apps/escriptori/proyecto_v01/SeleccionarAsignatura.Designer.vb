@@ -33,7 +33,7 @@ Partial Class SeleccionarAsignatura
         lblSelect.AutoSize = True
         lblSelect.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         lblSelect.ForeColor = SystemColors.ControlText
-        lblSelect.Location = New Point(16, 16)
+        lblSelect.Location = New Point(273, 159)
         lblSelect.Name = "lblSelect"
         lblSelect.Size = New Size(250, 28)
         lblSelect.TabIndex = 0
@@ -43,7 +43,7 @@ Partial Class SeleccionarAsignatura
         ' 
         cbAsignaturas.DropDownStyle = ComboBoxStyle.DropDownList
         cbAsignaturas.FormattingEnabled = True
-        cbAsignaturas.Location = New Point(12, 47)
+        cbAsignaturas.Location = New Point(242, 209)
         cbAsignaturas.Name = "cbAsignaturas"
         cbAsignaturas.Size = New Size(316, 28)
         cbAsignaturas.TabIndex = 1
@@ -51,7 +51,7 @@ Partial Class SeleccionarAsignatura
         ' btnAccept
         ' 
         btnAccept.Enabled = False
-        btnAccept.Location = New Point(140, 82)
+        btnAccept.Location = New Point(287, 276)
         btnAccept.Name = "btnAccept"
         btnAccept.Size = New Size(90, 30)
         btnAccept.TabIndex = 2
@@ -60,7 +60,7 @@ Partial Class SeleccionarAsignatura
         ' 
         ' btnCancel
         ' 
-        btnCancel.Location = New Point(242, 82)
+        btnCancel.Location = New Point(433, 276)
         btnCancel.Name = "btnCancel"
         btnCancel.Size = New Size(90, 30)
         btnCancel.TabIndex = 3

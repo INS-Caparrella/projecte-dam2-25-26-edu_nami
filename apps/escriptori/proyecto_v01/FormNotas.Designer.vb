@@ -35,6 +35,8 @@ Partial Class FormNotas
         lblMotive = New Label()
         pnlDgv = New Panel()
         pnlFoot = New Panel()
+        btnDownload = New Button()
+        btnJunta = New Button()
         btnClose = New Button()
         btnSave = New Button()
         dgvEstudiants = New DataGridView()
@@ -92,7 +94,7 @@ Partial Class FormNotas
         tlpCorrecion.Location = New Point(0, 141)
         tlpCorrecion.Name = "tlpCorrecion"
         tlpCorrecion.RowCount = 1
-        tlpCorrecion.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        tlpCorrecion.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
         tlpCorrecion.Size = New Size(800, 35)
         tlpCorrecion.TabIndex = 3
         tlpCorrecion.Visible = False
@@ -167,6 +169,8 @@ Partial Class FormNotas
         ' pnlFoot
         ' 
         pnlFoot.BackColor = Color.White
+        pnlFoot.Controls.Add(btnDownload)
+        pnlFoot.Controls.Add(btnJunta)
         pnlFoot.Controls.Add(btnClose)
         pnlFoot.Controls.Add(btnSave)
         pnlFoot.Dock = DockStyle.Bottom
@@ -175,6 +179,24 @@ Partial Class FormNotas
         pnlFoot.Padding = New Padding(12, 8, 12, 8)
         pnlFoot.Size = New Size(800, 52)
         pnlFoot.TabIndex = 2
+        ' 
+        ' btnDownload
+        ' 
+        btnDownload.Location = New Point(12, 11)
+        btnDownload.Name = "btnDownload"
+        btnDownload.Size = New Size(254, 36)
+        btnDownload.TabIndex = 4
+        btnDownload.Text = "Descargar acta de evaluación (.pdf)"
+        btnDownload.UseVisualStyleBackColor = True
+        ' 
+        ' btnJunta
+        ' 
+        btnJunta.Location = New Point(379, 11)
+        btnJunta.Name = "btnJunta"
+        btnJunta.Size = New Size(109, 36)
+        btnJunta.TabIndex = 1
+        btnJunta.Text = "Iniciar junta "
+        btnJunta.UseVisualStyleBackColor = True
         ' 
         ' btnClose
         ' 
@@ -216,7 +238,7 @@ Partial Class FormNotas
         dgvEstudiants.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
         DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = Color.WhiteSmoke
-        DataGridViewCellStyle2.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        DataGridViewCellStyle2.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         DataGridViewCellStyle2.ForeColor = Color.FromArgb(CByte(60), CByte(60), CByte(60))
         DataGridViewCellStyle2.Padding = New Padding(6, 0, 0, 0)
         DataGridViewCellStyle2.SelectionBackColor = SystemColors.ActiveCaption
@@ -228,7 +250,7 @@ Partial Class FormNotas
         dgvEstudiants.Columns.AddRange(New DataGridViewColumn() {NIA, Alumno, Media, Estado, Comentarios})
         DataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = Color.White
-        DataGridViewCellStyle3.Font = New Font("Segoe UI", 9.0F)
+        DataGridViewCellStyle3.Font = New Font("Segoe UI", 9F)
         DataGridViewCellStyle3.ForeColor = Color.FromArgb(CByte(40), CByte(40), CByte(40))
         DataGridViewCellStyle3.Padding = New Padding(6, 0, 0, 0)
         DataGridViewCellStyle3.SelectionBackColor = SystemColors.GradientActiveCaption
@@ -255,7 +277,7 @@ Partial Class FormNotas
         ' 
         ' Alumno
         ' 
-        Alumno.FillWeight = 150.0F
+        Alumno.FillWeight = 150F
         Alumno.HeaderText = "Alumno"
         Alumno.MinimumWidth = 6
         Alumno.Name = "Alumno"
@@ -263,7 +285,7 @@ Partial Class FormNotas
         ' 
         ' Media
         ' 
-        Media.FillWeight = 50.0F
+        Media.FillWeight = 50F
         Media.HeaderText = "Media"
         Media.MinimumWidth = 6
         Media.Name = "Media"
@@ -271,7 +293,7 @@ Partial Class FormNotas
         ' 
         ' Estado
         ' 
-        Estado.FillWeight = 50.0F
+        Estado.FillWeight = 50F
         Estado.HeaderText = "Estado"
         Estado.MinimumWidth = 6
         Estado.Name = "Estado"
@@ -320,7 +342,7 @@ Partial Class FormNotas
         ' tlpInfo
         ' 
         tlpInfo.ColumnCount = 4
-        tlpInfo.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, 80.0F))
+        tlpInfo.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, 80F))
         tlpInfo.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 70.70707F))
         tlpInfo.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 13.1313133F))
         tlpInfo.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 16.1616154F))
@@ -332,7 +354,7 @@ Partial Class FormNotas
         tlpInfo.Location = New Point(0, 0)
         tlpInfo.Name = "tlpInfo"
         tlpInfo.RowCount = 1
-        tlpInfo.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        tlpInfo.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
         tlpInfo.Size = New Size(800, 53)
         tlpInfo.TabIndex = 4
         ' 
@@ -359,7 +381,7 @@ Partial Class FormNotas
         ' 
         lblName.Anchor = AnchorStyles.Left
         lblName.AutoSize = True
-        lblName.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        lblName.Font = New Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         lblName.ForeColor = Color.LightSlateGray
         lblName.Location = New Point(83, 16)
         lblName.Name = "lblName"
@@ -379,7 +401,7 @@ Partial Class FormNotas
         ' 
         ' FormNotas
         ' 
-        AutoScaleDimensions = New SizeF(8.0F, 20.0F)
+        AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 450)
         Controls.Add(pnlPrincipal)
@@ -426,4 +448,6 @@ Partial Class FormNotas
     Friend WithEvents txtValue As TextBox
     Friend WithEvents lblMotive As Label
     Friend WithEvents btnSaveC As Button
+    Friend WithEvents btnJunta As Button
+    Friend WithEvents btnDownload As Button
 End Class

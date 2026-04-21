@@ -66,6 +66,10 @@
               "target": "Package",
               "version": "[13.0.4, )"
             },
+            "PuppeteerSharp": {
+              "target": "Package",
+              "version": "[24.40.0, )"
+            },
             "System.Configuration.ConfigurationManager": {
               "target": "Package",
               "version": "[10.0.4, )"
