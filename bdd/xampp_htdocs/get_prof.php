@@ -19,6 +19,9 @@ if ($mysqli->connect_errno) {
 }
 $mysqli->set_charset("utf8mb4");
 
+include "validar_token.php";
+
+
 // OBTENIR PROFESSOR
 $sql = "SELECT * FROM persones pr JOIN professors prf ON pr.dni=prf.dni WHERE prf.codi_prof = ?;";
 $stmt = $mysqli->prepare($sql);
