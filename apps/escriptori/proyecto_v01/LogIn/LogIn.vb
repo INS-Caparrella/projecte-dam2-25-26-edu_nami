@@ -9,10 +9,9 @@ Imports MySqlConnector
 Imports Newtonsoft.Json.Linq
 
 Public Class LogIn
-    Private Const BASE_URL As String = "https://192.168.17.6/login.php"
-
     Private Shared ReadOnly _client As HttpClient = UnsafeSSL.createUnsafeClient()
 
+    Dim url = BaseUrl.logIn.login()
 
     Private Sub LogIn_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnContinue.Enabled = False
@@ -74,7 +73,7 @@ Public Class LogIn
             {"password", pass}
         })
 
-        Dim response As HttpResponseMessage = Await _client.PostAsync(BASE_URL, data)
+        Dim response As HttpResponseMessage = Await _client.PostAsync(url, data)
         response.EnsureSuccessStatusCode()
 
 

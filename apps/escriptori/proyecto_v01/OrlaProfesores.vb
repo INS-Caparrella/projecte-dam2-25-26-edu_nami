@@ -1,8 +1,11 @@
 ﻿Imports System.Net.Http
 Imports Newtonsoft.Json.Linq
 
+''cuando haga click va a la ficha del profesor? alumnos pueden entrar o no?
 Public Class OrlaProfesores
     Private ReadOnly _client As HttpClient = UnsafeSSL.createUnsafeClient()
+
+    Dim url = BaseUrl.orlaProf.orla()
 
     Private Async Sub OrlaProfesores_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Await loadOrlaAsync()
@@ -10,7 +13,7 @@ Public Class OrlaProfesores
 
     Private Async Function loadOrlaAsync() As Task
         Try
-            Dim json As String = Await _client.GetStringAsync("https://192.168.17.6/orla.php")
+            Dim json As String = Await _client.GetStringAsync(url)
             Dim obj As JObject = JObject.Parse(json)
 
             If Not obj.Value(Of Boolean)("ok") Then

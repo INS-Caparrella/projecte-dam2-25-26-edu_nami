@@ -2,7 +2,7 @@
 Imports Newtonsoft.Json.Linq
 
 Public Class SeleccionarAsignatura
-    Private Const BASE_URL As String = "https://192.168.17.6/notes.php"
+    Dim url = BaseUrl.Notas.notas()
     Private ReadOnly _client As HttpClient = UnsafeSSL.createUnsafeClient()
     Private ReadOnly _dni As String
 
@@ -22,7 +22,7 @@ Public Class SeleccionarAsignatura
 
     Private Async Function loadAsigAsync() As Task
         Try
-            Dim json As String = Await _client.GetStringAsync($"{BASE_URL}?accio=assignatures&dni={_dni}")
+            Dim json As String = Await _client.GetStringAsync($"{url}?accio=assignatures&dni={_dni}")
             Dim obj As JObject = JObject.Parse(json)
 
             If Not obj.Value(Of Boolean)("ok") Then

@@ -42,4 +42,8 @@ Public Class FormPrincipal
         Me.Hide()
         f.Show()
     End Sub
+
+    Private Sub btnRegistros_Click(sender As Object, e As EventArgs) Handles btnRegistros.Click
+
+    End Sub
 End Class

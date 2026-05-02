@@ -4,8 +4,8 @@ Imports Newtonsoft.Json.Linq
 Public Class AbrirEvaluacion
     Private ReadOnly dni As String
     Private ReadOnly client As HttpClient = UnsafeSSL.createUnsafeClient()
-    Private Const BASE_URL As String = "https://192.168.17.6/periode.php"
     Private id As New List(Of Integer)
+    Dim url = BaseUrl.evaluacion.evaluacion()
 
     Public Sub New(dni As String)
         InitializeComponent()
@@ -24,7 +24,7 @@ Public Class AbrirEvaluacion
 
         Try
             Dim curs As String = $"{Date.Now.Year}-{Date.Now.Year + 1}"
-            Dim json As String = Await client.GetStringAsync($"{BASE_URL}?curs={curs}")
+            Dim json As String = Await client.GetStringAsync($"{url}?curs={curs}")
             Dim obj As JObject = JObject.Parse(json)
 
             If Not obj.Value(Of Boolean)("ok") Then
@@ -90,7 +90,7 @@ Public Class AbrirEvaluacion
                                                   {"accio", action},
                                                   {"dni", Me.dni}})
 
-            Dim res As HttpResponseMessage = Await client.PostAsync(BASE_URL, data)
+            Dim res As HttpResponseMessage = Await client.PostAsync(url, data)
             res.EnsureSuccessStatusCode()
 
             Dim json As String = Await res.Content.ReadAsStringAsync()
