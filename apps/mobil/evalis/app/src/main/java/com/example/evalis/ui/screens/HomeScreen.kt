@@ -64,12 +64,6 @@ fun HomeScreen(themeMode: ThemeMode, onThemeChange: (ThemeMode) -> Unit, options
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        ThemeSettings(
-            selectedMode = themeMode,
-            onModeSelected = onThemeChange
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
 
 
     }

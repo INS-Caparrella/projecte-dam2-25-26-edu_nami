@@ -31,6 +31,7 @@ fun ExpedientScreen(success: Boolean, navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+
             Text(
                 text = if (success) "✓" else "✗",
                 style = MaterialTheme.typography.displayLarge,

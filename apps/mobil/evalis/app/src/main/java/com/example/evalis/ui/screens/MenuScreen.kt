@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 //@PreviewScreenSizes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (ThemeMode) -> Unit) {
+fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (ThemeMode) -> Unit, onLogout: () -> Unit) {
 
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -53,10 +53,10 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
                     }
                 )
                 NavigationDrawerItem(
-                    label = { Text("Favorites") },
+                    label = { Text("Apariencia") },
                     selected = false,
                     onClick = {
-                        navController.navigate("favorites")
+                        navController.navigate("settings")
                         scope.launch { drawerState.close() }
                     }
                 )
@@ -86,15 +86,16 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
             }
         ) { padding ->
 
+
             NavHost(
+
                 navController = navController,
                 startDestination = "home",
                 modifier = Modifier.padding(padding)
             ) {
                 composable("home") { HomeScreen(themeMode, onThemeChange, options= option,navController)}
-                composable("favorites") { Text("Favorites") }
                 composable("profile") { Text("Profile") }
-                composable("profs") { ProfsScreen(navController) }
+                composable("profs") { ProfsScreen(navController, onSessionExpired = onLogout) }
                 composable("profDetail/{profId}/{dni}") { backStackEntry ->
                     val profId = backStackEntry.arguments?.getString("profId") ?: ""
                     val dni = backStackEntry.arguments?.getString("dni") ?: ""
@@ -109,6 +110,9 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
                 composable("expedientPDF/{success}") { backStackEntry ->
                     val success = backStackEntry.arguments?.getString("success") == "true"
                     ExpedientScreen(success = success, navController = navController)
+                }
+                composable("settings") {
+                    SettingsScreen(themeMode, onThemeChange, navController)
                 }
 
 

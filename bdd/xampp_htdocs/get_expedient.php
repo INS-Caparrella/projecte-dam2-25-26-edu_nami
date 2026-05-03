@@ -57,18 +57,28 @@ $anyInici = date('Y', strtotime($historic['data_inici']));
 $anyFi    = $historic['data_fi'] ? date('Y', strtotime($historic['data_fi'])) : ($anyInici + 1);
 $curs     = $anyInici . '-' . $anyFi;
 
-// 3. RAs I NOTES
-$sql3 = "SELECT a.codi AS codi_assignatura, a.nom AS nom_assignatura,
-                r.id AS id_ra, r.ra AS num_ra,
+// 3. RAs I NOTES - VERSIÓN FINAL CORREGIDA
+$sql3 = "SELECT DISTINCT
+                a.codi AS codi_assignatura, 
+                a.nom AS nom_assignatura,
+                COALESCE(r.id, 0) AS id_ra, 
+                COALESCE(r.ra, 1) AS num_ra,
                 er.nota
          FROM assignatures_cicle ac
          JOIN assignatures a ON a.codi = ac.id_assignatura
-         JOIN ras r ON r.codi_assignatura = a.codi
+         LEFT JOIN ras r ON r.codi_assignatura = a.codi
          LEFT JOIN estudiants_ras er ON er.id_ra = r.id AND er.nia = ?
          WHERE ac.nom_cicle = ?
-         ORDER BY a.codi, r.ra";
+           AND (er.nia IS NOT NULL 
+                OR r.data_inici BETWEEN ? AND ?
+                OR r.id IS NULL)
+         ORDER BY a.codi, num_ra";
+
+$dataInici = $historic['data_inici']; 
+$dataFi    = $historic['data_fi'] ?: date('Y-m-d', strtotime($historic['data_inici'] . ' +1 year'));
+
 $stmt3 = $mysqli->prepare($sql3);
-$stmt3->bind_param("is", $alumne['nia'], $cicle);
+$stmt3->bind_param("isss", $alumne['nia'], $cicle, $dataInici, $dataFi);  // ✅ 4 params: i s s s
 $stmt3->execute();
 $res3 = $stmt3->get_result();
 
@@ -172,10 +182,6 @@ $html = '<!DOCTYPE html>
     <td style="width: 40%;">
       <h4>Nom</h4>
       <p>' . htmlspecialchars($cicle) . '</p>
-    </td>
-    <td style="width: 20%;">
-      <h4>Grup</h4>
-      <p>' . htmlspecialchars($alumne['nom_grup']) . '</p>
     </td>
     <td style="width: 20%;">
       <h4>Estudi finalitzat</h4>

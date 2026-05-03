@@ -21,6 +21,28 @@ fun baixarPDF(
             connection.readTimeout = 15000
             connection.connect()
 
+            val responseCode = connection.responseCode
+            android.util.Log.d("PDF", "Response code: $responseCode")
+            android.util.Log.d("PDF", "Content-Type: ${connection.contentType}")  // <-- mira esto
+            android.util.Log.d("PDF", "Content-Length: ${connection.contentLength}")
+
+            if (responseCode != 200) {
+                android.os.Handler(Looper.getMainLooper()).post { onResult(false) }
+                return@thread
+            }
+
+            // Verifica que sea realmente un PDF
+            if (!connection.contentType.contains("pdf")) {  // <-- si no es PDF, falla
+                android.util.Log.e("PDF", "El servidor no devuelve un PDF: ${connection.contentType}")
+                android.os.Handler(Looper.getMainLooper()).post { onResult(false) }
+
+                // Justo después de comprobar el contentType, antes del return@thread
+                val errorBody = connection.inputStream.bufferedReader().readText()
+                android.util.Log.e("PDF", "Respuesta del servidor: $errorBody")
+
+                return@thread
+            }
+
             if (connection.responseCode != 200) {
                 android.os.Handler(Looper.getMainLooper()).post { onResult(false) }
                 return@thread

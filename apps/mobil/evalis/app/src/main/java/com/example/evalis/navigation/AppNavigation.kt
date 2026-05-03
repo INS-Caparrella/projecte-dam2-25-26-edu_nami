@@ -2,7 +2,6 @@ package com.example.evalis.navigation
 
 import androidx.compose.runtime.Composable
 import com.example.evalis.ui.screens.login.LoginScreen
-
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -24,26 +23,25 @@ fun AppNavigation(
     ) {
         composable("login") {
             LoginScreen(
-                onRegister={navController.navigate("register")},
-                onSuccess = { navController.navigate("menu")}
-
+                onRegister = { navController.navigate("register") },
+                onSuccess = { navController.navigate("menu") }
             )
         }
-
         composable("menu") {
-            val initialMode = ThemeMode.SYSTEM
-
             MenuScreen(
                 themeMode = themeMode,
                 onThemeChange = onThemeChange,
-                option = OptionsList.all()
+                option = OptionsList.all(),
+                onLogout = { navController.navigate("login") }
             )
         }
-
         composable("register") {
             RegisterScreen(
-                onSuccess = { navController.navigate("login")}
+                onSuccess = { navController.navigate("login") }
             )
+        }
+        composable("settings") {
+            SettingsScreen(themeMode, onThemeChange, navController)
         }
     }
 }

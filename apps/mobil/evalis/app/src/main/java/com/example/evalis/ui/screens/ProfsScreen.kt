@@ -111,12 +111,12 @@ fun ProfsListItem(prof: Prof, isLoading: Boolean,navController: NavController) {
 }
 
 @Composable
-fun ProfsScreen(navController: NavController) {
+fun ProfsScreen(navController: NavController, onSessionExpired: () -> Unit){
 
     profState.clear()
     profState.addAll(ProfsList.placeholders())
 
-    carregarProfDesDeServidor(SessionData.dni,navController)
+    carregarProfDesDeServidor(SessionData.dni,navController,onSessionExpired)
 
     Scaffold(modifier = Modifier.fillMaxWidth()) { inner ->
         Column(
@@ -142,7 +142,7 @@ fun ProfsScreen(navController: NavController) {
 
 }
 
-private fun carregarProfDesDeServidor(dniAlumne: String,navController: NavController) {
+private fun carregarProfDesDeServidor(dniAlumne: String,navController: NavController,onSessionExpired: () -> Unit) {
     isLoading = true
     thread {
         try {
@@ -152,7 +152,7 @@ private fun carregarProfDesDeServidor(dniAlumne: String,navController: NavContro
             android.os.Handler(Looper.getMainLooper()).post {
 
                 if (arr == null && gestor.lastError == "Token expirado") {
-                    navController.navigate("login")
+                    onSessionExpired()
                     return@post
                 }
 

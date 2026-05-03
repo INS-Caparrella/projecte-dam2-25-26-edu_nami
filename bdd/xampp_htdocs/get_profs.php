@@ -19,7 +19,7 @@ if ($dni === "") {
 }
 
 // CONSULTA
-$sql = "SELECT 
+$sql = "SELECT DISTINCT
             p.codi_prof,
             pr.nom,
             pr.cognom,

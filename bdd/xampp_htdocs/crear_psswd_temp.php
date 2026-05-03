@@ -1,7 +1,7 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "projecte_evalis");
+$conn = new mysqli("localhost", "root", "", "projecte_evalis", 3307);
 
-$username = "ndiakite";
+$username = "mserrapuig";
 $password = "1234";
 
 $hash = password_hash($password, PASSWORD_DEFAULT);
