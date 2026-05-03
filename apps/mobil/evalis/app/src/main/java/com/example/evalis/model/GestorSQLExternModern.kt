@@ -11,7 +11,7 @@ import java.net.URL
 class GestorSQLExternModern{
 
     object SqlInfo {
-        var BASE_URL: String ="http://10.100.138.177"
+        var BASE_URL: String ="http://192.168.1.15"
     }
 
     // Guardem aquí l'últim error per poder-lo mostrar a la UI si cal
@@ -87,7 +87,6 @@ class GestorSQLExternModern{
                         return null
                     }
                     println("RESPUESTA SERVIDOR: '${resultat.toString()}'")
-
 
                     JSONObject(resultat.toString())
                 }catch(e:Exception){
