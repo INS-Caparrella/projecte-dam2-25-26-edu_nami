@@ -1,54 +1,34 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\",
+  "WorkspaceRootPath": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\namin\\downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\formnotas.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
-      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:formnotas.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\namin\\downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\formprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
-      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:formprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\namin\\downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\login.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
-      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:login.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\namin\\downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\seleccionarasignatura.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
-      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:seleccionarasignatura.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\namin\\downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\orlaprofesores.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
-      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:orlaprofesores.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\namin\\downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\orlaprofesores.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
-      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:orlaprofesores.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\namin\\downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\formjunta.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
-      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:formjunta.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\namin\\downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\abrirevaluacion.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
-      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:abrirevaluacion.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\namin\\downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\abrirevaluacion.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
-      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:abrirevaluacion.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\namin\\downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\formprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\asus\\documents\\github\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\formprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
       "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:formprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\namin\\downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\formnotas.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
-      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:formnotas.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\asus\\documents\\github\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\formficha.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:formficha.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\namin\\downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\generaractapdf.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
-      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:generaractapdf.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\asus\\documents\\github\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\notas\\gestorgraduacion.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:notas\\gestorgraduacion.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\asus\\documents\\github\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\conexion\\baseurl.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:conexion\\baseurl.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\asus\\documents\\github\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\formprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:formprincipal.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\asus\\documents\\github\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\notas\\formnotas.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:notas\\formnotas.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|c:\\users\\asus\\documents\\github\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\login\\login.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{431178C6-AE51-4B8B-86BE-662C2B3CE28C}|proyecto_v01.vbproj|solutionrelative:login\\login.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -58,11 +38,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Bookmark",
@@ -74,148 +62,92 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "LogIn.vb [Design]",
-              "DocumentMoniker": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\LogIn.vb",
-              "RelativeDocumentMoniker": "LogIn.vb",
-              "ToolTip": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\LogIn.vb [Design]",
-              "RelativeToolTip": "LogIn.vb [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-05-02T08:51:05.724Z",
-              "EditorCaption": " [Design]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "SeleccionarAsignatura.vb",
-              "DocumentMoniker": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\SeleccionarAsignatura.vb",
-              "RelativeDocumentMoniker": "SeleccionarAsignatura.vb",
-              "ToolTip": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\SeleccionarAsignatura.vb",
-              "RelativeToolTip": "SeleccionarAsignatura.vb",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAgwAQAAAA8AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-04-21T14:21:50.012Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "FormJunta.vb [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\FormJunta.vb",
-              "RelativeDocumentMoniker": "FormJunta.vb",
-              "ToolTip": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\FormJunta.vb [Dise\u00F1o]",
-              "RelativeToolTip": "FormJunta.vb [Dise\u00F1o]",
+              "Title": "LogIn.vb [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\LogIn\\LogIn.vb",
+              "RelativeDocumentMoniker": "LogIn\\LogIn.vb",
+              "ToolTip": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\LogIn\\LogIn.vb [Dise\u00F1o]",
+              "RelativeToolTip": "LogIn\\LogIn.vb [Dise\u00F1o]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-04-21T14:20:42.812Z",
+              "WhenOpened": "2026-05-03T22:30:12.835Z",
               "EditorCaption": " [Dise\u00F1o]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "AbrirEvaluacion.vb",
-              "DocumentMoniker": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\AbrirEvaluacion.vb",
-              "RelativeDocumentMoniker": "AbrirEvaluacion.vb",
-              "ToolTip": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\AbrirEvaluacion.vb",
-              "RelativeToolTip": "AbrirEvaluacion.vb",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAA8AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-04-21T14:19:16.815Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "AbrirEvaluacion.vb [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\AbrirEvaluacion.vb",
-              "RelativeDocumentMoniker": "AbrirEvaluacion.vb",
-              "ToolTip": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\AbrirEvaluacion.vb [Dise\u00F1o]",
-              "RelativeToolTip": "AbrirEvaluacion.vb [Dise\u00F1o]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-04-21T14:18:56.144Z",
-              "EditorCaption": " [Dise\u00F1o]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "FormNotas.vb",
-              "DocumentMoniker": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\FormNotas.vb",
-              "RelativeDocumentMoniker": "FormNotas.vb",
-              "ToolTip": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\FormNotas.vb",
-              "RelativeToolTip": "FormNotas.vb",
-              "ViewState": "AgIAAJQBAAAAAAAAAAAIwKUBAABAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-04-20T20:26:06.924Z",
-              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "FormPrincipal.vb [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\FormPrincipal.vb",
-              "RelativeDocumentMoniker": "FormPrincipal.vb",
-              "ToolTip": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\FormPrincipal.vb [Dise\u00F1o]",
-              "RelativeToolTip": "FormPrincipal.vb [Dise\u00F1o]",
+              "Title": "FormFicha.vb",
+              "DocumentMoniker": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\FormFicha.vb",
+              "RelativeDocumentMoniker": "FormFicha.vb",
+              "ToolTip": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\FormFicha.vb",
+              "RelativeToolTip": "FormFicha.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-04-13T21:05:05.598Z",
+              "WhenOpened": "2026-05-03T22:29:19.331Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FormPrincipal.vb",
+              "DocumentMoniker": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\FormPrincipal.vb",
+              "RelativeDocumentMoniker": "FormPrincipal.vb",
+              "ToolTip": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\FormPrincipal.vb*",
+              "RelativeToolTip": "FormPrincipal.vb*",
+              "ViewState": "AgIAABoAAAAAAAAAAAAgwDIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-05-03T22:00:24.547Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "FormPrincipal.vb [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\FormPrincipal.vb",
+              "RelativeDocumentMoniker": "FormPrincipal.vb",
+              "ToolTip": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\FormPrincipal.vb [Dise\u00F1o]*",
+              "RelativeToolTip": "FormPrincipal.vb [Dise\u00F1o]*",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2026-05-03T22:00:24.551Z",
               "EditorCaption": " [Dise\u00F1o]"
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "OrlaProfesores.vb [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\OrlaProfesores.vb",
-              "RelativeDocumentMoniker": "OrlaProfesores.vb",
-              "ToolTip": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\OrlaProfesores.vb [Dise\u00F1o]",
-              "RelativeToolTip": "OrlaProfesores.vb [Dise\u00F1o]",
+              "Title": "FormNotas.vb",
+              "DocumentMoniker": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\Notas\\FormNotas.vb",
+              "RelativeDocumentMoniker": "Notas\\FormNotas.vb",
+              "ToolTip": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\Notas\\FormNotas.vb",
+              "RelativeToolTip": "Notas\\FormNotas.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAP8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-04-21T14:21:27.181Z",
-              "EditorCaption": " [Dise\u00F1o]"
+              "WhenOpened": "2026-05-03T22:00:24.555Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "OrlaProfesores.vb",
-              "DocumentMoniker": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\OrlaProfesores.vb",
-              "RelativeDocumentMoniker": "OrlaProfesores.vb",
-              "ToolTip": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\OrlaProfesores.vb",
-              "RelativeToolTip": "OrlaProfesores.vb",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAABUAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "GestorGraduacion.vb",
+              "DocumentMoniker": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\Notas\\GestorGraduacion.vb",
+              "RelativeDocumentMoniker": "Notas\\GestorGraduacion.vb",
+              "ToolTip": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\Notas\\GestorGraduacion.vb",
+              "RelativeToolTip": "Notas\\GestorGraduacion.vb",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAQwDAAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-04-21T14:21:29.379Z"
+              "WhenOpened": "2026-05-03T22:00:24.559Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "GenerarActaPDF.vb",
-              "DocumentMoniker": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\GenerarActaPDF.vb",
-              "RelativeDocumentMoniker": "GenerarActaPDF.vb",
-              "ToolTip": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\GenerarActaPDF.vb",
-              "RelativeToolTip": "GenerarActaPDF.vb",
-              "ViewState": "AgIAAKMAAAAAAAAAAAAcwKoAAAAZAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "BaseUrl.vb",
+              "DocumentMoniker": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\Conexion\\BaseUrl.vb",
+              "RelativeDocumentMoniker": "Conexion\\BaseUrl.vb",
+              "ToolTip": "C:\\Users\\asus\\Documents\\GitHub\\projecte-dam2-25-26-edu_nami\\apps\\escriptori\\proyecto_v01\\Conexion\\BaseUrl.vb",
+              "RelativeToolTip": "Conexion\\BaseUrl.vb",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAYwCIAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-04-21T10:12:15.101Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "FormNotas.vb [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\FormNotas.vb",
-              "RelativeDocumentMoniker": "FormNotas.vb",
-              "ToolTip": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\FormNotas.vb [Dise\u00F1o]",
-              "RelativeToolTip": "FormNotas.vb [Dise\u00F1o]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-04-13T21:41:25.108Z",
-              "EditorCaption": " [Dise\u00F1o]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "FormPrincipal.vb",
-              "DocumentMoniker": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\FormPrincipal.vb",
-              "RelativeDocumentMoniker": "FormPrincipal.vb",
-              "ToolTip": "C:\\Users\\namin\\Downloads\\proyecto\\apps\\escriptori\\proyecto_v01\\FormPrincipal.vb",
-              "RelativeToolTip": "FormPrincipal.vb",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAABxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2026-04-01T11:23:05.044Z"
+              "WhenOpened": "2026-05-03T22:00:24.561Z",
+              "EditorCaption": ""
             }
           ]
         }

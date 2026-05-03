@@ -1,7 +1,7 @@
 ﻿Imports System.Configuration
 
 Public Class BaseUrl
-    Public Const BASE_URL As String = "https://192.168.1.19"
+    Public Const BASE_URL As String = "https://192.168.1.134"
 
     Public Class LogIn
         Public Shared ReadOnly Property login As String = BASE_URL & "/login.php"
@@ -28,5 +28,14 @@ Public Class BaseUrl
 
     Public Class NotasExp
         Public Shared ReadOnly Property grad As String = BASE_URL & "/graduar_alumne.php"
+    End Class
+
+    Public Class ExpAlumnos
+        Public Shared ReadOnly Property expCsv As String = BASE_URL & "/exportar_csv.php"
+    End Class
+
+    Public Class FichaProfesores
+        Public Shared ReadOnly Property fichaProf As String = BASE_URL & "/fitxa_professor.php"
+        Public Shared ReadOnly Property listaProf As String = BASE_URL & "/lista_prof.php"
     End Class
 End Class

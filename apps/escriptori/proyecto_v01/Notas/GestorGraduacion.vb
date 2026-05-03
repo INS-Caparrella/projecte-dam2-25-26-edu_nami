@@ -45,8 +45,8 @@ Public Class GestorGraduacion
 
             If sfd.ShowDialog() <> DialogResult.OK Then Return
 
-            Dim html As String buildHtml(obj)
-            Dim pdfBytes As Byte() = Await ConstruirHtml.htmlToPdfAsync(html)
+            'Dim html As String buildHtml(obj)
+            'Dim pdfBytes As Byte() = Await ConstruirHtml.htmlToPdfAsync(html)
 
 
 

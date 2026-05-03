@@ -1,8 +1,10 @@
-﻿Imports Habanero.Base
+﻿Imports System.Net.Http
+Imports Habanero.Base
 Imports Org.BouncyCastle.Crypto.Paddings
 
 Public Class FormPrincipal
     Private ReadOnly dni As String
+    Private ReadOnly _client As HttpClient
     Private ReadOnly _nomProf As String
     Public Sub New(result As LoginResult)
         InitializeComponent()
@@ -41,5 +43,11 @@ Public Class FormPrincipal
         Dim f As New OrlaProfesores()
         Me.Hide()
         f.Show()
+    End Sub
+
+    Private Sub btnFicha_Click(sender As Object, e As EventArgs) Handles btnFicha.Click
+        Dim ficha As New FormFicha(dni, _client)
+        ficha.Show()
+
     End Sub
 End Class
