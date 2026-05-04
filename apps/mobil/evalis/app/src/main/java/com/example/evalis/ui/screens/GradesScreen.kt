@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -32,7 +33,7 @@ import androidx.navigation.NavController
 import com.example.evalis.model.GestorSQLExternModern
 import com.example.evalis.R
 import com.example.evalis.model.GestorSQLExternModern.SqlInfo.BASE_URL
-import com.example.evalis.ui.screens.expedient.baixarPDF
+import com.example.evalis.ui.screens.reports.baixarPDF
 import com.example.evalis.ui.screens.login.SessionData
 import org.json.JSONArray
 import org.json.JSONObject
@@ -56,7 +57,7 @@ object EstudiList {
 }
 
 @Composable
-private fun EstudiList(Estudi: List<Estudi>,isLoading: Boolean,navController: NavController) {
+private fun EstudisList(Estudi: List<Estudi>, isLoading: Boolean, navController: NavController) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(Estudi) { p -> EstudiListItem(p, estudiIsLoading, navController) }
     }
@@ -106,13 +107,14 @@ fun EstudiListItem(estudi: Estudi, isLoading: Boolean, navController: NavControl
 }
 
 @Composable
-fun EstudiScreen(navController: NavController) {
+fun EstudisScreen(navController: NavController, onSessionExpired: () -> Unit) {
 
 
-    estudiState.clear()
-    estudiState.addAll(EstudiList.placeholders())
-
-    carregarEstudiDesDeServidor(SessionData.dni,navController)
+    LaunchedEffect(Unit) {
+        estudiState.clear()
+        estudiState.addAll(EstudiList.placeholders())
+        carregarEstudiDesDeServidor(SessionData.dni, navController, onSessionExpired)
+    }
 
     Scaffold(modifier = Modifier.fillMaxWidth()) { inner ->
         Column(
@@ -128,7 +130,7 @@ fun EstudiScreen(navController: NavController) {
             )
             Spacer(Modifier.height(20.dp))
 
-            EstudiList(
+            EstudisList(
                 isLoading = estudiIsLoading,
                 Estudi = estudiState,
                 navController = navController
@@ -164,8 +166,10 @@ private fun parsejarEstudis(obj: JSONObject): EstudiParsed {
 }
 
 
-private fun carregarEstudiDesDeServidor(dniAlumne: String,navController: NavController) {
+private fun carregarEstudiDesDeServidor(dniAlumne: String,navController: NavController, onSessionExpired: () -> Unit) {
     estudiIsLoading = true
+    android.util.Log.d("ESTUDI", "DNI: $dniAlumne")
+    android.util.Log.d("ESTUDI", "Token: ${SessionData.token}")
     thread {
         try {
             val gestor = GestorSQLExternModern()
@@ -174,9 +178,7 @@ private fun carregarEstudiDesDeServidor(dniAlumne: String,navController: NavCont
             android.os.Handler(Looper.getMainLooper()).post {
 
                 if (arr == null && gestor.lastError == "Token expirado") {
-                    navController.navigate("login") {
-                        popUpTo(0) { inclusive = true }
-                    }
+                    onSessionExpired()
                     return@post
                 }
 
