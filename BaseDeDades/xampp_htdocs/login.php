@@ -34,10 +34,11 @@ if($username===""||$password===""){
 }
 
 $stmt = $conn->prepare("
-    SELECT u.id_user, u.password, u.dni, p.nom, p.cognom, p.rol
+    SELECT u.id_user, u.password, u.dni, p.nom, p.cognom, p.rol, e.nia
     FROM usuaris u 
     INNER JOIN persones p ON p.dni = u.dni 
-    WHERE username=?
+    LEFT JOIN estudiants e ON e.dni = p.dni
+    WHERE username=?;
 ");
 $stmt->bind_param("s", $username);
 $stmt->execute();
@@ -49,7 +50,7 @@ if ($stmt->num_rows === 0) {
     exit;
 }
 
-$stmt->bind_result($id_user, $password_hash_bd, $dni, $nom, $cognom, $rol);
+$stmt->bind_result($id_user, $password_hash_bd, $dni, $nom, $cognom, $rol, $nia);
 $stmt->fetch();
 $stmt->close();
 
@@ -92,13 +93,13 @@ $data_fi = date("Y-m-d H:i:s", time() + 36000);
 
 $stmt2 = $conn->prepare("
     INSERT INTO sessions (dni_user, token, data_inici, data_fin)
-    VALUES (?, ?, ?, ?)
-");
+    VALUES (?, ?, ?, ?)");
+    
 $stmt2->bind_param("ssss", $dni, $token, $data_inici, $data_fi);
 $stmt2->execute();
 
 ob_clean();
-echo json_encode([
+$response = [
     "pot_entrar" => true,
     "dni"        => $dni,
     "rol"        => $rol,
@@ -108,4 +109,11 @@ echo json_encode([
     "expires"    => $data_fi,
     "grup"       => $grup,
     "grups"      => $grups
-]);
+];
+
+if ($rol === "alumne" && $nia !== null) {
+    $response["nia"] = $nia;
+}
+
+ob_clean();
+echo json_encode($response);
