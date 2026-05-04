@@ -1,6 +1,7 @@
 package com.example.evalis.ui.screens
 
 import android.os.Looper
+import android.widget.SearchView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,25 +16,38 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.evalis.model.GestorSQLExternModern
@@ -63,7 +77,7 @@ object ProfsList {
 }
 
 @Composable
-private fun ProfsList(profs: List<Prof>, isLoading: Boolean,navController: NavController) {
+private fun ProfsList(profs: List<Prof>, isLoading: Boolean, navController: NavController) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(profs) { p -> ProfsListItem(p, isLoading, navController) }
     }
@@ -72,7 +86,7 @@ private fun ProfsList(profs: List<Prof>, isLoading: Boolean,navController: NavCo
 }
 
 @Composable
-fun ProfsListItem(prof: Prof, isLoading: Boolean,navController: NavController) {
+fun ProfsListItem(prof: Prof, isLoading: Boolean, navController: NavController) {
     val context = LocalContext.current
     val clickableEnabled = !isLoading && prof.id != ""
 
@@ -112,7 +126,7 @@ fun ProfsListItem(prof: Prof, isLoading: Boolean,navController: NavController) {
 }
 
 @Composable
-fun ProfsScreen(navController: NavController, onSessionExpired: () -> Unit){
+fun ProfsScreen(navController: NavController, onSessionExpired: () -> Unit) {
 
     LaunchedEffect(Unit) {
         profState.clear()
@@ -134,22 +148,23 @@ fun ProfsScreen(navController: NavController, onSessionExpired: () -> Unit){
             )
             Spacer(Modifier.height(12.dp))
 
-            ProfsList(
-                isLoading = isLoading,
-                profs = profState,
-                navController = navController
-            )
+            SearchView(profs = profState, navController = navController)
         }
     }
 
 }
 
-private fun carregarProfDesDeServidor(dniAlumne: String,navController: NavController,onSessionExpired: () -> Unit) {
+private fun carregarProfDesDeServidor(
+    dniAlumne: String,
+    navController: NavController,
+    onSessionExpired: () -> Unit
+) {
     isLoading = true
     thread {
         try {
             val gestor = GestorSQLExternModern()
-            val arr: JSONArray? = gestor.connectar("${BASE_URL}/get_profs.php?dni=$dniAlumne&token=${SessionData.token}")
+            val arr: JSONArray? =
+                gestor.connectar("${BASE_URL}/get_profs.php?dni=$dniAlumne&token=${SessionData.token}")
 
             android.os.Handler(Looper.getMainLooper()).post {
 
@@ -175,9 +190,9 @@ private fun carregarProfDesDeServidor(dniAlumne: String,navController: NavContro
                     val surname = obj.optString("cognom")
                     val email = obj.optString("email")
 
-                    val rutaRel=obj.optString("ruta_foto")
+                    val rutaRel = obj.optString("ruta_foto")
 
-                    val urlFoto= if(rutaRel.startsWith("/")) "${BASE_URL}$rutaRel" else rutaRel
+                    val urlFoto = if (rutaRel.startsWith("/")) "${BASE_URL}$rutaRel" else rutaRel
 
                     if (id != "") {
                         profState.add(Prof(id, name, surname, urlFoto, email))
@@ -195,6 +210,61 @@ private fun carregarProfDesDeServidor(dniAlumne: String,navController: NavContro
 
         } catch (e: Exception) {
         }
+    }
+}
+
+@Composable
+fun SearchView(profs: List<Prof>,navController: NavController) {
+
+    var textSearch by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            value = textSearch,
+            onValueChange = {
+                textSearch = it
+            },
+            placeholder = {
+                Text(text = "Professor/a")
+            },
+            maxLines = 1,
+            singleLine = true,
+            textStyle = TextStyle(color = Color.Black, fontSize = 20.sp),
+                    trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null
+                )
+            },
+            shape = RoundedCornerShape(8.dp),
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+
+        )
+
+        val filtrats = profs.filter {
+            it.name.contains(textSearch, ignoreCase = true) ||
+                    it.surname.contains(textSearch, ignoreCase = true)
+        }
+
+        Spacer(Modifier.height(21.dp))
+
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(filtrats) { prof ->
+                ProfsListItem(prof = prof, isLoading = isLoading, navController = navController)
+            }
+
+        }
+
     }
 }
 

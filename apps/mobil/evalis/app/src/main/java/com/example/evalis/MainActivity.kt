@@ -68,6 +68,10 @@ class MainActivity : ComponentActivity() {
         val savedMode = prefs.getString("theme_mode", ThemeMode.SYSTEM.name)
         val initialMode = ThemeMode.valueOf(savedMode!!)
 
+
+        //Probar notificació
+        getSharedPreferences("notifs", MODE_PRIVATE).edit().clear().apply()
+
         setContent {
             var themeMode by remember { mutableStateOf(initialMode) }
 

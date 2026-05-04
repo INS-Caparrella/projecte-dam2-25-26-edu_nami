@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.ListenableWorker.Result
+import com.example.evalis.model.GestorSQLExternModern.SqlInfo.BASE_URL
 import com.example.evalis.ui.screens.login.SessionData
 import java.net.URL
 
@@ -19,9 +20,14 @@ class Polling(appContext: Context, params: WorkerParameters) :
         val yaBoletin = prefs.getBoolean("boletin_notificado", false)
         val yaExpediente = prefs.getBoolean("expediente_notificado", false)
 
-        val nia = SessionData.nia // ← aquí pones el NIA del alumno logueado
+        val nia = applicationContext
+            .getSharedPreferences("session", Context.MODE_PRIVATE)
+            .getInt("nia", -1)
 
-        val url = URL("https://TU_SERVIDOR/api/hay_novedades.php?nia=$nia")
+        if (nia == -1) return Result.success()
+
+        val url = URL("${BASE_URL}/send_notifs.php?nia=$nia")
+
         val respuesta = url.readText()
 
         when (respuesta) {

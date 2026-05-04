@@ -1,5 +1,6 @@
 package com.example.evalis.ui.screens.login
 
+import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.ui.res.stringResource
@@ -43,7 +44,7 @@ import kotlin.jvm.java
 object SessionData {
     var dni: String =""
     var token:String=""
-    var nia:String=""
+
 }
 
 
@@ -162,9 +163,13 @@ fun LoginButton(user: String, pass: String, onSuccess: () -> Unit, modifier: Mod
 
                         } else {
                             val potEntrar = obj.optBoolean("pot_entrar", false)
+
                             SessionData.dni = obj.optString("dni")
                             SessionData.token = obj.optString("token")
-                            SessionData.nia = obj.optString("nia")
+                            context.getSharedPreferences("session", Context.MODE_PRIVATE)
+                                .edit()
+                                .putInt("nia", obj.optInt("nia"))
+                                .apply()
 
 
                             if (potEntrar) {
