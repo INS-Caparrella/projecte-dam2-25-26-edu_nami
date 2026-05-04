@@ -44,7 +44,9 @@ var estudiIsLoading by mutableStateOf(true)
 
 data class Estudi(
     val name: String,
-    val isHistoric: Boolean = false
+    val isHistoric: Boolean = false,
+    val teHistoric: Boolean = false,
+    val totsFinalitzats: Boolean = false
 )
 
 object EstudiList {
@@ -74,21 +76,23 @@ fun EstudiListItem(estudi: Estudi, isLoading: Boolean, navController: NavControl
         modifier = Modifier
             .fillMaxWidth()
             .clickable(enabled = clickableEnabled) {
-                if (estudi.isHistoric) {
-                    val url = "${BASE_URL}/get_expedient.php" +
-                            "?dni=${SessionData.dni}" +
-                            "&cicle=${estudi.name}" +
-                            "&token=${SessionData.token}"
-
-                    baixarPDF(
-                        context = context,
-                        url = url,
-                        fileName = "expedient_${estudi.name}.pdf"
-                    ) { success ->
-                        navController.navigate("expedientPDF/$success")
+                when {
+                    estudi.totsFinalitzats && !estudi.teHistoric -> {
+                        //expedient
+                        val url = "${BASE_URL}/get_expedient.php" +
+                                "?dni=${SessionData.dni}" +
+                                "&cicle=${estudi.name}" +
+                                "&token=${SessionData.token}"
+                        baixarPDF(context, url, "expedient_${estudi.name}.pdf") { success ->
+                            navController.navigate("expedientPDF/$success")
+                        }
+                    }
+                    else -> {
+                        //butlleti
+                        navController.navigate("cursos/${estudi.name}")
                     }
                 }
-            },
+            }
     ) {
         Row(
             modifier = Modifier
@@ -107,7 +111,7 @@ fun EstudiListItem(estudi: Estudi, isLoading: Boolean, navController: NavControl
 }
 
 @Composable
-fun EstudisScreen(navController: NavController, onSessionExpired: () -> Unit) {
+fun StudiesScreen(navController: NavController, onSessionExpired: () -> Unit) {
 
 
     LaunchedEffect(Unit) {
@@ -154,15 +158,15 @@ private fun parsejarEstudis(obj: JSONObject): EstudiParsed {
 
     for (i in 0 until historicArr.length()) {
         val t = historicArr.optJSONObject(i) ?: continue
-        val name = t.optString("cicleH")
-        if (name.isNotBlank()) {
-            historic.add(Estudi(name))
+        val cicleH = t.optString("cicleH")
+        val totsFinalitzats = t.optBoolean("tots_finalitzats")
+        val esActual = t.optBoolean("es_actual")
+        if (cicleH.isNotBlank()) {
+            historic.add(Estudi(cicleH, isHistoric = true, teHistoric = esActual, totsFinalitzats = totsFinalitzats))
         }
     }
 
-    return EstudiParsed(
-        name,historic
-    )
+    return EstudiParsed(name, historic)
 }
 
 
@@ -191,15 +195,21 @@ private fun carregarEstudiDesDeServidor(dniAlumne: String,navController: NavCont
 
                 estudiState.clear()
 
+                estudiState.clear()
+
                 for (i in 0 until arr.length()) {
                     val obj = arr.getJSONObject(i)
-
                     val parsed = parsejarEstudis(obj)
 
-                    estudiState.add(Estudi(parsed.name, isHistoric = false))
+                    // Cicle actual si no està al historic
+                    val actualEsAlHistoric = parsed.historic.any { it.teHistoric }
+                    if (!actualEsAlHistoric) {
+                        estudiState.add(Estudi(parsed.name, isHistoric = false))
+                    }
 
+                    // Afegir historics
                     for (h in parsed.historic) {
-                        estudiState.add(Estudi(h.name, isHistoric = true))
+                        estudiState.add(h)
                     }
                 }
 

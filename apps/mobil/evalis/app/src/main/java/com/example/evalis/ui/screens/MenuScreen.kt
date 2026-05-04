@@ -105,7 +105,7 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
                         onClose = { navController.popBackStack() }
                     )
                 }
-                composable("butlleti") { EstudisScreen(navController,onLogout) }
+                composable("butlleti") { StudiesScreen(navController,onLogout) }
 
                 composable("expedientPDF/{success}") { backStackEntry ->
                     val success = backStackEntry.arguments?.getString("success") == "true"
@@ -113,6 +113,15 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
                 }
                 composable("settings") {
                     SettingsScreen(themeMode, onThemeChange, navController)
+                }
+
+                composable("cursos/{cicle}") { backStackEntry ->
+                    val cicle = backStackEntry.arguments?.getString("cicle") ?: ""
+                    CursosScreen(
+                        cicle = cicle,
+                        navController = navController,
+                        onSessionExpired = onLogout
+                    )
                 }
 
 

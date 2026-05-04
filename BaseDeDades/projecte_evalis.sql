@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3307
--- Tiempo de generación: 04-05-2026 a las 00:42:03
+-- Tiempo de generación: 04-05-2026 a las 15:14:42
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -20,14 +20,11 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `projecte_evalis`
 --
-CREATE DATABASE IF NOT EXISTS `projecte_evalis` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `projecte_evalis`;
 
 DELIMITER $$
 --
 -- Procedimientos
 --
-DROP PROCEDURE IF EXISTS `alumnesGrup`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `alumnesGrup` (IN `grup` VARCHAR(11))   BEGIN
     SELECT p.nom,p.cognom,p.dni, TIMESTAMPDIFF(YEAR, p.data_naix, CURDATE()) AS edat
     FROM persones p
@@ -36,7 +33,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `alumnesGrup` (IN `grup` VARCHAR(11)
     ORDER BY p.nom,p.cognom;
 END$$
 
-DROP PROCEDURE IF EXISTS `llistatMajorsEdatEstudiants`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `llistatMajorsEdatEstudiants` ()   BEGIN
     SELECT p.nom AS nom,p.cognom AS cognom, TIMESTAMPDIFF(YEAR, p.data_naix, CURDATE()) AS edat
     FROM persones p JOIN estudiants e ON e.dni = p.dni
@@ -47,7 +43,6 @@ END$$
 --
 -- Funciones
 --
-DROP FUNCTION IF EXISTS `intentsLogin`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `intentsLogin` (`userId` INT, `rang1` DATETIME, `rang2` DATETIME) RETURNS INT(11)  BEGIN
     DECLARE result INT DEFAULT 0;
 
@@ -59,7 +54,6 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `intentsLogin` (`userId` INT, `rang1`
     RETURN result;
 END$$
 
-DROP FUNCTION IF EXISTS `majorEdat`$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `majorEdat` (`dni` VARCHAR(9)) RETURNS TINYINT(1)  BEGIN
     DECLARE edat INT;
     DECLARE major BOOLEAN DEFAULT FALSE;
@@ -83,7 +77,6 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `acta_avaluacio`
 --
 
-DROP TABLE IF EXISTS `acta_avaluacio`;
 CREATE TABLE `acta_avaluacio` (
   `id` int(11) NOT NULL,
   `id_assignatura` varchar(20) NOT NULL,
@@ -102,7 +95,6 @@ CREATE TABLE `acta_avaluacio` (
 -- Estructura de tabla para la tabla `acta_notes`
 --
 
-DROP TABLE IF EXISTS `acta_notes`;
 CREATE TABLE `acta_notes` (
   `id` int(11) NOT NULL,
   `id_acta` int(11) NOT NULL,
@@ -118,7 +110,6 @@ CREATE TABLE `acta_notes` (
 -- Estructura de tabla para la tabla `administradors`
 --
 
-DROP TABLE IF EXISTS `administradors`;
 CREATE TABLE `administradors` (
   `id` int(11) NOT NULL,
   `dni` varchar(9) NOT NULL,
@@ -154,7 +145,6 @@ INSERT INTO `administradors` (`id`, `dni`, `id_user`, `dades`, `superadmin`) VAL
 -- Estructura de tabla para la tabla `admin_centre`
 --
 
-DROP TABLE IF EXISTS `admin_centre`;
 CREATE TABLE `admin_centre` (
   `id` int(11) NOT NULL,
   `admin_id` int(11) NOT NULL,
@@ -185,7 +175,6 @@ INSERT INTO `admin_centre` (`id`, `admin_id`, `codi_centre`, `backup`) VALUES
 -- Estructura de tabla para la tabla `assignatures`
 --
 
-DROP TABLE IF EXISTS `assignatures`;
 CREATE TABLE `assignatures` (
   `codi` varchar(25) NOT NULL,
   `nom` varchar(50) NOT NULL,
@@ -219,7 +208,6 @@ INSERT INTO `assignatures` (`codi`, `nom`, `departament`) VALUES
 -- Estructura de tabla para la tabla `assignatures_cicle`
 --
 
-DROP TABLE IF EXISTS `assignatures_cicle`;
 CREATE TABLE `assignatures_cicle` (
   `id` int(11) NOT NULL,
   `nom_cicle` varchar(256) NOT NULL,
@@ -258,7 +246,6 @@ INSERT INTO `assignatures_cicle` (`id`, `nom_cicle`, `id_assignatura`) VALUES
 -- Estructura de tabla para la tabla `assistencia`
 --
 
-DROP TABLE IF EXISTS `assistencia`;
 CREATE TABLE `assistencia` (
   `id` int(11) NOT NULL,
   `codi_prof` varchar(20) NOT NULL,
@@ -309,7 +296,6 @@ INSERT INTO `assistencia` (`id`, `codi_prof`, `id_assignatura`, `nom_grup`, `hor
 -- Estructura de tabla para la tabla `centres`
 --
 
-DROP TABLE IF EXISTS `centres`;
 CREATE TABLE `centres` (
   `codi` int(11) NOT NULL,
   `nom` varchar(256) NOT NULL,
@@ -339,7 +325,6 @@ INSERT INTO `centres` (`codi`, `nom`, `data_inaug`) VALUES
 -- Estructura de tabla para la tabla `cicles`
 --
 
-DROP TABLE IF EXISTS `cicles`;
 CREATE TABLE `cicles` (
   `nom` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -373,7 +358,6 @@ INSERT INTO `cicles` (`nom`) VALUES
 -- Estructura de tabla para la tabla `contractes`
 --
 
-DROP TABLE IF EXISTS `contractes`;
 CREATE TABLE `contractes` (
   `id` int(11) NOT NULL,
   `codi_prof` varchar(20) NOT NULL,
@@ -407,10 +391,35 @@ INSERT INTO `contractes` (`id`, `codi_prof`, `codi_centre`, `data_alta`, `data_b
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `cursos_cicle`
+--
+
+CREATE TABLE `cursos_cicle` (
+  `id` int(11) NOT NULL,
+  `nom_cicle` varchar(256) NOT NULL,
+  `grado` enum('1r','2n') NOT NULL,
+  `hores_total` int(11) NOT NULL,
+  `any_inici_referencia` year(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cursos_cicle`
+--
+
+INSERT INTO `cursos_cicle` (`id`, `nom_cicle`, `grado`, `hores_total`, `any_inici_referencia`) VALUES
+(1, 'CFGM Sistemes Microinformatics i Xarxes', '1r', 800, '2021'),
+(2, 'CFGM Sistemes Microinformatics i Xarxes', '2n', 900, '2022'),
+(3, 'CFGS Desenvolupament Aplicacions Multiplataforma', '1r', 1000, '2023'),
+(4, 'CFGS Desenvolupament Aplicacions Multiplataforma', '2n', 1100, '2024'),
+(5, 'CFGS Desenvolupament Aplicacions Web', '1r', 1000, '2023'),
+(6, 'CFGS Desenvolupament Aplicacions Web', '2n', 1100, '2024');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `directiva`
 --
 
-DROP TABLE IF EXISTS `directiva`;
 CREATE TABLE `directiva` (
   `rol` varchar(25) NOT NULL,
   `codi_prof` varchar(20) NOT NULL
@@ -441,11 +450,11 @@ INSERT INTO `directiva` (`rol`, `codi_prof`) VALUES
 -- Estructura de tabla para la tabla `estudiants`
 --
 
-DROP TABLE IF EXISTS `estudiants`;
 CREATE TABLE `estudiants` (
   `nia` int(11) NOT NULL,
   `dni` varchar(9) NOT NULL,
   `nom_grup` varchar(25) NOT NULL,
+  `grado` enum('1r','2n') DEFAULT NULL,
   `nom_cicle` varchar(256) NOT NULL,
   `cursant` tinyint(1) NOT NULL,
   `repetidor` tinyint(1) NOT NULL,
@@ -459,42 +468,41 @@ CREATE TABLE `estudiants` (
 -- Volcado de datos para la tabla `estudiants`
 --
 
-INSERT INTO `estudiants` (`nia`, `dni`, `nom_grup`, `nom_cicle`, `cursant`, `repetidor`, `treballant`, `empresa`, `actiu`, `data_inici`) VALUES
-(1001, '11111111A', 'DAM2A', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2024-09-01'),
-(1002, '22222222B', 'DAM2A', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2023-09-01'),
-(1003, '33333333C', 'DAW2A', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2024-09-01'),
-(1004, '44444444D', 'DAW2A', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 1, 'WebCorp Lleida', 1, '2023-09-01'),
-(1005, '55555555E', 'ASIX2A', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 0, '', 1, '2024-09-01'),
-(1006, '66666666F', 'ASIX2A', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 1, 'NetSystems SL', 1, '2023-09-01'),
-(1007, '77777777G', 'SMX2A', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 0, '', 1, '2024-09-01'),
-(1008, '88888888H', 'GA2A', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2024-09-01'),
-(1009, '99999999I', 'FPB2A', 'FP Basica Informatica', 1, 0, 0, '', 1, '2024-09-01'),
-(1010, '10101010J', 'CI2A', 'CFGS Comerce Internacional', 1, 0, 0, '', 1, '2024-09-01'),
-(1011, '12121212L', 'DAM2A', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 1, 0, '', 1, '2023-09-01'),
-(1012, '13131313M', 'DAW1A', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2024-09-01'),
-(1013, '14141414N', 'ASIX2A', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 1, 'TechLleida SA', 1, '2023-09-01'),
-(1014, '15151515P', 'GA2A', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2023-09-01'),
-(1015, '16161616Q', 'SMX1A', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 0, '', 1, '2024-09-01'),
-(1016, '17171717R', 'DAM2A', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2024-09-01'),
-(1017, '18181818S', 'DAW2A', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2024-09-01'),
-(1018, '19191919T', 'ASIX2A', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 0, '', 1, '2024-09-01'),
-(1019, '20202020U', 'GA2A', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2024-09-01'),
-(1020, '21212121V', 'SMX2A', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 1, 'InfoLleida SL', 1, '2023-09-01'),
-(1021, '22222223W', 'DAM2A', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 1, 'AppDev SL', 1, '2023-09-01'),
-(1022, '23232323X', 'DAW2A', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2023-09-01'),
-(1023, '24242424Y', 'ASIX2A', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 1, 'SysAdmin SL', 1, '2023-09-01'),
-(1024, '25252525Z', 'CI2A', 'CFGS Comerce Internacional', 1, 0, 0, '', 1, '2024-09-01'),
-(1025, '26262626A', 'FPB2A', 'FP Basica Informatica', 1, 0, 0, '', 1, '2024-09-01'),
-(1026, '27272727B', 'GA2A', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2023-09-01'),
-(1027, '28282828C', 'SMX2A', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 0, '', 1, '2024-09-01'),
-(1028, '29292929D', 'DAM2A', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2024-09-01'),
-(1029, '30303030E', 'DAW2A', 'CFGS Desenvolupament Aplicacions Web', 1, 1, 0, '', 1, '2024-09-01'),
-(1030, '31313131F', 'CI2A', 'CFGS Comerce Internacional', 1, 0, 1, 'ComercGlobal', 1, '2023-09-01');
+INSERT INTO `estudiants` (`nia`, `dni`, `nom_grup`, `grado`, `nom_cicle`, `cursant`, `repetidor`, `treballant`, `empresa`, `actiu`, `data_inici`) VALUES
+(1001, '11111111A', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2024-09-01'),
+(1002, '22222222B', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2023-09-01'),
+(1003, '33333333C', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2024-09-01'),
+(1004, '44444444D', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 1, 'WebCorp Lleida', 1, '2023-09-01'),
+(1005, '55555555E', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 0, '', 1, '2024-09-01'),
+(1006, '66666666F', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 1, 'NetSystems SL', 1, '2023-09-01'),
+(1007, '77777777G', 'SMX2A', '2n', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 0, '', 1, '2024-09-01'),
+(1008, '88888888H', 'GA2A', '2n', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2024-09-01'),
+(1009, '99999999I', 'FPB2A', '2n', 'FP Basica Informatica', 1, 0, 0, '', 1, '2024-09-01'),
+(1010, '10101010J', 'CI2A', '2n', 'CFGS Comerce Internacional', 1, 0, 0, '', 1, '2024-09-01'),
+(1011, '12121212L', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 1, 0, '', 1, '2023-09-01'),
+(1012, '13131313M', 'DAW1A', '1r', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2024-09-01'),
+(1013, '14141414N', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 1, 'TechLleida SA', 1, '2023-09-01'),
+(1014, '15151515P', 'GA2A', '2n', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2023-09-01'),
+(1015, '16161616Q', 'SMX1A', '1r', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 0, '', 1, '2024-09-01'),
+(1016, '17171717R', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2024-09-01'),
+(1017, '18181818S', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2024-09-01'),
+(1018, '19191919T', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 0, '', 1, '2024-09-01'),
+(1019, '20202020U', 'GA2A', '2n', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2024-09-01'),
+(1020, '21212121V', 'SMX2A', '2n', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 1, 'InfoLleida SL', 1, '2023-09-01'),
+(1021, '22222223W', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 1, 'AppDev SL', 1, '2023-09-01'),
+(1022, '23232323X', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2023-09-01'),
+(1023, '24242424Y', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 1, 'SysAdmin SL', 1, '2023-09-01'),
+(1024, '25252525Z', 'CI2A', '2n', 'CFGS Comerce Internacional', 1, 0, 0, '', 1, '2024-09-01'),
+(1025, '26262626A', 'FPB2A', '2n', 'FP Basica Informatica', 1, 0, 0, '', 1, '2024-09-01'),
+(1026, '27272727B', 'GA2A', '2n', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2023-09-01'),
+(1027, '28282828C', 'SMX2A', '2n', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 0, '', 1, '2024-09-01'),
+(1028, '29292929D', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2024-09-01'),
+(1029, '30303030E', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 1, 0, '', 1, '2024-09-01'),
+(1030, '31313131F', 'CI2A', '2n', 'CFGS Comerce Internacional', 1, 0, 1, 'ComercGlobal', 1, '2023-09-01');
 
 --
 -- Disparadores `estudiants`
 --
-DROP TRIGGER IF EXISTS `estudiantHistoric`;
 DELIMITER $$
 CREATE TRIGGER `estudiantHistoric` AFTER UPDATE ON `estudiants` FOR EACH ROW BEGIN
     DECLARE fin BOOLEAN DEFAULT FALSE;
@@ -520,7 +528,6 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `estudiants_ras`
 --
 
-DROP TABLE IF EXISTS `estudiants_ras`;
 CREATE TABLE `estudiants_ras` (
   `id` int(11) NOT NULL,
   `id_ra` int(11) NOT NULL,
@@ -587,26 +594,71 @@ INSERT INTO `estudiants_ras` (`id`, `id_ra`, `nia`, `nota`, `data_inici`) VALUES
 --
 -- Disparadores `estudiants_ras`
 --
-DROP TRIGGER IF EXISTS `promocio_fp_insert`;
+DELIMITER $$
+CREATE TRIGGER `promocio_fp_correcta` AFTER INSERT ON `estudiants_ras` FOR EACH ROW BEGIN
+    DECLARE total_ras INT;
+    DECLARE aprovades INT;
+    DECLARE curs_actual ENUM('1r','2n');
+    DECLARE nou_curs ENUM('1r','2n');
+
+    SELECT COUNT(*), e.grado INTO total_ras, curs_actual
+    FROM estudiants_ras er 
+    JOIN estudiants e ON er.nia = e.nia 
+    WHERE er.nia = NEW.nia GROUP BY e.nia, e.grado;
+
+    SELECT COUNT(*) INTO aprovades
+    FROM estudiants_ras WHERE nia = NEW.nia AND nota >= 5;
+
+    IF total_ras = aprovades AND curs_actual = '1r' THEN
+        SET nou_curs = '2n';
+        
+        -- Promover
+        UPDATE estudiants 
+        SET nom_grup = REPLACE(nom_grup, '1', '2'),
+            grado = nou_curs,
+            data_inici = CURDATE()
+        WHERE nia = NEW.nia;
+        
+        -- Histórico 1r curso
+        INSERT INTO historic_estudiants (nia, nom_cicle, grado, finalitzat, nota_final, data_inici, data_fi)
+        SELECT nia, nom_cicle, '1r', 1, ROUND(AVG(nota),1), 
+               MIN(data_inici), CURDATE()
+        FROM estudiants e JOIN estudiants_ras er ON e.nia = er.nia
+        WHERE e.nia = NEW.nia AND e.grado = '1r';
+    END IF;
+END
+$$
+DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `promocio_fp_insert` AFTER INSERT ON `estudiants_ras` FOR EACH ROW BEGIN
     DECLARE total_ras INT;
     DECLARE aprovades INT;
+    DECLARE curs_actual VARCHAR(10);
 
     SELECT COUNT(*) INTO total_ras
-    FROM estudiants_ras
-    WHERE nia = NEW.nia;
+    FROM estudiants_ras WHERE nia = NEW.nia;
 
     SELECT COUNT(*) INTO aprovades
-    FROM estudiants_ras
-    WHERE nia = NEW.nia
-      AND nota >= 5;
+    FROM estudiants_ras 
+    WHERE nia = NEW.nia AND nota >= 5;
 
-    IF total_ras > 0 AND total_ras = aprovades THEN
-        UPDATE estudiants
-        SET nom_grup = REPLACE(nom_grup, '1', '2')
-        WHERE nia = NEW.nia
-          AND nom_grup LIKE '%1%';
+    -- Si aprueba TODO el curso 1º → promover a 2º Y crear histórico
+    IF total_ras > 0 AND total_ras = aprovades AND NEW.nia IN (
+        SELECT nia FROM estudiants WHERE nom_grup LIKE '%1%'
+    ) THEN
+        -- Promover grupo
+        UPDATE estudiants 
+        SET nom_grup = REPLACE(nom_grup, '1', '2'),
+            data_inici = CURDATE()
+        WHERE nia = NEW.nia;
+        
+        -- Crear histórico del curso finalizado
+        INSERT INTO historic_estudiants (nia, nom_cicle, finalitzat, nota_final, data_inici, data_fi)
+        SELECT NEW.nia, nom_cicle, 1, ROUND(AVG(nota),1), 
+               MIN(data_inici), CURDATE()
+        FROM estudiants e 
+        JOIN estudiants_ras er ON e.nia = er.nia
+        WHERE e.nia = NEW.nia;
     END IF;
 END
 $$
@@ -618,7 +670,6 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `grup_classe`
 --
 
-DROP TABLE IF EXISTS `grup_classe`;
 CREATE TABLE `grup_classe` (
   `nom` varchar(25) NOT NULL,
   `aula` varchar(20) NOT NULL
@@ -650,7 +701,6 @@ INSERT INTO `grup_classe` (`nom`, `aula`) VALUES
 -- Estructura de tabla para la tabla `historic_actes`
 --
 
-DROP TABLE IF EXISTS `historic_actes`;
 CREATE TABLE `historic_actes` (
   `id` int(11) NOT NULL,
   `id_acta` int(11) NOT NULL,
@@ -668,11 +718,11 @@ CREATE TABLE `historic_actes` (
 -- Estructura de tabla para la tabla `historic_estudiants`
 --
 
-DROP TABLE IF EXISTS `historic_estudiants`;
 CREATE TABLE `historic_estudiants` (
   `id` int(11) NOT NULL,
   `nia` int(11) NOT NULL,
   `nom_cicle` varchar(256) NOT NULL,
+  `grado` enum('1r','2n') DEFAULT NULL,
   `finalitzat` tinyint(1) NOT NULL,
   `nota_final` decimal(4,1) DEFAULT NULL,
   `data_inici` date NOT NULL,
@@ -683,39 +733,40 @@ CREATE TABLE `historic_estudiants` (
 -- Volcado de datos para la tabla `historic_estudiants`
 --
 
-INSERT INTO `historic_estudiants` (`id`, `nia`, `nom_cicle`, `finalitzat`, `nota_final`, `data_inici`, `data_fi`) VALUES
-(153, 1001, 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 7.4, '2023-09-01', '2024-06-20'),
-(154, 1002, 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 8.0, '2022-09-01', '2023-06-20'),
-(155, 1011, 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 5.0, '2022-09-01', '2023-06-20'),
-(156, 1016, 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 7.0, '2023-09-01', '2024-06-20'),
-(157, 1021, 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 7.0, '2022-09-01', '2023-06-20'),
-(158, 1028, 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 6.0, '2023-09-01', '2024-06-20'),
-(159, 1003, 'CFGS Desenvolupament Aplicacions Web', 1, 8.0, '2023-09-01', '2024-06-20'),
-(160, 1004, 'CFGS Desenvolupament Aplicacions Web', 1, 7.0, '2022-09-01', '2023-06-20'),
-(161, 1017, 'CFGS Desenvolupament Aplicacions Web', 1, 8.0, '2023-09-01', '2024-06-20'),
-(162, 1022, 'CFGS Desenvolupament Aplicacions Web', 1, 7.0, '2022-09-01', '2023-06-20'),
-(163, 1005, 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 7.0, '2023-09-01', '2024-06-20'),
-(164, 1006, 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 7.0, '2022-09-01', '2023-06-20'),
-(165, 1013, 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 8.0, '2022-09-01', '2023-06-20'),
-(166, 1018, 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 7.0, '2023-09-01', '2024-06-20'),
-(167, 1023, 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 8.0, '2022-09-01', '2023-06-20'),
-(168, 1007, 'CFGM Sistemes Microinformatics i Xarxes', 1, 7.0, '2023-09-01', '2024-06-20'),
-(169, 1020, 'CFGM Sistemes Microinformatics i Xarxes', 1, 6.0, '2022-09-01', '2023-06-20'),
-(170, 1027, 'CFGM Sistemes Microinformatics i Xarxes', 1, 6.0, '2023-09-01', '2024-06-20'),
-(171, 1008, 'CFGM Gestio Administrativa', 1, 7.0, '2023-09-01', '2024-06-20'),
-(172, 1014, 'CFGM Gestio Administrativa', 1, 6.0, '2022-09-01', '2023-06-20'),
-(173, 1019, 'CFGM Gestio Administrativa', 1, 7.0, '2023-09-01', '2024-06-20'),
-(174, 1026, 'CFGM Gestio Administrativa', 1, 7.0, '2022-09-01', '2023-06-20'),
-(175, 1010, 'CFGS Comerce Internacional', 1, 7.0, '2023-09-01', '2024-06-20'),
-(176, 1024, 'CFGS Comerce Internacional', 1, 7.0, '2023-09-01', '2024-06-20'),
-(177, 1030, 'CFGS Comerce Internacional', 1, 7.0, '2022-09-01', '2023-06-20'),
-(178, 1009, 'FP Basica Informatica', 1, 6.0, '2023-09-01', '2024-06-20'),
-(179, 1025, 'FP Basica Informatica', 1, 6.0, '2023-09-01', '2024-06-20'),
-(180, 1029, 'CFGS Desenvolupament Aplicacions Web', 0, NULL, '2022-09-01', '2023-06-20'),
-(181, 1005, 'CFGM Sistemes Microinformatics i Xarxes', 1, 7.0, '2021-09-01', '2023-06-20'),
-(182, 1018, 'CFGM Sistemes Microinformatics i Xarxes', 1, 7.0, '2021-09-01', '2023-06-20'),
-(183, 1003, 'CFGM Sistemes Microinformatics i Xarxes', 1, 7.0, '2021-09-01', '2023-06-20'),
-(184, 1001, 'CFGM Sistemes Microinformatics i Xarxes', 1, 7.0, '2021-09-01', '2023-06-20');
+INSERT INTO `historic_estudiants` (`id`, `nia`, `nom_cicle`, `grado`, `finalitzat`, `nota_final`, `data_inici`, `data_fi`) VALUES
+(153, 1001, 'CFGS Desenvolupament Aplicacions Multiplataforma', '1r', 1, 7.4, '2023-09-01', '2024-06-20'),
+(154, 1002, 'CFGS Desenvolupament Aplicacions Multiplataforma', NULL, 1, 8.0, '2022-09-01', '2023-06-20'),
+(155, 1011, 'CFGS Desenvolupament Aplicacions Multiplataforma', NULL, 1, 5.0, '2022-09-01', '2023-06-20'),
+(156, 1016, 'CFGS Desenvolupament Aplicacions Multiplataforma', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
+(157, 1021, 'CFGS Desenvolupament Aplicacions Multiplataforma', NULL, 1, 7.0, '2022-09-01', '2023-06-20'),
+(158, 1028, 'CFGS Desenvolupament Aplicacions Multiplataforma', NULL, 1, 6.0, '2023-09-01', '2024-06-20'),
+(159, 1003, 'CFGS Desenvolupament Aplicacions Web', NULL, 1, 8.0, '2023-09-01', '2024-06-20'),
+(160, 1004, 'CFGS Desenvolupament Aplicacions Web', NULL, 1, 7.0, '2022-09-01', '2023-06-20'),
+(161, 1017, 'CFGS Desenvolupament Aplicacions Web', NULL, 1, 8.0, '2023-09-01', '2024-06-20'),
+(162, 1022, 'CFGS Desenvolupament Aplicacions Web', NULL, 1, 7.0, '2022-09-01', '2023-06-20'),
+(163, 1005, 'CFGS Administracio de Sistemes Informatics en Xarxa', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
+(164, 1006, 'CFGS Administracio de Sistemes Informatics en Xarxa', NULL, 1, 7.0, '2022-09-01', '2023-06-20'),
+(165, 1013, 'CFGS Administracio de Sistemes Informatics en Xarxa', NULL, 1, 8.0, '2022-09-01', '2023-06-20'),
+(166, 1018, 'CFGS Administracio de Sistemes Informatics en Xarxa', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
+(167, 1023, 'CFGS Administracio de Sistemes Informatics en Xarxa', NULL, 1, 8.0, '2022-09-01', '2023-06-20'),
+(168, 1007, 'CFGM Sistemes Microinformatics i Xarxes', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
+(169, 1020, 'CFGM Sistemes Microinformatics i Xarxes', NULL, 1, 6.0, '2022-09-01', '2023-06-20'),
+(170, 1027, 'CFGM Sistemes Microinformatics i Xarxes', NULL, 1, 6.0, '2023-09-01', '2024-06-20'),
+(171, 1008, 'CFGM Gestio Administrativa', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
+(172, 1014, 'CFGM Gestio Administrativa', NULL, 1, 6.0, '2022-09-01', '2023-06-20'),
+(173, 1019, 'CFGM Gestio Administrativa', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
+(174, 1026, 'CFGM Gestio Administrativa', NULL, 1, 7.0, '2022-09-01', '2023-06-20'),
+(175, 1010, 'CFGS Comerce Internacional', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
+(176, 1024, 'CFGS Comerce Internacional', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
+(177, 1030, 'CFGS Comerce Internacional', NULL, 1, 7.0, '2022-09-01', '2023-06-20'),
+(178, 1009, 'FP Basica Informatica', NULL, 1, 6.0, '2023-09-01', '2024-06-20'),
+(179, 1025, 'FP Basica Informatica', NULL, 1, 6.0, '2023-09-01', '2024-06-20'),
+(180, 1029, 'CFGS Desenvolupament Aplicacions Web', NULL, 0, NULL, '2022-09-01', '2023-06-20'),
+(181, 1005, 'CFGM Sistemes Microinformatics i Xarxes', NULL, 1, 7.0, '2021-09-01', '2023-06-20'),
+(182, 1018, 'CFGM Sistemes Microinformatics i Xarxes', NULL, 1, 7.0, '2021-09-01', '2023-06-20'),
+(183, 1003, 'CFGM Sistemes Microinformatics i Xarxes', NULL, 1, 7.0, '2021-09-01', '2023-06-20'),
+(184, 1001, 'CFGM Sistemes Microinformatics i Xarxes', '2n', 1, 7.0, '2022-09-01', '2023-06-20'),
+(185, 1001, 'CFGM Sistemes Microinformatics i Xarxes', '1r', 1, 7.0, '2021-09-01', '2022-06-20');
 
 -- --------------------------------------------------------
 
@@ -723,7 +774,6 @@ INSERT INTO `historic_estudiants` (`id`, `nia`, `nom_cicle`, `finalitzat`, `nota
 -- Estructura de tabla para la tabla `historic_fct`
 --
 
-DROP TABLE IF EXISTS `historic_fct`;
 CREATE TABLE `historic_fct` (
   `id` int(11) NOT NULL,
   `nia` int(11) NOT NULL,
@@ -758,7 +808,6 @@ INSERT INTO `historic_fct` (`id`, `nia`, `empreses`, `hores`, `finalitzat`, `obs
 -- Estructura de tabla para la tabla `historic_professors`
 --
 
-DROP TABLE IF EXISTS `historic_professors`;
 CREATE TABLE `historic_professors` (
   `id` int(11) NOT NULL,
   `codi_prof` varchar(20) NOT NULL,
@@ -810,7 +859,6 @@ INSERT INTO `historic_professors` (`id`, `codi_prof`, `tipus`, `motius`, `justif
 -- Estructura de tabla para la tabla `logs_consultes`
 --
 
-DROP TABLE IF EXISTS `logs_consultes`;
 CREATE TABLE `logs_consultes` (
   `id` int(11) NOT NULL,
   `dni_user` varchar(20) NOT NULL,
@@ -951,7 +999,25 @@ INSERT INTO `logs_consultes` (`id`, `dni_user`, `consulta`) VALUES
 (127, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
 (128, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
 (129, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF02&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(130, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd');
+(130, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
+(131, '11111111A', '/get_profs.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
+(132, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
+(133, '11111111A', '/get_profs.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
+(134, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF02&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
+(135, '11111111A', '/get_profs.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
+(136, '11111111A', '/get_estudis.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
+(137, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
+(138, '11111111A', '/get_estudis.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
+(139, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
+(140, '11111111A', '/get_estudis.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
+(141, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
+(142, '11111111A', '/get_estudis.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
+(143, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
+(144, '11111111A', '/get_estudis.php?dni=11111111A&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
+(145, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
+(146, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&data_inici=2023-09-01&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
+(147, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
+(148, '11111111A', '/get_estudis.php?dni=11111111A&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53');
 
 -- --------------------------------------------------------
 
@@ -959,7 +1025,6 @@ INSERT INTO `logs_consultes` (`id`, `dni_user`, `consulta`) VALUES
 -- Estructura de tabla para la tabla `logs_login`
 --
 
-DROP TABLE IF EXISTS `logs_login`;
 CREATE TABLE `logs_login` (
   `id` int(11) NOT NULL,
   `dni_user` varchar(20) NOT NULL,
@@ -974,7 +1039,6 @@ CREATE TABLE `logs_login` (
 -- Estructura de tabla para la tabla `periodes_avaluacio`
 --
 
-DROP TABLE IF EXISTS `periodes_avaluacio`;
 CREATE TABLE `periodes_avaluacio` (
   `id` int(11) NOT NULL,
   `trimestre` tinyint(1) NOT NULL COMMENT '1, 2 o 3',
@@ -991,7 +1055,6 @@ CREATE TABLE `periodes_avaluacio` (
 -- Estructura de tabla para la tabla `persones`
 --
 
-DROP TABLE IF EXISTS `persones`;
 CREATE TABLE `persones` (
   `dni` varchar(9) NOT NULL,
   `nom` varchar(25) NOT NULL,
@@ -1062,7 +1125,6 @@ INSERT INTO `persones` (`dni`, `nom`, `cognom`, `data_naix`, `poblacio`, `codi_p
 --
 -- Disparadores `persones`
 --
-DROP TRIGGER IF EXISTS `generarUsuari`;
 DELIMITER $$
 CREATE TRIGGER `generarUsuari` AFTER INSERT ON `persones` FOR EACH ROW BEGIN
     DECLARE usernameBase VARCHAR(50);
@@ -1084,7 +1146,6 @@ CREATE TRIGGER `generarUsuari` AFTER INSERT ON `persones` FOR EACH ROW BEGIN
 END
 $$
 DELIMITER ;
-DROP TRIGGER IF EXISTS `valid_email`;
 DELIMITER $$
 CREATE TRIGGER `valid_email` BEFORE INSERT ON `persones` FOR EACH ROW BEGIN
     IF NEW.email NOT REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}$' THEN
@@ -1101,7 +1162,6 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `professors`
 --
 
-DROP TABLE IF EXISTS `professors`;
 CREATE TABLE `professors` (
   `codi_prof` varchar(20) NOT NULL,
   `dni` varchar(9) NOT NULL,
@@ -1135,7 +1195,6 @@ INSERT INTO `professors` (`codi_prof`, `dni`, `dedicacio`) VALUES
 -- Estructura de tabla para la tabla `prof_assignatura`
 --
 
-DROP TABLE IF EXISTS `prof_assignatura`;
 CREATE TABLE `prof_assignatura` (
   `id` int(11) NOT NULL,
   `id_codiprof` varchar(20) NOT NULL,
@@ -1169,7 +1228,6 @@ INSERT INTO `prof_assignatura` (`id`, `id_codiprof`, `id_assignatura`) VALUES
 -- Estructura de tabla para la tabla `ras`
 --
 
-DROP TABLE IF EXISTS `ras`;
 CREATE TABLE `ras` (
   `id` int(11) NOT NULL,
   `ra` int(11) NOT NULL,
@@ -1211,7 +1269,6 @@ INSERT INTO `ras` (`id`, `ra`, `codi_assignatura`, `data_inici`, `data_fin`) VAL
 --
 -- Disparadores `ras`
 --
-DROP TRIGGER IF EXISTS `verificarRa`;
 DELIMITER $$
 CREATE TRIGGER `verificarRa` BEFORE INSERT ON `ras` FOR EACH ROW BEGIN
     DECLARE exist INT DEFAULT 0;
@@ -1235,31 +1292,50 @@ DELIMITER ;
 -- Estructura de tabla para la tabla `sessions`
 --
 
-DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
   `id_session` int(11) NOT NULL,
   `dni_user` varchar(20) NOT NULL,
   `token` char(64) NOT NULL,
-  `username` varchar(11) NOT NULL,
-  `data_inici` date NOT NULL,
-  `data_fin` date DEFAULT NULL
+  `data_inici` datetime NOT NULL,
+  `data_fin` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `sessions`
 --
 
-INSERT INTO `sessions` (`id_session`, `dni_user`, `token`, `username`, `data_inici`, `data_fin`) VALUES
-(40, '11111111A', 'b2121697855da39afcaf7bfdcb21a56ca3b2cbb3281aafc363784f62ad8711df', '', '2026-05-03', '2026-05-04'),
-(41, '11111111A', '3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443', '', '2026-05-03', '2026-05-04'),
-(42, '11111111A', 'cf425b12e956c1329d170a83ffd6babf5df7cceb2045af17a01d38960378b309', '', '2026-05-03', '2026-05-04'),
-(43, '11111111A', 'b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0', '', '2026-05-03', '2026-05-04'),
-(44, '11111111A', '14b6d07fd0cac990a807d41bb08556382aec77937716642293888296cdf312c1', '', '2026-05-03', '2026-05-04'),
-(45, '11111111A', 'fa66ad05921947ab8d1573d2937f17bd3b64e55064ffd2d7d21ce6852040e858', '', '2026-05-03', '2026-05-04'),
-(46, '11111111A', '438878390709ba53d83134e7908917aa19c6c12071631a9e9fc69a8c5be888c1', '', '2026-05-03', '2026-05-04'),
-(47, '11111111A', '9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd', '', '2026-05-03', '2026-05-04'),
-(48, '11111111A', 'ab8d980505d696a67e9e1fcdabd07f692601b9b57ea533f1565386bfeabf3e97', '', '2026-05-04', '2026-05-04'),
-(49, '11111111A', 'a625bb14c62e4b43e7ac1f4adcbe4d72363053e3c220770971fde1fabf7c9331', '', '2026-05-04', '2026-05-04');
+INSERT INTO `sessions` (`id_session`, `dni_user`, `token`, `data_inici`, `data_fin`) VALUES
+(40, '11111111A', 'b2121697855da39afcaf7bfdcb21a56ca3b2cbb3281aafc363784f62ad8711df', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
+(41, '11111111A', '3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
+(42, '11111111A', 'cf425b12e956c1329d170a83ffd6babf5df7cceb2045af17a01d38960378b309', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
+(43, '11111111A', 'b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
+(44, '11111111A', '14b6d07fd0cac990a807d41bb08556382aec77937716642293888296cdf312c1', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
+(45, '11111111A', 'fa66ad05921947ab8d1573d2937f17bd3b64e55064ffd2d7d21ce6852040e858', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
+(46, '11111111A', '438878390709ba53d83134e7908917aa19c6c12071631a9e9fc69a8c5be888c1', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
+(47, '11111111A', '9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
+(48, '11111111A', 'ab8d980505d696a67e9e1fcdabd07f692601b9b57ea533f1565386bfeabf3e97', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(49, '11111111A', 'a625bb14c62e4b43e7ac1f4adcbe4d72363053e3c220770971fde1fabf7c9331', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(50, '11111111A', 'faf322f4f5d0254447f714ece90f0d7e77bbc35e89a62150d0f895ebff30e4ff', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(51, '11111111A', '6823f0edee710c361844ba85745af7d84141f40914564105b5c9e7c36ffc71b8', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(52, '11111111A', '3f360ad4a96d356e429cb1d72b8c0c55209ac6a45b7e41098635e72f8d1ad9a0', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(53, '11111111A', 'e2728607b62937b8d4c311f4f0d247612c899cd08907b13392d921ed0116a134', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(54, '11111111A', 'b3a9b7278f2f1ef0c6bec6185029db9c771e994c3f47407f67e208c9215989ca', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(55, '11111111A', 'c386b8ba5419aa74fb8b3e714d451d3fb318349962319f5297e77124dafa8c2d', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(56, '11111111A', 'da63389184cdf94e056d6b7fc52e3686eb2c8135cec510819e207743f302560e', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(57, '11111111A', '69ef853e591a56b62b5461a7542eeb62cf3eb95429b7aed5d7d18c3c91bb5ceb', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(58, '11111111A', '9692fb8cd7a49cbe54e3c19402042e36b0d3f2b5f697e69bf812d84275b1dfa7', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(59, '11111111A', '57659695cf433ea3811f6d9da0f5e2736bc3d50e69cc5d31ab09f67d395ee0da', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(60, '11111111A', '71483a21270f93fa292b560999ef0a82a2b934c0e0e199083c1d6223341b667b', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(61, '11111111A', '8a1510beda7cca50bd3bace12be5f5cebc57caf12e4ba60a1ce18177e757d9da', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(62, '11111111A', '598cc2182cf9fd15601419cc6ec2cdd8def6752a146515bda5c6dcde1a52de22', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(63, '11111111A', '8762861aacaff0e5649f10c4880a6992c2cb28cc519f287adc4cb6b372c11c93', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(64, '11111111A', 'f8708ce6d88377b0be29aa40be377f784aa13a4c15f20249579773b7c381adfc', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(65, '11111111A', '2fdd6b61ede0de1464fc2a8288ef0875adc5f000fc5a1f1114df5e52ff533e76', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(66, '11111111A', '1c8b32d9d9a099567478ee5037bd8f1310d511ce3a7e18423bf80131a6256607', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(67, '11111111A', '740895a3a522f30db682a71f21059c8dc7a5db2dab9f4f8d3b1e5e5482c90ce3', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(68, '11111111A', '4c00cfe94933e8183495390a884681a009b01b82c7467aa820fc3a8fc7bc69d3', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
+(69, '11111111A', '1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788', '2026-05-04 11:07:47', '2026-05-04 21:07:47'),
+(70, '11111111A', '22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53', '2026-05-04 12:10:22', '2026-05-04 22:10:22');
 
 -- --------------------------------------------------------
 
@@ -1267,7 +1343,6 @@ INSERT INTO `sessions` (`id_session`, `dni_user`, `token`, `username`, `data_ini
 -- Estructura de tabla para la tabla `usuaris`
 --
 
-DROP TABLE IF EXISTS `usuaris`;
 CREATE TABLE `usuaris` (
   `id_user` int(11) NOT NULL,
   `dni` varchar(9) NOT NULL,
@@ -1404,6 +1479,13 @@ ALTER TABLE `contractes`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_codip` (`codi_prof`),
   ADD KEY `fk_codic` (`codi_centre`);
+
+--
+-- Indices de la tabla `cursos_cicle`
+--
+ALTER TABLE `cursos_cicle`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `nom_cicle` (`nom_cicle`);
 
 --
 -- Indices de la tabla `directiva`
@@ -1578,6 +1660,12 @@ ALTER TABLE `contractes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
+-- AUTO_INCREMENT de la tabla `cursos_cicle`
+--
+ALTER TABLE `cursos_cicle`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT de la tabla `estudiants_ras`
 --
 ALTER TABLE `estudiants_ras`
@@ -1593,7 +1681,7 @@ ALTER TABLE `historic_actes`
 -- AUTO_INCREMENT de la tabla `historic_estudiants`
 --
 ALTER TABLE `historic_estudiants`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
 
 --
 -- AUTO_INCREMENT de la tabla `historic_fct`
@@ -1611,7 +1699,7 @@ ALTER TABLE `historic_professors`
 -- AUTO_INCREMENT de la tabla `logs_consultes`
 --
 ALTER TABLE `logs_consultes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
 
 --
 -- AUTO_INCREMENT de la tabla `logs_login`
@@ -1641,7 +1729,7 @@ ALTER TABLE `ras`
 -- AUTO_INCREMENT de la tabla `sessions`
 --
 ALTER TABLE `sessions`
-  MODIFY `id_session` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id_session` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT de la tabla `usuaris`
@@ -1702,6 +1790,12 @@ ALTER TABLE `assistencia`
 ALTER TABLE `contractes`
   ADD CONSTRAINT `fk_codic` FOREIGN KEY (`codi_centre`) REFERENCES `centres` (`codi`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_codip` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `cursos_cicle`
+--
+ALTER TABLE `cursos_cicle`
+  ADD CONSTRAINT `cursos_cicle_ibfk_1` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `directiva`
