@@ -33,7 +33,7 @@ import androidx.navigation.NavController
 import com.example.evalis.model.GestorSQLExternModern
 import com.example.evalis.R
 import com.example.evalis.model.GestorSQLExternModern.SqlInfo.BASE_URL
-import com.example.evalis.ui.screens.expedient.baixarPDF
+import com.example.evalis.ui.screens.reports.baixarPDF
 import com.example.evalis.ui.screens.login.SessionData
 import org.json.JSONArray
 import org.json.JSONObject
@@ -57,7 +57,7 @@ object EstudiList {
 }
 
 @Composable
-private fun EstudiList(Estudi: List<Estudi>,isLoading: Boolean,navController: NavController) {
+private fun EstudisList(Estudi: List<Estudi>, isLoading: Boolean, navController: NavController) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(Estudi) { p -> EstudiListItem(p, estudiIsLoading, navController) }
     }
@@ -107,7 +107,7 @@ fun EstudiListItem(estudi: Estudi, isLoading: Boolean, navController: NavControl
 }
 
 @Composable
-fun EstudiScreen(navController: NavController,onSessionExpired: () -> Unit) {
+fun EstudisScreen(navController: NavController, onSessionExpired: () -> Unit) {
 
 
     LaunchedEffect(Unit) {
@@ -130,7 +130,7 @@ fun EstudiScreen(navController: NavController,onSessionExpired: () -> Unit) {
             )
             Spacer(Modifier.height(20.dp))
 
-            EstudiList(
+            EstudisList(
                 isLoading = estudiIsLoading,
                 Estudi = estudiState,
                 navController = navController

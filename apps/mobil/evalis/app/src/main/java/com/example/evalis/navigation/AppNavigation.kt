@@ -67,7 +67,7 @@ fun AppNavigation(
         }
 
         composable("estudi") {
-            EstudiScreen(navController = navController, onSessionExpired = {
+            EstudisScreen(navController = navController, onSessionExpired = {
                 navController.navigate("login"){
                     popUpTo("login"){inclusive=true}
                 }

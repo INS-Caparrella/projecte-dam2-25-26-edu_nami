@@ -30,8 +30,6 @@ class GestorSQLExternModern{
             connection.connect()
 
             val responseCode=connection.responseCode
-            android.util.Log.d("GESTOR", "URL: $urlString")
-            android.util.Log.d("GESTOR", "Response code: $responseCode")
 
             if (responseCode == 401) {
                 lastError = "Token expirado"
@@ -93,7 +91,6 @@ class GestorSQLExternModern{
                         lastError = "Token expirado"
                         return null
                     }
-                    println("RESPUESTA SERVIDOR: '${resultat.toString()}'")
 
                     JSONObject(resultat.toString())
                 }catch(e:Exception){
@@ -145,7 +142,6 @@ class GestorSQLExternModern{
                     it.forEachLine{line->resultat.append(line)}
                 }
                 try{
-                    println("RESPUESTA SERVIDOR: >>>${resultat.toString()}<<<")
 
                     val obj= JSONObject(resultat.toString())
 

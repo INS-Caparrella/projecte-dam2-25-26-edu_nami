@@ -1,4 +1,4 @@
-package com.example.evalis.ui.screens.expedient
+package com.example.evalis.ui.screens.reports
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 
 
 @Composable
-fun ExpedientScreen(success: Boolean, navController: NavController) {
+fun DownloadScreen(success: Boolean, navController: NavController) {
     Scaffold { inner ->
         Column(
             modifier = Modifier
