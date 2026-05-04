@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -113,10 +114,11 @@ fun ProfsListItem(prof: Prof, isLoading: Boolean,navController: NavController) {
 @Composable
 fun ProfsScreen(navController: NavController, onSessionExpired: () -> Unit){
 
-    profState.clear()
-    profState.addAll(ProfsList.placeholders())
-
-    carregarProfDesDeServidor(SessionData.dni,navController,onSessionExpired)
+    LaunchedEffect(Unit) {
+        profState.clear()
+        profState.addAll(ProfsList.placeholders())
+        carregarProfDesDeServidor(SessionData.dni, navController, onSessionExpired)
+    }
 
     Scaffold(modifier = Modifier.fillMaxWidth()) { inner ->
         Column(

@@ -105,7 +105,7 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
                         onClose = { navController.popBackStack() }
                     )
                 }
-                composable("butlleti") { EstudiScreen(navController) }
+                composable("butlleti") { EstudiScreen(navController,onLogout) }
 
                 composable("expedientPDF/{success}") { backStackEntry ->
                     val success = backStackEntry.arguments?.getString("success") == "true"
