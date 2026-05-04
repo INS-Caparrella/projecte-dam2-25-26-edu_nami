@@ -10,7 +10,7 @@ Public Class OrlaProfesores
 
     Private Async Function loadOrlaAsync() As Task
         Try
-            Dim json As String = Await _client.GetStringAsync("https://192.168.17.6/orla.php")
+            Dim json As String = Await _client.GetStringAsync("https://192.168.1.134/orla.php")
             Dim obj As JObject = JObject.Parse(json)
 
             If Not obj.Value(Of Boolean)("ok") Then

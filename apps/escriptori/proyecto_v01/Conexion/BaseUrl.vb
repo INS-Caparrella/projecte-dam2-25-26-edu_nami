@@ -38,4 +38,8 @@ Public Class BaseUrl
         Public Shared ReadOnly Property fichaProf As String = BASE_URL & "/fitxa_professor.php"
         Public Shared ReadOnly Property listaProf As String = BASE_URL & "/lista_prof.php"
     End Class
+
+    Public Class ExpXML
+        Public Shared ReadOnly Property exp As String = BASE_URL & "/export_logs.php"
+    End Class
 End Class
