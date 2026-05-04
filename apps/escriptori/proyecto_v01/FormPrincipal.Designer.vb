@@ -30,11 +30,12 @@ Partial Class FormPrincipal
         btnOpenT = New ToolStripButton()
         btnOrlas = New ToolStripButton()
         btnCSV = New ToolStripButton()
+        btnJSON = New ToolStripButton()
+        btnXML = New ToolStripButton()
         pbPicture = New PictureBox()
         tlpInfoP = New TableLayoutPanel()
         lblName = New Label()
         lblRol = New Label()
-        btnJSON = New ToolStripButton()
         tsMenuPrincipal.SuspendLayout()
         CType(pbPicture, ComponentModel.ISupportInitialize).BeginInit()
         tlpInfoP.SuspendLayout()
@@ -52,7 +53,7 @@ Partial Class FormPrincipal
         ' 
         tsMenuPrincipal.Dock = DockStyle.Left
         tsMenuPrincipal.ImageScalingSize = New Size(20, 20)
-        tsMenuPrincipal.Items.AddRange(New ToolStripItem() {btnFicha, btnGrades, btnOpenT, btnOrlas, btnCSV, btnJSON})
+        tsMenuPrincipal.Items.AddRange(New ToolStripItem() {btnFicha, btnGrades, btnOpenT, btnOrlas, btnCSV, btnJSON, btnXML})
         tsMenuPrincipal.Location = New Point(0, 0)
         tsMenuPrincipal.Name = "tsMenuPrincipal"
         tsMenuPrincipal.Size = New Size(40, 450)
@@ -105,6 +106,24 @@ Partial Class FormPrincipal
         btnCSV.Size = New Size(37, 24)
         btnCSV.Text = "Exportar clase a CSV"
         ' 
+        ' btnJSON
+        ' 
+        btnJSON.DisplayStyle = ToolStripItemDisplayStyle.Image
+        btnJSON.Image = CType(resources.GetObject("btnJSON.Image"), Image)
+        btnJSON.ImageTransparentColor = Color.Magenta
+        btnJSON.Name = "btnJSON"
+        btnJSON.Size = New Size(37, 24)
+        btnJSON.Text = "Exportar profesores a JSON"
+        ' 
+        ' btnXML
+        ' 
+        btnXML.DisplayStyle = ToolStripItemDisplayStyle.Image
+        btnXML.Image = CType(resources.GetObject("btnXML.Image"), Image)
+        btnXML.ImageTransparentColor = Color.Magenta
+        btnXML.Name = "btnXML"
+        btnXML.Size = New Size(37, 24)
+        btnXML.Text = "Descargar logins XML"
+        ' 
         ' pbPicture
         ' 
         pbPicture.Anchor = AnchorStyles.None
@@ -153,15 +172,6 @@ Partial Class FormPrincipal
         lblRol.TabIndex = 2
         lblRol.Text = "Rol"
         ' 
-        ' btnJSON
-        ' 
-        btnJSON.DisplayStyle = ToolStripItemDisplayStyle.Image
-        btnJSON.Image = CType(resources.GetObject("btnJSON.Image"), Image)
-        btnJSON.ImageTransparentColor = Color.Magenta
-        btnJSON.Name = "btnJSON"
-        btnJSON.Size = New Size(37, 24)
-        btnJSON.Text = "Exportar profesores a JSON"
-        ' 
         ' FormPrincipal
         ' 
         AutoScaleDimensions = New SizeF(8F, 20F)
@@ -194,4 +204,5 @@ Partial Class FormPrincipal
     Friend WithEvents lblRol As Label
     Friend WithEvents btnFicha As ToolStripButton
     Friend WithEvents btnJSON As ToolStripButton
+    Friend WithEvents btnXML As ToolStripButton
 End Class

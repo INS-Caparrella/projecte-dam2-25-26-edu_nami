@@ -34,14 +34,12 @@ Public Class FormPrincipal
 
         If sel.ShowDialog = DialogResult.OK Then
             Dim f As New FormNotas(Me, dni, sel.asignaturaId, sel.asignaturaNom, _nomProf, lblRol.Text, sel.grup)
-            Me.Hide()
             f.Show()
         End If
     End Sub
 
     Private Sub btnOrlas_Click(sender As Object, e As EventArgs) Handles btnOrlas.Click
         Dim f As New OrlaProfesores()
-        Me.Hide()
         f.Show()
     End Sub
 
@@ -58,5 +56,9 @@ Public Class FormPrincipal
 
     Private Async Sub btnJSON_Click(sender As Object, e As EventArgs) Handles btnJSON.Click
         Await ExportarJSON.exportarProfessorsAsync(dni, _client)
+    End Sub
+
+    Private Async Sub btnXML_Click(sender As Object, e As EventArgs) Handles btnXML.Click
+        Await ExportarXML.ExportLogsAsync(dni, _client)
     End Sub
 End Class
