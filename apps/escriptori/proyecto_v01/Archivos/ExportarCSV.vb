@@ -4,15 +4,11 @@ Imports System.Text
 Imports Newtonsoft.Json.Linq
 
 Public Class ExportadorCSV
-
-
-    ' ── Punt d'entrada ───────────────────────────────────────
     Public Shared Async Function ExportarAsync(nomGrup As String,
                                                client As HttpClient) As Task
         Dim url = BaseUrl.ExpAlumnos.expCsv()
 
         Try
-            ' 1. Obtenim les dades del servidor
             Dim json As String = Await client.GetStringAsync(
                 $"{url}?nom_grup={Uri.EscapeDataString(nomGrup)}")
             Dim obj As JObject = JObject.Parse(json)
@@ -23,19 +19,16 @@ Public Class ExportadorCSV
                 Return
             End If
 
-            ' 2. Triar on desar
             Dim sfd As New SaveFileDialog() With {
-                .Title = "Exportar classe a CSV",
+                .Title = "Exportar clase a CSV",
                 .Filter = "CSV (*.csv)|*.csv",
-                .FileName = $"Alumnes_{nomGrup}_{Date.Now:yyyyMMdd}.csv",
+                .FileName = $"alumnos_{nomGrup}_{Date.Now:yyyyMMdd}.csv",
                 .InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
             }
             If sfd.ShowDialog() <> DialogResult.OK Then Return
 
-            ' 3. Construïm el CSV
             Dim sb As New StringBuilder()
-            ' Capçalera amb BOM per a Excel (codificació correcta de caràcters)
-            sb.AppendLine("Nom,Cognoms,DNI,Grup,Cicle")
+            sb.AppendLine("Nombre,Apellidos,DNI,Grupo,Ciclo")
 
             For Each alum As JToken In obj("alumnes")
                 Dim nom As String = EscCsv(alum.Value(Of String)("nom"))
@@ -46,17 +39,15 @@ Public Class ExportadorCSV
                 sb.AppendLine($"{nom},{cognom},{dni},{grup},{cicle}")
             Next
 
-            ' 4. Desar amb BOM UTF-8 per a compatibilitat amb Excel
             File.WriteAllText(sfd.FileName, sb.ToString(), New UTF8Encoding(True))
 
             Dim total As Integer = obj("alumnes").Count()
             MessageBox.Show(
-                $"CSV exportat correctament.{Environment.NewLine}" &
-                $"{total} alumnes del grup {nomGrup}.{Environment.NewLine}" &
-                $"Fitxer: {sfd.FileName}",
-                "Exportació completada", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                $"CSV exportado correctamente.{Environment.NewLine}" &
+                $"{total} alumnos del grupo {nomGrup}.{Environment.NewLine}" &
+                $"Archivo: {sfd.FileName}",
+                "Exportación completada", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
-            ' Obrir la carpeta
             Process.Start("explorer.exe", $"/select,""{sfd.FileName}""")
 
         Catch ex As Exception
@@ -65,10 +56,8 @@ Public Class ExportadorCSV
         End Try
     End Function
 
-    ' ── Escapa un valor per a CSV ─────────────────────────────
     Private Shared Function EscCsv(val As String) As String
         If String.IsNullOrEmpty(val) Then Return ""
-        ' Si conté comes, cometes o salts de línia, embolcalla amb cometes
         If val.Contains(",") OrElse val.Contains("""") OrElse val.Contains(vbLf) Then
             Return $"""{val.Replace("""", """""")}"""
         End If

@@ -29,12 +29,12 @@ Partial Class FormPrincipal
         btnGrades = New ToolStripButton()
         btnOpenT = New ToolStripButton()
         btnOrlas = New ToolStripButton()
-        btnDownload = New ToolStripButton()
-        btnConfig = New ToolStripButton()
+        btnCSV = New ToolStripButton()
         pbPicture = New PictureBox()
         tlpInfoP = New TableLayoutPanel()
         lblName = New Label()
         lblRol = New Label()
+        btnJSON = New ToolStripButton()
         tsMenuPrincipal.SuspendLayout()
         CType(pbPicture, ComponentModel.ISupportInitialize).BeginInit()
         tlpInfoP.SuspendLayout()
@@ -43,16 +43,16 @@ Partial Class FormPrincipal
         ' pnlPrincipal
         ' 
         pnlPrincipal.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
-        pnlPrincipal.Location = New Point(25, 65)
+        pnlPrincipal.Location = New Point(25, 85)
         pnlPrincipal.Name = "pnlPrincipal"
-        pnlPrincipal.Size = New Size(775, 385)
+        pnlPrincipal.Size = New Size(775, 365)
         pnlPrincipal.TabIndex = 0
         ' 
         ' tsMenuPrincipal
         ' 
         tsMenuPrincipal.Dock = DockStyle.Left
         tsMenuPrincipal.ImageScalingSize = New Size(20, 20)
-        tsMenuPrincipal.Items.AddRange(New ToolStripItem() {btnFicha, btnGrades, btnOpenT, btnOrlas, btnDownload, btnConfig})
+        tsMenuPrincipal.Items.AddRange(New ToolStripItem() {btnFicha, btnGrades, btnOpenT, btnOrlas, btnCSV, btnJSON})
         tsMenuPrincipal.Location = New Point(0, 0)
         tsMenuPrincipal.Name = "tsMenuPrincipal"
         tsMenuPrincipal.Size = New Size(40, 450)
@@ -96,30 +96,21 @@ Partial Class FormPrincipal
         btnOrlas.Size = New Size(37, 24)
         btnOrlas.Text = "Ver la orla de profesores"
         ' 
-        ' btnDownload
+        ' btnCSV
         ' 
-        btnDownload.DisplayStyle = ToolStripItemDisplayStyle.Image
-        btnDownload.Image = CType(resources.GetObject("btnDownload.Image"), Image)
-        btnDownload.ImageTransparentColor = Color.Magenta
-        btnDownload.Name = "btnDownload"
-        btnDownload.Size = New Size(37, 24)
-        btnDownload.Text = "Descargar PDF"
-        ' 
-        ' btnConfig
-        ' 
-        btnConfig.DisplayStyle = ToolStripItemDisplayStyle.Image
-        btnConfig.Image = CType(resources.GetObject("btnConfig.Image"), Image)
-        btnConfig.ImageTransparentColor = Color.Magenta
-        btnConfig.Name = "btnConfig"
-        btnConfig.Size = New Size(37, 24)
-        btnConfig.Text = "Configurar centro"
+        btnCSV.DisplayStyle = ToolStripItemDisplayStyle.Image
+        btnCSV.Image = CType(resources.GetObject("btnCSV.Image"), Image)
+        btnCSV.ImageTransparentColor = Color.Magenta
+        btnCSV.Name = "btnCSV"
+        btnCSV.Size = New Size(37, 24)
+        btnCSV.Text = "Exportar clase a CSV"
         ' 
         ' pbPicture
         ' 
         pbPicture.Anchor = AnchorStyles.None
-        pbPicture.Location = New Point(723, 3)
+        pbPicture.Location = New Point(698, 3)
         pbPicture.Name = "pbPicture"
-        pbPicture.Size = New Size(77, 59)
+        pbPicture.Size = New Size(102, 76)
         pbPicture.TabIndex = 13
         pbPicture.TabStop = False
         ' 
@@ -130,24 +121,24 @@ Partial Class FormPrincipal
         tlpInfoP.ColumnStyles.Add(New ColumnStyle(SizeType.Absolute, 20F))
         tlpInfoP.Controls.Add(lblName, 0, 0)
         tlpInfoP.Controls.Add(lblRol, 0, 1)
-        tlpInfoP.Location = New Point(506, 3)
+        tlpInfoP.Location = New Point(433, 3)
         tlpInfoP.Name = "tlpInfoP"
         tlpInfoP.RowCount = 2
         tlpInfoP.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
         tlpInfoP.RowStyles.Add(New RowStyle(SizeType.Absolute, 20F))
         tlpInfoP.RowStyles.Add(New RowStyle(SizeType.Absolute, 20F))
-        tlpInfoP.Size = New Size(211, 59)
+        tlpInfoP.Size = New Size(259, 76)
         tlpInfoP.TabIndex = 12
         ' 
         ' lblName
         ' 
         lblName.Anchor = AnchorStyles.None
         lblName.AutoSize = True
-        lblName.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        lblName.ForeColor = Color.MidnightBlue
-        lblName.Location = New Point(61, 5)
+        lblName.Font = New Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        lblName.ForeColor = Color.SteelBlue
+        lblName.Location = New Point(67, 9)
         lblName.Name = "lblName"
-        lblName.Size = New Size(89, 28)
+        lblName.Size = New Size(125, 38)
         lblName.TabIndex = 1
         lblName.Text = "Nombre"
         ' 
@@ -156,11 +147,20 @@ Partial Class FormPrincipal
         lblRol.Anchor = AnchorStyles.None
         lblRol.AutoSize = True
         lblRol.ForeColor = Color.DarkBlue
-        lblRol.Location = New Point(90, 39)
+        lblRol.Location = New Point(114, 56)
         lblRol.Name = "lblRol"
         lblRol.Size = New Size(31, 20)
         lblRol.TabIndex = 2
         lblRol.Text = "Rol"
+        ' 
+        ' btnJSON
+        ' 
+        btnJSON.DisplayStyle = ToolStripItemDisplayStyle.Image
+        btnJSON.Image = CType(resources.GetObject("btnJSON.Image"), Image)
+        btnJSON.ImageTransparentColor = Color.Magenta
+        btnJSON.Name = "btnJSON"
+        btnJSON.Size = New Size(37, 24)
+        btnJSON.Text = "Exportar profesores a JSON"
         ' 
         ' FormPrincipal
         ' 
@@ -187,11 +187,11 @@ Partial Class FormPrincipal
     Friend WithEvents btnGrades As ToolStripButton
     Friend WithEvents btnOpenT As ToolStripButton
     Friend WithEvents btnOrlas As ToolStripButton
-    Friend WithEvents btnDownload As ToolStripButton
+    Friend WithEvents btnCSV As ToolStripButton
     Friend WithEvents pbPicture As PictureBox
     Friend WithEvents tlpInfoP As TableLayoutPanel
     Friend WithEvents lblName As Label
     Friend WithEvents lblRol As Label
     Friend WithEvents btnFicha As ToolStripButton
-    Friend WithEvents btnConfig As ToolStripButton
+    Friend WithEvents btnJSON As ToolStripButton
 End Class

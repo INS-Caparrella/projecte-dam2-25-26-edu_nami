@@ -4,7 +4,7 @@ Imports Org.BouncyCastle.Crypto.Paddings
 
 Public Class FormPrincipal
     Private ReadOnly dni As String
-    Private ReadOnly _client As HttpClient
+    Private ReadOnly _client As HttpClient = UnsafeSSL.createUnsafeClient()
     Private ReadOnly _nomProf As String
     Public Sub New(result As LoginResult)
         InitializeComponent()
@@ -48,6 +48,15 @@ Public Class FormPrincipal
     Private Sub btnFicha_Click(sender As Object, e As EventArgs) Handles btnFicha.Click
         Dim ficha As New FormFicha(dni, _client)
         ficha.Show()
+    End Sub
 
+    Private Async Sub btnCSV_Click(sender As Object, e As EventArgs) Handles btnCSV.Click
+        Dim grup As String = InputBox("Introduzca el nombre del grupo (ex: SMX2A):", "Exportar CSV")
+        If String.IsNullOrWhiteSpace(grup) Then Return
+        Await ExportadorCSV.ExportarAsync(grup.Trim().ToUpper(), _client)
+    End Sub
+
+    Private Async Sub btnJSON_Click(sender As Object, e As EventArgs) Handles btnJSON.Click
+        Await ExportarJSON.exportarProfessorsAsync(dni, _client)
     End Sub
 End Class
