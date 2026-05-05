@@ -24,4 +24,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Evalis"
 include(":app")
- 
+include(":core:domain")
+include(":feature:login")
+include(":feature:profs")
+include(":feature:expedient")

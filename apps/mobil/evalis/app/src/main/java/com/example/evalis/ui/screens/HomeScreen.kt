@@ -107,6 +107,3 @@ fun ThemeOption(text: String, mode: ThemeMode, selectedMode: ThemeMode, onModeSe
         Text(text = text)
     }
 }
-
-
-

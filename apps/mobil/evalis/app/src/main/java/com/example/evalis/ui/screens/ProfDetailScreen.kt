@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.domain.AssigAlumne
 import com.example.evalis.model.GestorSQLExternModern
 import com.example.evalis.ui.components.Assignatures
 import com.example.evalis.ui.theme.EvalisTheme
@@ -28,12 +29,6 @@ import com.example.evalis.ui.screens.login.SessionData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-
-
-data class AssigAlumne(
-    val nom: String,
-    val aula: String
-)
 
 @Composable
 fun ProfsDetail(dni: String, profId: String, onClose: () -> Unit = {}) {

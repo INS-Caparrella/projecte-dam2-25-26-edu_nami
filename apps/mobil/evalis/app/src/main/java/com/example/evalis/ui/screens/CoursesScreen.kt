@@ -14,21 +14,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.domain.Curs
 import com.example.evalis.model.GestorSQLExternModern
 import com.example.evalis.model.GestorSQLExternModern.SqlInfo.BASE_URL
 import com.example.evalis.ui.screens.login.SessionData
 import com.example.evalis.ui.screens.reports.baixarPDF
 import org.json.JSONObject
 import kotlin.concurrent.thread
-
-data class Curs(
-    val curs: String,
-    val finalitzat: Boolean,
-    val notaFinal: String?,
-    val actual: Boolean,
-    val dataInici: String,
-    val dataFi: String?
-)
 
 val cursosState = mutableStateListOf<Curs>()
 var cursosIsLoading by mutableStateOf(true)

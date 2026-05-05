@@ -1,6 +1,7 @@
 package com.example.evalis.ui.screens
 
 import android.os.Looper
+import com.example.evalis.core.domain.Prof
 import android.widget.SearchView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -60,13 +61,7 @@ import kotlin.concurrent.thread
 var isLoading by mutableStateOf(true)
 val profState = mutableStateListOf<Prof>()
 
-data class Prof(
-    val id: String,
-    val name: String,
-    val surname: String,
-    val imageUrl: String,
-    val email: String
-)
+
 
 object ProfsList {
     fun placeholders(): List<Prof> = listOf(

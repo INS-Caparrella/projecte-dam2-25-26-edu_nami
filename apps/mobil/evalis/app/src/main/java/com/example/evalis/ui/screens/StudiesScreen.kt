@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.domain.Estudi
 import com.example.evalis.model.GestorSQLExternModern
 import com.example.evalis.R
 import com.example.evalis.model.GestorSQLExternModern.SqlInfo.BASE_URL
@@ -42,12 +43,6 @@ import kotlin.concurrent.thread
 val estudiState = mutableStateListOf<Estudi>()
 var estudiIsLoading by mutableStateOf(true)
 
-data class Estudi(
-    val name: String,
-    val isHistoric: Boolean = false,
-    val teHistoric: Boolean = false,
-    val totsFinalitzats: Boolean = false
-)
 
 object EstudiList {
     fun placeholders(): List<Estudi> = listOf(
