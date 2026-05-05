@@ -1,7 +1,7 @@
 ﻿Imports System.Configuration
 
 Public Class BaseUrl
-    Public Const BASE_URL As String = "https://192.168.1.134"
+    Public Const BASE_URL As String = "https://192.168.19.105"
 
     Public Class LogIn
         Public Shared ReadOnly Property login As String = BASE_URL & "/login.php"
