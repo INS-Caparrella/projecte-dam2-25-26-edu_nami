@@ -56,7 +56,7 @@ Partial Class FormPrincipal
         tsMenuPrincipal.Items.AddRange(New ToolStripItem() {btnFicha, btnGrades, btnOpenT, btnOrlas, btnCSV, btnJSON, btnXML})
         tsMenuPrincipal.Location = New Point(0, 0)
         tsMenuPrincipal.Name = "tsMenuPrincipal"
-        tsMenuPrincipal.Size = New Size(40, 450)
+        tsMenuPrincipal.Size = New Size(30, 450)
         tsMenuPrincipal.TabIndex = 14
         tsMenuPrincipal.Text = "Menú"
         tsMenuPrincipal.TextDirection = ToolStripTextDirection.Vertical90
@@ -67,7 +67,7 @@ Partial Class FormPrincipal
         btnFicha.Image = CType(resources.GetObject("btnFicha.Image"), Image)
         btnFicha.ImageTransparentColor = Color.Magenta
         btnFicha.Name = "btnFicha"
-        btnFicha.Size = New Size(37, 24)
+        btnFicha.Size = New Size(27, 24)
         btnFicha.Text = "Generar ficha de profesor"
         ' 
         ' btnGrades
@@ -76,7 +76,7 @@ Partial Class FormPrincipal
         btnGrades.Image = CType(resources.GetObject("btnGrades.Image"), Image)
         btnGrades.ImageTransparentColor = Color.Magenta
         btnGrades.Name = "btnGrades"
-        btnGrades.Size = New Size(37, 24)
+        btnGrades.Size = New Size(27, 24)
         btnGrades.Text = "Introducir notas"
         ' 
         ' btnOpenT
@@ -85,7 +85,7 @@ Partial Class FormPrincipal
         btnOpenT.Image = CType(resources.GetObject("btnOpenT.Image"), Image)
         btnOpenT.ImageTransparentColor = Color.Magenta
         btnOpenT.Name = "btnOpenT"
-        btnOpenT.Size = New Size(37, 24)
+        btnOpenT.Size = New Size(27, 24)
         btnOpenT.Text = "Gestionar período evaluación"
         ' 
         ' btnOrlas
@@ -94,7 +94,7 @@ Partial Class FormPrincipal
         btnOrlas.Image = CType(resources.GetObject("btnOrlas.Image"), Image)
         btnOrlas.ImageTransparentColor = Color.Magenta
         btnOrlas.Name = "btnOrlas"
-        btnOrlas.Size = New Size(37, 24)
+        btnOrlas.Size = New Size(27, 24)
         btnOrlas.Text = "Ver la orla de profesores"
         ' 
         ' btnCSV
@@ -103,7 +103,7 @@ Partial Class FormPrincipal
         btnCSV.Image = CType(resources.GetObject("btnCSV.Image"), Image)
         btnCSV.ImageTransparentColor = Color.Magenta
         btnCSV.Name = "btnCSV"
-        btnCSV.Size = New Size(37, 24)
+        btnCSV.Size = New Size(27, 24)
         btnCSV.Text = "Exportar clase a CSV"
         ' 
         ' btnJSON
@@ -112,7 +112,7 @@ Partial Class FormPrincipal
         btnJSON.Image = CType(resources.GetObject("btnJSON.Image"), Image)
         btnJSON.ImageTransparentColor = Color.Magenta
         btnJSON.Name = "btnJSON"
-        btnJSON.Size = New Size(37, 24)
+        btnJSON.Size = New Size(27, 24)
         btnJSON.Text = "Exportar profesores a JSON"
         ' 
         ' btnXML
@@ -121,7 +121,7 @@ Partial Class FormPrincipal
         btnXML.Image = CType(resources.GetObject("btnXML.Image"), Image)
         btnXML.ImageTransparentColor = Color.Magenta
         btnXML.Name = "btnXML"
-        btnXML.Size = New Size(37, 24)
+        btnXML.Size = New Size(27, 24)
         btnXML.Text = "Descargar logins XML"
         ' 
         ' pbPicture

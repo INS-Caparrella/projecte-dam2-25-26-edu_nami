@@ -36,7 +36,6 @@ Partial Class FormNotas
         pnlDgv = New Panel()
         pnlFoot = New Panel()
         btnDownload = New Button()
-        btnJunta = New Button()
         btnClose = New Button()
         btnSave = New Button()
         dgvEstudiants = New DataGridView()
@@ -170,7 +169,6 @@ Partial Class FormNotas
         ' 
         pnlFoot.BackColor = Color.White
         pnlFoot.Controls.Add(btnDownload)
-        pnlFoot.Controls.Add(btnJunta)
         pnlFoot.Controls.Add(btnClose)
         pnlFoot.Controls.Add(btnSave)
         pnlFoot.Dock = DockStyle.Bottom
@@ -188,15 +186,6 @@ Partial Class FormNotas
         btnDownload.TabIndex = 4
         btnDownload.Text = "Descargar acta de evaluación (.pdf)"
         btnDownload.UseVisualStyleBackColor = True
-        ' 
-        ' btnJunta
-        ' 
-        btnJunta.Location = New Point(379, 11)
-        btnJunta.Name = "btnJunta"
-        btnJunta.Size = New Size(109, 36)
-        btnJunta.TabIndex = 1
-        btnJunta.Text = "Iniciar junta "
-        btnJunta.UseVisualStyleBackColor = True
         ' 
         ' btnClose
         ' 
@@ -448,6 +437,5 @@ Partial Class FormNotas
     Friend WithEvents txtValue As TextBox
     Friend WithEvents lblMotive As Label
     Friend WithEvents btnSaveC As Button
-    Friend WithEvents btnJunta As Button
     Friend WithEvents btnDownload As Button
 End Class

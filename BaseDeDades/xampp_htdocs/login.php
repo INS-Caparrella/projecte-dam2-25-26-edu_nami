@@ -34,11 +34,10 @@ if($username===""||$password===""){
 }
 
 $stmt = $conn->prepare("
-    SELECT u.id_user, u.password, u.dni, p.nom, p.cognom, p.rol, e.nia
+    SELECT u.id_user, u.password, u.dni, p.nom, p.cognom, p.rol, p.ruta_foto
     FROM usuaris u 
     INNER JOIN persones p ON p.dni = u.dni 
-    LEFT JOIN estudiants e ON e.dni = p.dni
-    WHERE username=?;
+    WHERE username=?
 ");
 $stmt->bind_param("s", $username);
 $stmt->execute();
@@ -50,11 +49,12 @@ if ($stmt->num_rows === 0) {
     exit;
 }
 
-$stmt->bind_result($id_user, $password_hash_bd, $dni, $nom, $cognom, $rol, $nia);
+$stmt->bind_result($id_user, $password_hash_bd, $dni, $nom, $cognom, $rol, $ruta_foto);
 $stmt->fetch();
 $stmt->close();
 
 if (!password_verify($password, $password_hash_bd)) {
+    guardarLog($conn, $dni, 0);
     ob_clean();
     echo json_encode(["pot_entrar"=>false,"tipus_error"=>"Usuari o contrasenya incorrectes"]);
     exit;
@@ -93,27 +93,32 @@ $data_fi = date("Y-m-d H:i:s", time() + 36000);
 
 $stmt2 = $conn->prepare("
     INSERT INTO sessions (dni_user, token, data_inici, data_fin)
-    VALUES (?, ?, ?, ?)");
-    
+    VALUES (?, ?, ?, ?)
+");
 $stmt2->bind_param("ssss", $dni, $token, $data_inici, $data_fi);
 $stmt2->execute();
 
+
+guardarLog($conn, $dni, 1);
 ob_clean();
-$response = [
+echo json_encode([
     "pot_entrar" => true,
     "dni"        => $dni,
     "rol"        => $rol,
     "nom"        => $nom,
     "cognom"     => $cognom,
+    "ruta_foto"  => $ruta_foto,
     "token"      => $token,
     "expires"    => $data_fi,
     "grup"       => $grup,
     "grups"      => $grups
-];
+]);
 
-if ($rol === "alumne" && $nia !== null) {
-    $response["nia"] = $nia;
+function guardarLog(mysqli $conn, string $dni, int $exito): void {
+    if (empty($dni)) return;
+    $ip = ip2long($_SERVER["REMOTE_ADDR"] ?? "0.0.0.0");
+    if ($ip === false) $ip = 0;
+    $log = $conn->prepare("INSERT INTO logs_login (dni_user, ip, exito) VALUES (?, ?, ?)");
+    $log->bind_param("sii", $dni, $ip, $exito);
+    $log->execute();
 }
-
-ob_clean();
-echo json_encode($response);

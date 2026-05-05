@@ -9,55 +9,66 @@ Public Class OrlaProfesores
     End Sub
 
     Private Async Function loadOrlaAsync() As Task
+        Dim url = BaseUrl.OrlaProf.orla()
         Try
-            Dim json As String = Await _client.GetStringAsync("https://192.168.1.134/orla.php")
+            Dim json As String = Await _client.GetStringAsync(url)
             Dim obj As JObject = JObject.Parse(json)
 
             If Not obj.Value(Of Boolean)("ok") Then
-                MessageBox.Show("error: " & obj.Value(Of String)("error"), "Error.", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("error: " & obj.Value(Of String)("error"), "Error.",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Return
             End If
 
             flpOrla.Controls.Clear()
 
             For Each prof As JToken In obj("professors")
-                flpOrla.Controls.Add(createCard(prof))
+                Dim card As Panel = createCard(prof)
+                flpOrla.Controls.Add(card)
+
+                Dim pb As PictureBox = TryCast(card.Controls.Find("pbFoto", False).FirstOrDefault(), PictureBox)
+                If pb IsNot Nothing Then
+                    Dim ruta As String = prof("ruta_foto")?.ToString()
+                    Await CargarFotos.loadAsync(_client, ruta, pb)
+                End If
             Next
+
         Catch ex As Exception
             MessageBox.Show("Error: " & ex.Message)
         End Try
     End Function
 
-    Private Function createCard(prof As JToken) As Control
+    Private Function createCard(prof As JToken) As Panel
         Dim card As New Panel With {
-        .Width = 200,
-        .Height = 280,
-        .BackColor = Color.White,
-        .Margin = New Padding(10),
-        .Top = 60
+            .Width = 200,
+            .Height = 290,
+            .BackColor = Color.White,
+            .Margin = New Padding(10)
         }
 
         Dim pic As New PictureBox With {
+            .Name = "pbFoto",
             .Width = 180,
             .Height = 180,
             .Top = 10,
             .Left = 10,
             .SizeMode = PictureBoxSizeMode.Zoom,
-            .ImageLocation = ""
+            .BackColor = Color.FromArgb(230, 235, 245)
         }
 
         Dim lblName As New Label With {
-            .Text = prof("nom").ToString() & " " & prof("cognom").ToString(),
-            .Top = 195,
+            .Text = $"{prof("nom")} {prof("cognom")}",
+            .Top = 196,
             .Left = 10,
             .Width = 180,
             .Height = 20,
+            .Font = New Font("Segoe UI", 9, FontStyle.Bold),
             .TextAlign = ContentAlignment.MiddleCenter
         }
 
         Dim lblJob As New Label With {
-            .Text = prof("carrec").ToString(),
-            .Top = 220,
+            .Text = prof("carrec")?.ToString(),
+            .Top = 218,
             .Left = 10,
             .Width = 180,
             .Height = 20,
@@ -66,7 +77,7 @@ Public Class OrlaProfesores
         }
 
         Dim lblEmail As New Label With {
-            .Text = prof("email").ToString(),
+            .Text = prof("email")?.ToString(),
             .Top = 240,
             .Left = 10,
             .Width = 180,
@@ -75,10 +86,9 @@ Public Class OrlaProfesores
             .TextAlign = ContentAlignment.MiddleCenter
         }
 
-
         Dim lblDept As New Label With {
-            .Text = prof("departament").ToString(),
-            .Top = 260,
+            .Text = prof("departament")?.ToString(),
+            .Top = 262,
             .Left = 10,
             .Width = 180,
             .Height = 20,
@@ -94,8 +104,4 @@ Public Class OrlaProfesores
 
         Return card
     End Function
-
-    Private Sub lblGoBack_Click(sender As Object, e As EventArgs) Handles lblGoBack.Click
-
-    End Sub
 End Class

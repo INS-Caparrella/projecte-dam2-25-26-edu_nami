@@ -91,10 +91,8 @@ Public Class AbrirEvaluacion
                                                   {"dni", Me.dni}})
 
             Dim res As HttpResponseMessage = Await client.PostAsync(url, data)
-            res.EnsureSuccessStatusCode()
-
-            Dim json As String = Await res.Content.ReadAsStringAsync()
-            Dim obj As JObject = JObject.Parse(json)
+            Dim raw As String = Await res.Content.ReadAsStringAsync()
+            Dim obj As JObject = JObject.Parse(raw)
 
             If obj.Value(Of Boolean)("ok") Then
                 Dim msg As String = If(action = "obrir",

@@ -4,9 +4,6 @@
     <Compile Update="FormFicha.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="FormJunta.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="FormPrincipal.vb">
       <SubType>Form</SubType>
     </Compile>

@@ -7,7 +7,7 @@ Imports PuppeteerSharp.Media
 Public Class GenerarActaPDF
     Private ReadOnly _dni As String
     Private ReadOnly _client As HttpClient = UnsafeSSL.createUnsafeClient()
-    Dim url = BaseUrl.genActa.dadesActa()
+    Dim url = BaseUrl.GenActa.dadesActa()
 
     Public Sub New(dni As String)
         _dni = dni
@@ -17,12 +17,14 @@ Public Class GenerarActaPDF
         Dim json As String = Await _client.GetStringAsync($"{url}?id_acta={idActa}&dni={_dni}")
         Dim obj As JObject = JObject.Parse(json)
 
+        Dim numAlumnes As Integer = obj("alumnes").Count()
+
         If Not obj.Value(Of Boolean)("ok") Then
             Throw New Exception("Error: " & obj.Value(Of String)("error"))
         End If
 
         'construir html
-        Dim html As String = BuildHtml(obj)
+        Dim html As String = buildHtml(obj)
 
         'generar pdf
         Dim pdfBytes As Byte() = Await ConstruirHtml.htmlToPdfAsync(html)
@@ -72,10 +74,13 @@ Public Class GenerarActaPDF
         Dim i As Integer = 1
         For Each alumn As JToken In alumnes
             Dim nom As String = $"{alumn.Value(Of String)("cognom")}, {alumn.Value(Of String)("nom")}"
-            Dim notaFinal As String = alumn("nota_final")?.ToString()
+            Dim notaFinal As String = If(alumn("nota_final") IsNot Nothing AndAlso alumn("nota_final").Type <> JTokenType.Null,
+                alumn("nota_final").ToString(), "-")
             Dim aprovat As Boolean = False
             Dim notaVal As Double
-            If Double.TryParse(notaFinal, notaVal) Then aprovat = notaVal >= 5
+            If Double.TryParse(notaFinal, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, notaVal) Then
+                aprovat = notaVal >= 5
+            End If
 
             Dim statusClass As String = If(aprovat, "Aprobado", "Suspenso")
             Dim statusText As String = If(aprovat, "AP", "NA")

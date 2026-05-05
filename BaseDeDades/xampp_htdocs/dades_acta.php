@@ -43,7 +43,7 @@ if($perm->num_rows === 0) {
 }
 $perm->close();
 
-$stmt = $conn->prepare("SELECT aa.id, aa.is_assignatura, aa.nom_grup, aa.trimestre, aa.curs, aa.data_obertura, aa.data_tancament, aa.corregida, a.nom AS nom_assignatura, a.departament, gc.aula,
+$stmt = $conn->prepare("SELECT aa.id, aa.id_assignatura, aa.nom_grup, aa.trimestre, aa.curs, aa.data_obertura, aa.data_tancament, aa.corregida, a.nom AS nom_assignatura, a.departament, gc.aula,
 CONCAT(p.nom, ' ', p.cognom) AS nom_responsable 
 FROM acta_avaluacio aa
 INNER JOIN assignatures a ON a.codi = aa.id_assignatura
@@ -68,15 +68,22 @@ $stmt_ras->bind_param("s", $acta["id_assignatura"]);
 $stmt_ras->execute();
 $ras = $stmt_ras->get_result()->fetch_all(MYSQLI_ASSOC);
 
-$stmt_alumn = $conn->prepare("SELECT an.nia, p.nom, p.cognom, an.nota_final, an.repetidor, an.treballant, e.nom_cicle
-FROM acta_notes an
-INNER JOIN estudiants e ON e.nia = an.nia
-INNER JOIN persones p ON p.dni = e.dni
-WHERE an.id_acta = ?
-ORDER BY p.cognom, p.nom");
-$stmt_alumn->bind_param("i", $id_acta);
-$stmt_alumn->execute();
-$alumnes_raw = $stmt_alumn->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt_alum = $conn->prepare("
+    SELECT e.nia, p.nom, p.cognom,
+           an.nota_final, an.repetidor, an.treballant,
+           e.nom_cicle
+    FROM estudiants e
+    INNER JOIN persones p ON p.dni = e.dni
+    LEFT JOIN acta_notes an ON an.nia = e.nia AND an.id_acta = ?
+    WHERE e.nom_grup = (
+        SELECT nom_grup FROM acta_avaluacio WHERE id = ?
+    )
+    AND e.actiu = 1
+    ORDER BY p.cognom, p.nom
+");
+$stmt_alum->bind_param("ii", $id_acta, $id_acta);
+$stmt_alum->execute();
+$alumnes_raw = $stmt_alum->get_result()->fetch_all(MYSQLI_ASSOC);
 
 $stmt_nota = $conn->prepare("SELECT nota FROM estudiants_ras WHERE nia=? AND id_ra=?");
 $alumnes = [];

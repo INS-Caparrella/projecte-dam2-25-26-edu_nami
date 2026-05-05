@@ -26,9 +26,6 @@ Public Class FormFicha
     Private Async Function loadListAsync() As Task
         Try
             Dim json As String = Await _client.GetStringAsync($"{urlList}?dni_consultor={_dniConsultor}")
-
-            MessageBox.Show(json.Substring(0, Math.Min(500, json.Length)), "Raw")
-
             Dim obj As JObject = JObject.Parse(json)
 
             If Not obj.Value(Of Boolean)("ok") Then
@@ -44,13 +41,8 @@ Public Class FormFicha
             For Each p As JToken In obj("professors")
                 Dim dni As String = p.Value(Of String)("dni")
                 Dim nom As String = $"{p.Value(Of String)("cognom")}, {p.Value(Of String)("nom")}"
-
                 _professors.Add((dni, nom))
-
-                lstProfessors.Items.Add(New With {
-                                        .dni = dni,
-                                        .nom = nom
-                                        })
+                lstProfessors.Items.Add(nom)
             Next
 
         Catch ex As Exception
@@ -74,11 +66,14 @@ Public Class FormFicha
     Private Async Sub lstProfessors_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstProfessors.SelectedIndexChanged
         If lstProfessors.SelectedIndex < 0 Then Return
 
-        Dim item = lstProfessors.SelectedItem
-        Dim dni As String = item.dni
+        Dim nomSel As String = lstProfessors.SelectedItem?.ToString()
+        If String.IsNullOrEmpty(nomSel) Then Return
 
-        _dniSeleccionat = dni
-        Await loadFitxaAsync(dni)
+        Dim prof = _professors.FirstOrDefault(Function(p) p.nom = nomSel)
+        If String.IsNullOrEmpty(prof.dni) Then Return
+
+        _dniSeleccionat = prof.dni
+        Await loadFitxaAsync(prof.dni)
     End Sub
 
     'cargar ficha de profesor
@@ -103,16 +98,7 @@ Public Class FormFicha
 
             'foto
             Dim ruta As String = obj.Value(Of String)("ruta_foto")
-            Try
-                If Not String.IsNullOrEmpty(ruta) AndAlso File.Exists(ruta) Then
-                    pbFoto.Image = Image.FromFile(ruta)
-                Else
-                    pbFoto.Image = Nothing
-                End If
-            Catch ex As Exception
-                MessageBox.Show("Error al cargar la foto: " & ex.Message)
-                pbFoto.Image = Nothing
-            End Try
+            Await CargarFotos.loadAsync(_client, ruta, pbFoto)
 
             'asignaturas
             dgvAssignatures.Rows.Clear()

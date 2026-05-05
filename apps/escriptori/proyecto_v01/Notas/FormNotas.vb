@@ -1,4 +1,5 @@
 ﻿Imports System.Net.Http
+Imports Habanero.Base
 Imports Newtonsoft.Json.Linq
 
 Public Class FormNotas
@@ -20,6 +21,7 @@ Public Class FormNotas
     Private ReadOnly _nomProf As String
     Private ReadOnly _rol As String
     Private ReadOnly _grup As String
+    Private ReadOnly _rutaFoto As String
 
     Private _trimestreActual As Integer = 0
     Private _idActa As Integer = -1
@@ -33,7 +35,7 @@ Public Class FormNotas
     Private _selectedNia As Integer
     Private _selectedCamp As String = "nota_final"
 
-    Public Sub New(parent As FormPrincipal, dni As String, idAssignatura As String, nomAssignatura As String, nomProf As String, rol As String, grup As String)
+    Public Sub New(parent As FormPrincipal, dni As String, idAssignatura As String, nomAssignatura As String, nomProf As String, rol As String, grup As String, Optional rutaFoto As String = "")
         InitializeComponent()
         _parent = parent
         _dni = dni
@@ -42,6 +44,7 @@ Public Class FormNotas
         _nomProf = nomProf
         _rol = rol
         _grup = grup
+        _rutaFoto = rutaFoto
     End Sub
 
     Private Async Sub IntroducirNotas_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -53,6 +56,7 @@ Public Class FormNotas
         _idActa = Await createActa()
 
         Await loadStudentsAsync()
+        Await CargarFotos.loadAsync(_client, _rutaFoto, pbProf)
 
         btnDownload.Visible = (_rol = "director" OrElse _rol = "administrador")
     End Sub
@@ -91,13 +95,12 @@ Public Class FormNotas
                                                   {"id_assignatura", _idAssignatura},
                                                   {"dni_prof", _dni},
                                                   {"curs", $"{Date.Now.Year}-{Date.Now.Year + 1}"},
-                                                  {"trimestre", _trimestreActual.ToString()},
+                                                  {"trimestre", trimestre.ToString()},
                                                   {"grup", _grup}
                                                   })
 
             Dim res As HttpResponseMessage = Await _client.PostAsync(url_crearActa, data)
             Dim raw As String = Await res.Content.ReadAsStringAsync()
-            MessageBox.Show("Resposta: " & raw)
 
             Dim json As JObject = JObject.Parse(raw)
             If json.Value(Of Boolean)("ok") Then
@@ -127,7 +130,7 @@ Public Class FormNotas
         lblStatus.Text = "Estado: Cargando..."
 
         Try
-            Dim json As String = Await _client.GetStringAsync($"{url_notas}?accio=vista_notes_all&id_assignatura={_idAssignatura}")
+            Dim json As String = Await _client.GetStringAsync($"{url_notas}?accio=vista_notes_all&id_assignatura={_idAssignatura}&nom_grup={_grup}")
             Dim obj As JObject = JObject.Parse(json)
 
             If Not obj.Value(Of Boolean)("ok") Then
@@ -196,21 +199,22 @@ Public Class FormNotas
                 btnClose.Enabled = (pend = 0 AndAlso _trimestreActual > 0)
             End If
 
-            btnJunta.Enabled = (totalStudents > 0)
 
             If dgvEstudiants.Columns.Contains("Corregir") Then
                 dgvEstudiants.Columns.Remove("Corregir")
             End If
 
-            If ended OrElse (pend = 0 AndAlso Not btnClose.Enabled) Then
-                If puedeCorregir() Then
+            Dim actaTancada As Boolean = ended OrElse _trimestreActual = 0 OrElse (pend = 0 AndAlso Not btnClose.Enabled)
+
+            If actaTancada AndAlso puedeCorregir() Then
+                If Not dgvEstudiants.Columns.Contains("Corregir") Then
                     Dim btnCol As New DataGridViewButtonColumn With {
-                        .Name = "Corregir",
-                        .HeaderText = "Corregir",
-                        .Text = "Corregir",
-                        .UseColumnTextForButtonValue = True,
-                        .FillWeight = 60
-                    }
+            .Name = "Corregir",
+            .HeaderText = "Corregir",
+            .Text = "Corregir",
+            .UseColumnTextForButtonValue = True,
+            .FillWeight = 60
+        }
                     dgvEstudiants.Columns.Add(btnCol)
                 End If
             End If
@@ -414,7 +418,8 @@ Public Class FormNotas
     End Sub
 
     Private Function puedeCorregir() As Boolean
-        Return _rol = "director" OrElse _rol = "administrador"
+        Return _rol = "director" OrElse _rol = "administrador" OrElse
+            _rol.ToLower().Contains("cap")
     End Function
 
     Private Sub lblLogOut_Click(sender As Object, e As EventArgs) Handles lblLogOut.Click
@@ -535,80 +540,4 @@ Public Class FormNotas
             btnDownload.Text = "Generar acta de evaluación (.pdf)"
         End Try
     End Sub
-
-
-    'Private Sub btnJunta_Click(sender As Object, e As EventArgs) Handles btnJunta.Click
-    '    Dim sb As New System.Text.StringBuilder()
-    '    sb.AppendLine($"JUNTA DE EVALUACIÓN - {_nomAssignatura} - {_grup}")
-    '    sb.AppendLine($"Trimestre: {_trimestreActual}  ·  Curso: {Date.Now.Year}-{Date.Now.Year + 1}")
-
-    '    sb.AppendLine(New String("-"c, 60))
-    '    sb.AppendLine($"{"Alumno",-30} {"Nota",-8} {"Estado"}")
-    '    sb.AppendLine(New String("-"c, 60))
-
-    '    For Each row As DataGridViewRow In dgvEstudiants.Rows
-    '        Dim nom As String = row.Cells("Alumno").Value?.ToString()
-    '        Dim media As String = row.Cells("Media").Value?.ToString()
-    '        Dim estado As String = row.Cells("Estado").Value?.ToString()
-    '        sb.AppendLine($"{nom,-30} {media,-8}, {estado}")
-    '    Next
-
-    '    sb.AppendLine(New String("-"c, 60))
-
-    '    Dim FormJunta As New Form With {
-    '        .Text = "Junta d'avaluació",
-    '        .Size = New Size(600, 500),
-    '        .StartPosition = FormStartPosition.CenterParent,
-    '        .MinimizeBox = False
-    '    }
-
-    '    Dim txt As New RichTextBox With {
-    '        .Dock = DockStyle.Fill,
-    '        .Font = New Font("Courier New", 10),
-    '        .ReadOnly = True,
-    '        .Text = sb.ToString(),
-    '        .BackColor = Color.White
-    '    }
-
-    '    Dim pnlBotns As New FlowLayoutPanel With {
-    '        .Dock = DockStyle.Bottom,
-    '        .Height = 48,
-    '        .FlowDirection = FlowDirection.RightToLeft,
-    '        .Padding = New Padding(8)
-    '    }
-
-    '    Dim btnImprimir As New Button With {
-    '        .Text = "Imprimir",
-    '        .Width = 100,
-    '        .Height = 32,
-    '        .FlatStyle = FlatStyle.Flat
-    '    }
-    '    AddHandler btnImprimir.Click, Sub(s, ev)
-    '                                      Dim pd As New System.Drawing.Printing.PrintDocument()
-    '                                      Dim content As String = txt.Text
-    '                                      AddHandler pd.PrintPage, Sub(ps, pe)
-    '                                                                   pe.Graphics.DrawString(content,
-    '                                                                    New Font("Courier New", 10), Brushes.Black, pe.MarginBounds)
-    '                                                               End Sub
-    '                                      Dim preview As New System.Windows.Forms.PrintPreviewDialog With {
-    '                                      .Document = pd
-    '                                      }
-    '                                      preview.ShowDialog()
-    '                                  End Sub
-
-    '    Dim btnTancar As New Button With {
-    '        .Text = "Tancar",
-    '        .Width = 100,
-    '        .Height = 32,
-    '        .FlatStyle = FlatStyle.Flat
-    '    }
-    '    AddHandler btnTancar.Click, Sub(s, ev) FormJunta.Close()
-
-    '    pnlBotns.Controls.AddRange({btnTancar, btnImprimir})
-    '    FormJunta.Controls.Add(txt)
-    '    FormJunta.Controls.Add(pnlBotns)
-    '    FormJunta.ShowDialog()
-    'End Sub
-
-
 End Class

@@ -51,19 +51,33 @@ if ($metode === "POST"){
     //comprobar que sea un director
     $check = $conn->prepare("
     SELECT p.dni FROM persones p
-    WHERE p.dni = ?
-    AND p.rol IN ('director')
-    LIMIT 1");
-
+    WHERE p.dni = ? AND p.rol IN ('director', 'administrador')
+    LIMIT 1
+");
     $check->bind_param("s", $dni);
     $check->execute();
     $check->store_result();
 
-    if($check->num_rows === 0) {
-        echo json_encode(["ok" => false,
-        "error" => "no tiene permisos para realizar esta acción"]);
+if ($check->num_rows === 0) {
+    // Comprova si és cap d'estudis a directiva
+    $rol_cap = "Cap d'estudis";
+    $check2 = $conn->prepare("
+        SELECT d.codi_prof FROM directiva d
+        INNER JOIN professors pr ON pr.codi_prof = d.codi_prof
+        WHERE pr.dni = ? AND d.rol = ?
+        LIMIT 1
+    ");
+    $check2->bind_param("ss", $dni, $rol_cap);
+    $check2->execute();
+    $check2->store_result();
+
+    if ($check2->num_rows === 0) {
+        echo json_encode(["ok" => false, "error" => "No tiene permisos"]);
         exit;
     }
+    $check2->close();
+}
+$check->close();
 
 if ($accion === "obrir") {
     $conn->query("UPDATE periodes_avaluacio SET obert = 0, 

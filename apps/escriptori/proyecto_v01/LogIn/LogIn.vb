@@ -43,7 +43,6 @@ Public Class LogIn
                 Return
             End If
             If result.canEnter Then
-                MessageBox.Show("inicio de sesión correcto")
                 Dim finestraFilla As New FormPrincipal(result)
                 finestraFilla.Show()
                 Me.Hide()
@@ -89,6 +88,8 @@ Public Class LogIn
             .surname = obj.Value(Of String)("cognom"),
             .typeError = obj.Value(Of String)("tipus_error"),
             .grup = obj.Value(Of String)("grup"),
+            .rolDirectiva = If(obj.Value(Of String)("rol_directiva"), ""),
+            .rutaFoto = obj.Value(Of String)("ruta_foto"),
             .grups = If(obj("grups") IsNot Nothing, obj("grups").ToObject(Of List(Of String))(), New List(Of String))
         }
     End Function
@@ -103,5 +104,7 @@ Public Class LoginResult
     Public Property name As String
     Public Property surname As String
     Public Property grup As String
+    Public Property rolDirectiva As String = ""
+    Public Property rutaFoto As String = ""
     Public Property grups As List(Of String)
 End Class
