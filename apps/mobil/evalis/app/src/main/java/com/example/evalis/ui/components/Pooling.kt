@@ -6,8 +6,7 @@ import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.ListenableWorker.Result
-import com.example.evalis.model.GestorSQLExternModern.SqlInfo.BASE_URL
-import com.example.evalis.ui.screens.login.SessionData
+import com.example.evalis.core.data.GestorSQLExternModern.SqlInfo.BASE_URL
 import java.net.URL
 
 class Polling(appContext: Context, params: WorkerParameters) :

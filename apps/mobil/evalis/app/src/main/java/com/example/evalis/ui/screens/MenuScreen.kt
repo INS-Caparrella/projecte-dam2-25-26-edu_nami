@@ -25,8 +25,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.evalis.HomeScreen
 import com.example.evalis.ThemeMode
+import com.example.evalis.feature.profs.ProfsDetail
+import com.example.evalis.feature.profs.ProfsScreen
 import com.example.evalis.ui.components.Option
-import com.example.evalis.ui.screens.reports.DownloadScreen
+import com.example.expedient.CursosScreen
+import com.example.expedient.StudiesScreen
+import com.example.expedient.reports.DownloadScreen
 import kotlinx.coroutines.launch
 
 

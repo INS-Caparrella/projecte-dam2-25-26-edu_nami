@@ -1,0 +1,15 @@
+<resources>
+    <string name="login_label">Inici de sessió</string>
+    <string name="user_label">Usuari</string>
+    <string name="pass_label">Contrasenya</string>
+    <string name="reg_button">Registrar</string>
+    <string name="login_button">Entrar</string>
+    <string name="login_aviso">Hola! Has iniciat sessió correctament.</string>
+    <string name="error_aviso1">Sense resposta o error desconegut (revisa URL, port i JSON)</string>
+    <string name="error_aviso2">Error en la connexió: %1$s</string>
+    <string name="error_aviso3">Usuari o contrasenya incorrectes</string>
+    <string name="error_aviso4">Error inesperat: %1$s</string>
+    <string name="user_reg">Usuari creat amb èxit</string>
+    <string name="error_reg1">Usuari existent o DNI incorrecte</string>
+    <string name="estudi_label">Els meus expedients</string>
+</resources>
