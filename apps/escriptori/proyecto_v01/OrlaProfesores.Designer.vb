@@ -43,6 +43,7 @@ Partial Class OrlaProfesores
         Name = "OrlaProfesores"
         StartPosition = FormStartPosition.CenterScreen
         Text = "Orla profesores"
+        WindowState = FormWindowState.Maximized
         ResumeLayout(False)
     End Sub
 

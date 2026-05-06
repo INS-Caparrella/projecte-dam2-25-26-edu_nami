@@ -397,6 +397,7 @@ Partial Class FormNotas
         Name = "FormNotas"
         StartPosition = FormStartPosition.CenterScreen
         Text = "Introducción de notas"
+        WindowState = FormWindowState.Maximized
         pnlPrincipal.ResumeLayout(False)
         pnlPrincipal.PerformLayout()
         tlpCorrecion.ResumeLayout(False)

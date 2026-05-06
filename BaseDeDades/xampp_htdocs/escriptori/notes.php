@@ -1,4 +1,6 @@
 <?php
+error_reporting(0);
+ini_set('display_errors', 0);
 header("Content-Type: application/json; charset=utf-8");
 
 $conn = new mysqli("localhost", "root", "", "projecte_evalis", 3307);
@@ -68,93 +70,120 @@ switch ($accio) {
  
 
     // obtener todos los ras y las notas
-    case "vista_notes_all":
-        $id_asig = $_GET["id_assignatura"] ?? "";
-        $nom_grup = $_GET["nom_grup"] ?? ""; 
-        if (!$id_asig) { error_out("Falta id_assignatura"); break; }
+case "vista_notes_all":
+    $id_asig = $_GET["id_assignatura"] ?? "";
+    $nom_grup = $_GET["nom_grup"] ?? ""; 
+    if (!$id_asig) { error_out("Falta id_assignatura"); break; }
 
-        // ras
-        $stmt_ras = $conn->prepare("SELECT id, ra FROM ras WHERE codi_assignatura=? ORDER BY ra");
-        $stmt_ras->bind_param("s", $id_asig);
-        $stmt_ras->execute();
-        $res_ras = $stmt_ras->get_result();
-        $ras = [];
-        while ($r = $res_ras->fetch_assoc()) $ras[] = $r;
+    // RAS reales de la asignatura
+    $stmt_ras = $conn->prepare("
+        SELECT id, ra 
+        FROM ras 
+        WHERE codi_assignatura = ?
+        ORDER BY ra
+    ");
+    $stmt_ras->bind_param("s", $id_asig);
+    $stmt_ras->execute();
+    $res_ras = $stmt_ras->get_result();
+    $ras = [];
+    while ($r = $res_ras->fetch_assoc()) $ras[] = $r;
 
-        if (empty($ras)) {
-            echo json_encode(["ok" => true, "ras" => [], "estudiants" => []]);
-            break;
-        }
+    if (empty($ras)) {
+        echo json_encode(["ok" => true, "ras" => [], "estudiants" => []]);
+        break;
+    }
 
-        // estudiantes
-       $stmt_est = $conn->prepare("
+    // Estudiantes del grupo
+    $stmt_est = $conn->prepare("
         SELECT e.nia, p.nom, p.cognom
         FROM estudiants e
         INNER JOIN persones p ON p.dni = e.dni
         WHERE e.nom_cicle IN (
             SELECT ac.nom_cicle FROM assignatures_cicle ac WHERE ac.id_assignatura = ?
         )
-        AND e.nom_grup = ?    -- ← tens aquest filtre?
+        AND e.nom_grup = ?
         AND e.actiu = 1
         ORDER BY p.cognom, p.nom
     ");
     $stmt_est->bind_param("ss", $id_asig, $nom_grup);
-        $stmt_est->execute();
-        $estudiants_base = $stmt_est->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt_est->execute();
+    $estudiants_base = $stmt_est->get_result()->fetch_all(MYSQLI_ASSOC);
 
-        // nota de ra por estudiante
-        $stmt_nota = $conn->prepare("SELECT nota FROM estudiants_ras WHERE nia=? AND id_ra=?");
+    // Notas por RA
+    $stmt_nota = $conn->prepare("
+        SELECT nota 
+        FROM estudiants_ras 
+        WHERE nia = ? AND id_ra = ?
+    ");
 
-        $estudiants = [];
-        foreach ($estudiants_base as $est) {
-            $nia          = $est["nia"];
-            $notes        = [];
-            $notes_valors = [];
+    $estudiants = [];
+    foreach ($estudiants_base as $est) {
+        $nia = $est["nia"];
+        $notes = [];
+        $notes_valors = [];
 
-            foreach ($ras as $ra) {
-                $stmt_nota->bind_param("ii", $nia, $ra["id"]);
-                $stmt_nota->execute();
-                $row_nota = $stmt_nota->get_result()->fetch_assoc();
-                $nota = $row_nota ? $row_nota["nota"] : null;
-                $notes["ra_" . $ra["id"]] = $nota;
-                if ($nota !== null) $notes_valors[] = (float)$nota;
-            }
+        foreach ($ras as $ra) {
+            $stmt_nota->bind_param("ii", $nia, $ra["id"]);
+            $stmt_nota->execute();
+            $row_nota = $stmt_nota->get_result()->fetch_assoc();
+            $nota = $row_nota ? $row_nota["nota"] : null;
 
-            $mitjana = count($notes_valors) > 0
-                ? round(array_sum($notes_valors) / count($notes_valors), 2)
-                : null;
-
-            $estudiants[] = array_merge([
-                "nia"     => (int)$nia,
-                "nom"     => $est["nom"],
-                "cognom"  => $est["cognom"],
-                "mitjana" => $mitjana,
-                "aprovat" => $mitjana !== null ? $mitjana >= 5 : null
-            ], $notes);
+            $notes["ra_" . $ra["id"]] = $nota;
+            if ($nota !== null) $notes_valors[] = (float)$nota;
         }
 
-        echo json_encode(["ok" => true, "ras" => $ras, "estudiants" => $estudiants]);
-        break;
+        $mitjana = count($notes_valors) > 0
+            ? round(array_sum($notes_valors) / count($notes_valors), 2)
+            : null;
 
-    case "guardar":
-        if (!periodeObert($conn)) { error_out("El periode esta tancat"); break; }
-        
-        $id_ra = (int)($_POST["id_ra"] ?? 0);
-        $nia   = (int)($_POST["nia"]   ?? 0);
-        $nota  = $_POST["nota"] ?? "";
-        
-        if (!$id_ra || !$nia || $nota === "") { error_out("Falten parametres"); break; }
-        $nota = floatval(str_replace(",", ".", $nota));
-        
-        if ($nota < 0 || $nota > 10) { error_out("Nota fora de rang"); break; }
-      $stmt = $conn->prepare("
-        INSERT INTO estudiants_ras (id_ra, nia, nota) VALUES (?, ?, ?)
+        $estudiants[] = array_merge([
+            "nia"     => (int)$nia,
+            "nom"     => $est["nom"],
+            "cognom"  => $est["cognom"],
+            "mitjana" => $mitjana,
+            "aprovat" => $mitjana !== null ? $mitjana >= 5 : null
+        ], $notes);
+    }
+
+    echo json_encode(["ok" => true, "ras" => $ras, "estudiants" => $estudiants]);
+    break;
+
+
+case "guardar":
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    
+    if (!periodeObert($conn)) { error_out("El periode esta tancat"); break; }
+    
+    $id_ra = (int)($_POST["id_ra"] ?? 0);
+    $nia   = (int)($_POST["nia"]   ?? 0);
+    $nota  = $_POST["nota"] ?? "";
+    
+    if (!$id_ra || !$nia || $nota === "") { error_out("Falten parametres"); break; }
+    $nota = floatval(str_replace(",", ".", $nota));
+    
+    if ($nota < 0 || $nota > 10) { error_out("Nota fora de rang"); break; }
+
+    $stmt = $conn->prepare("
+        INSERT INTO estudiants_ras (id_ra, nia, nota)
+        VALUES (?, ?, ?)
         ON DUPLICATE KEY UPDATE nota = VALUES(nota)
     ");
+    if (!$stmt) {
+        error_out("Error prepare: " . $conn->error);
+        break;
+    }
+
     $stmt->bind_param("iid", $id_ra, $nia, $nota);
-    $stmt->execute();
-    echo json_encode(["ok" => $stmt->affected_rows >= 0]);
+    if (!$stmt->execute()) {
+        error_out("Error execucio: " . $stmt->error);
+        break;
+    }
+
+    echo json_encode(["ok" => true]);
     break;
+
+
 
     case "tancar_proces":
         $id_asig = $_POST["id_assignatura"] ?? "";
