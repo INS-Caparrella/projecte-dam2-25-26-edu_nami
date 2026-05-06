@@ -30,7 +30,13 @@ import androidx.work.WorkManager
 import com.example.evalis.ui.components.NotificationHelper
 import com.example.evalis.ui.components.Polling
 import java.util.concurrent.TimeUnit
-
+import coil.Coil
+import coil.ImageLoader
+import okhttp3.OkHttpClient
+import java.security.cert.X509Certificate
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +77,25 @@ class MainActivity : ComponentActivity() {
 
         //Probar notificació
         getSharedPreferences("notifs", MODE_PRIVATE).edit().clear().apply()
+
+        val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+            override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
+            override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
+            override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+        })
+        val sslContext = SSLContext.getInstance("SSL").also {
+            it.init(null, trustAllCerts, java.security.SecureRandom())
+        }
+        val unsafeOkHttp = OkHttpClient.Builder()
+            .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
+            .hostnameVerifier { _, _ -> true }
+            .build()
+
+        Coil.setImageLoader(
+            ImageLoader.Builder(this)
+                .okHttpClient(unsafeOkHttp)
+                .build()
+        )
 
         setContent {
             var themeMode by remember { mutableStateOf(initialMode) }

@@ -1,59 +1,50 @@
 package com.example.evalis.ui.components
 
+import android.Manifest
 import android.content.Context
-import android.content.pm.PackageInstaller
 import android.util.Log
+import androidx.annotation.RequiresPermission
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import androidx.work.ListenableWorker.Result
 import com.example.evalis.core.data.GestorSQLExternModern.SqlInfo.BASE_URL
+import com.example.network.UnsafeSSL
 import java.net.URL
 
-class Polling(appContext: Context, params: WorkerParameters) :
-    Worker(appContext, params) {
+class Polling(appContext: Context, params: WorkerParameters) : Worker(appContext, params) {
 
-
+    @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override fun doWork(): Result {
-
-        val prefs = applicationContext.getSharedPreferences("notifs", Context.MODE_PRIVATE)
-        val yaBoletin = prefs.getBoolean("boletin_notificado", false)
-        val yaExpediente = prefs.getBoolean("expediente_notificado", false)
-
         val nia = applicationContext
             .getSharedPreferences("session", Context.MODE_PRIVATE)
             .getInt("nia", -1)
 
-        if (nia == -1) return Result.success()
-
-        val url = URL("${BASE_URL}/send_notifs.php?nia=$nia")
-
-        val respuesta = url.readText()
-
-        when (respuesta) {
-            "butlleti" -> {
-                if (!yaBoletin) {
-                    NotificationHelper.mostrar(
-                        applicationContext,
-                        "Nuevo boletín disponible",
-                        "Ya puedes descargar tu boletín"
-                    )
-                    prefs.edit().putBoolean("boletin_notificado", true).apply()
-                }
-            }
-
-            "expedient" -> {
-                if (!yaExpediente) {
-                    NotificationHelper.mostrar(
-                        applicationContext,
-                        "Expediente disponible",
-                        "Tu expediente académico ya está listo"
-                    )
-                    prefs.edit().putBoolean("expediente_notificado", true).apply()
-                }
-            }
+        if (nia == -1) {
+            Log.d("Polling", "NIA no trobat, skip")
+            return Result.success()
         }
-        android.util.Log.d("Polling", "Worker ejecutado, respuesta: $respuesta")
 
-        return Result.success()
+        return try {
+            UnsafeSSL.ignoreSSLErrors()
+            val resposta = URL("${BASE_URL}/send_notifs.php?nia=$nia").readText().trim()
+            Log.d("Polling", "NIA=$nia resposta=$resposta")
+
+            when (resposta) {
+                "butlleti" -> NotificationHelper.mostrar(
+                    applicationContext,
+                    "Nou butlletí disponible",
+                    "Ja pots descarregar el teu butlletí"
+                )
+                "expedient" -> NotificationHelper.mostrar(
+                    applicationContext,
+                    "Expedient disponible",
+                    "El teu expedient acadèmic ja està llest"
+                )
+                else -> Log.d("Polling", "Sense novetats: $resposta")
+            }
+            Result.success()
+        } catch (e: Exception) {
+            Log.e("Polling", "Error: ${e.message}")
+            Result.failure()
+        }
     }
 }

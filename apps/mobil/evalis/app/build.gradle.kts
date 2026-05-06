@@ -37,9 +37,13 @@ android {
 dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:domain"))
+    implementation(project(":core:network"))
     implementation(project(":feature:expedient"))
-    implementation(project(":feature:login"))   // ← añadir
-    implementation(project(":feature:profs"))   // ← añadir
+    implementation(project(":feature:login"))
+    implementation(project(":feature:profs"))
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.patrykandpatrick.vico:compose-m3:1.13.1")
+    implementation("com.patrykandpatrick.vico:core:1.13.1")
 
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")

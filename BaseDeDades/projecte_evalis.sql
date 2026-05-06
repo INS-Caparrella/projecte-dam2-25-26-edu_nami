@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3307
--- Temps de generació: 06-05-2026 a les 01:36:22
--- Versió del servidor: 10.4.32-MariaDB
--- Versió de PHP: 8.2.12
+-- Tiempo de generación: 06-05-2026 a las 16:12:56
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,65 +18,499 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de dades: `projecte_evalis`
+-- Base de datos: `phpmyadmin`
 --
-
-DELIMITER $$
---
--- Procediments
---
-CREATE DEFINER=`root`@`localhost` PROCEDURE `alumnesGrup` (IN `grup` VARCHAR(11))   BEGIN
-    SELECT p.nom,p.cognom,p.dni, TIMESTAMPDIFF(YEAR, p.data_naix, CURDATE()) AS edat
-    FROM persones p
-    JOIN estudiants e ON e.dni=p.dni 
-    WHERE e.nom_grup = grup
-    ORDER BY p.nom,p.cognom;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `llistatMajorsEdatEstudiants` ()   BEGIN
-    SELECT p.nom AS nom,p.cognom AS cognom, TIMESTAMPDIFF(YEAR, p.data_naix, CURDATE()) AS edat
-    FROM persones p JOIN estudiants e ON e.dni = p.dni
-    WHERE TIMESTAMPDIFF(YEAR, p.data_naix, CURDATE()) >= 18
-    ORDER BY p.nom,p.cognom;
-END$$
-
---
--- Funcions
---
-CREATE DEFINER=`root`@`localhost` FUNCTION `intentsLogin` (`userId` INT, `rang1` DATETIME, `rang2` DATETIME) RETURNS INT(11)  BEGIN
-    DECLARE result INT DEFAULT 0;
-
-    SELECT COUNT(*) INTO result
-    FROM logs_login l
-    WHERE l.id_user = userId
-      AND l.data BETWEEN rang1 AND rang2;
-
-    RETURN result;
-END$$
-
-CREATE DEFINER=`root`@`localhost` FUNCTION `majorEdat` (`dni` VARCHAR(9)) RETURNS TINYINT(1)  BEGIN
-    DECLARE edat INT;
-    DECLARE major BOOLEAN DEFAULT FALSE;
-
-    SELECT TIMESTAMPDIFF(YEAR, data_naix, CURDATE()) 
-    INTO edat FROM persones p 
-    WHERE p.dni = dni;
-
-    IF edat IS NOT NULL AND edat >= 18 THEN
-        SET major = TRUE;
-    END IF;
-
-    RETURN major;
-END$$
-
-DELIMITER ;
+DROP DATABASE IF EXISTS `phpmyadmin`;
+CREATE DATABASE IF NOT EXISTS `phpmyadmin` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+USE `phpmyadmin`;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `acta_avaluacio`
+-- Estructura de tabla para la tabla `pma__bookmark`
 --
 
+DROP TABLE IF EXISTS `pma__bookmark`;
+CREATE TABLE `pma__bookmark` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `dbase` varchar(255) NOT NULL DEFAULT '',
+  `user` varchar(255) NOT NULL DEFAULT '',
+  `label` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `query` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Bookmarks';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__central_columns`
+--
+
+DROP TABLE IF EXISTS `pma__central_columns`;
+CREATE TABLE `pma__central_columns` (
+  `db_name` varchar(64) NOT NULL,
+  `col_name` varchar(64) NOT NULL,
+  `col_type` varchar(64) NOT NULL,
+  `col_length` text DEFAULT NULL,
+  `col_collation` varchar(64) NOT NULL,
+  `col_isNull` tinyint(1) NOT NULL,
+  `col_extra` varchar(255) DEFAULT '',
+  `col_default` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Central list of columns';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__column_info`
+--
+
+DROP TABLE IF EXISTS `pma__column_info`;
+CREATE TABLE `pma__column_info` (
+  `id` int(5) UNSIGNED NOT NULL,
+  `db_name` varchar(64) NOT NULL DEFAULT '',
+  `table_name` varchar(64) NOT NULL DEFAULT '',
+  `column_name` varchar(64) NOT NULL DEFAULT '',
+  `comment` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `mimetype` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
+  `transformation` varchar(255) NOT NULL DEFAULT '',
+  `transformation_options` varchar(255) NOT NULL DEFAULT '',
+  `input_transformation` varchar(255) NOT NULL DEFAULT '',
+  `input_transformation_options` varchar(255) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Column information for phpMyAdmin';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__designer_settings`
+--
+
+DROP TABLE IF EXISTS `pma__designer_settings`;
+CREATE TABLE `pma__designer_settings` (
+  `username` varchar(64) NOT NULL,
+  `settings_data` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Settings related to Designer';
+
+--
+-- Volcado de datos para la tabla `pma__designer_settings`
+--
+
+INSERT INTO `pma__designer_settings` (`username`, `settings_data`) VALUES
+('root', '{\"relation_lines\":\"true\",\"snap_to_grid\":\"off\",\"angular_direct\":\"direct\"}');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__export_templates`
+--
+
+DROP TABLE IF EXISTS `pma__export_templates`;
+CREATE TABLE `pma__export_templates` (
+  `id` int(5) UNSIGNED NOT NULL,
+  `username` varchar(64) NOT NULL,
+  `export_type` varchar(10) NOT NULL,
+  `template_name` varchar(64) NOT NULL,
+  `template_data` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Saved export templates';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__favorite`
+--
+
+DROP TABLE IF EXISTS `pma__favorite`;
+CREATE TABLE `pma__favorite` (
+  `username` varchar(64) NOT NULL,
+  `tables` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Favorite tables';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__history`
+--
+
+DROP TABLE IF EXISTS `pma__history`;
+CREATE TABLE `pma__history` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `username` varchar(64) NOT NULL DEFAULT '',
+  `db` varchar(64) NOT NULL DEFAULT '',
+  `table` varchar(64) NOT NULL DEFAULT '',
+  `timevalue` timestamp NOT NULL DEFAULT current_timestamp(),
+  `sqlquery` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='SQL history for phpMyAdmin';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__navigationhiding`
+--
+
+DROP TABLE IF EXISTS `pma__navigationhiding`;
+CREATE TABLE `pma__navigationhiding` (
+  `username` varchar(64) NOT NULL,
+  `item_name` varchar(64) NOT NULL,
+  `item_type` varchar(64) NOT NULL,
+  `db_name` varchar(64) NOT NULL,
+  `table_name` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Hidden items of navigation tree';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__pdf_pages`
+--
+
+DROP TABLE IF EXISTS `pma__pdf_pages`;
+CREATE TABLE `pma__pdf_pages` (
+  `db_name` varchar(64) NOT NULL DEFAULT '',
+  `page_nr` int(10) UNSIGNED NOT NULL,
+  `page_descr` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='PDF relation pages for phpMyAdmin';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__recent`
+--
+
+DROP TABLE IF EXISTS `pma__recent`;
+CREATE TABLE `pma__recent` (
+  `username` varchar(64) NOT NULL,
+  `tables` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Recently accessed tables';
+
+--
+-- Volcado de datos para la tabla `pma__recent`
+--
+
+INSERT INTO `pma__recent` (`username`, `tables`) VALUES
+('root', '[{\"db\":\"projecte_evalis\",\"table\":\"persones\"},{\"db\":\"projecte_evalis\",\"table\":\"ras\"},{\"db\":\"projecte_evalis\",\"table\":\"estudiants_ras\"},{\"db\":\"projecte_evalis\",\"table\":\"sessions\"},{\"db\":\"projecte_evalis\",\"table\":\"acta_avaluacio\"},{\"db\":\"projecte_evalis\",\"table\":\"acta_notes\"},{\"db\":\"projecte_evalis\",\"table\":\"logs_login\"},{\"db\":\"projecte_evalis\",\"table\":\"cursos_cicle\"},{\"db\":\"projecte_evalis\",\"table\":\"usuaris\"},{\"db\":\"projecte_evalis\",\"table\":\"historic_estudiants\"}]');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__relation`
+--
+
+DROP TABLE IF EXISTS `pma__relation`;
+CREATE TABLE `pma__relation` (
+  `master_db` varchar(64) NOT NULL DEFAULT '',
+  `master_table` varchar(64) NOT NULL DEFAULT '',
+  `master_field` varchar(64) NOT NULL DEFAULT '',
+  `foreign_db` varchar(64) NOT NULL DEFAULT '',
+  `foreign_table` varchar(64) NOT NULL DEFAULT '',
+  `foreign_field` varchar(64) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Relation table';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__savedsearches`
+--
+
+DROP TABLE IF EXISTS `pma__savedsearches`;
+CREATE TABLE `pma__savedsearches` (
+  `id` int(5) UNSIGNED NOT NULL,
+  `username` varchar(64) NOT NULL DEFAULT '',
+  `db_name` varchar(64) NOT NULL DEFAULT '',
+  `search_name` varchar(64) NOT NULL DEFAULT '',
+  `search_data` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Saved searches';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__table_coords`
+--
+
+DROP TABLE IF EXISTS `pma__table_coords`;
+CREATE TABLE `pma__table_coords` (
+  `db_name` varchar(64) NOT NULL DEFAULT '',
+  `table_name` varchar(64) NOT NULL DEFAULT '',
+  `pdf_page_number` int(11) NOT NULL DEFAULT 0,
+  `x` float UNSIGNED NOT NULL DEFAULT 0,
+  `y` float UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Table coordinates for phpMyAdmin PDF output';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__table_info`
+--
+
+DROP TABLE IF EXISTS `pma__table_info`;
+CREATE TABLE `pma__table_info` (
+  `db_name` varchar(64) NOT NULL DEFAULT '',
+  `table_name` varchar(64) NOT NULL DEFAULT '',
+  `display_field` varchar(64) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Table information for phpMyAdmin';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__table_uiprefs`
+--
+
+DROP TABLE IF EXISTS `pma__table_uiprefs`;
+CREATE TABLE `pma__table_uiprefs` (
+  `username` varchar(64) NOT NULL,
+  `db_name` varchar(64) NOT NULL,
+  `table_name` varchar(64) NOT NULL,
+  `prefs` text NOT NULL,
+  `last_update` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Tables'' UI preferences';
+
+--
+-- Volcado de datos para la tabla `pma__table_uiprefs`
+--
+
+INSERT INTO `pma__table_uiprefs` (`username`, `db_name`, `table_name`, `prefs`, `last_update`) VALUES
+('root', 'projecte_evalis', 'estudiants_ras', '{\"sorted_col\":\"`estudiants_ras`.`id_ra` ASC\"}', '2026-05-06 10:54:36'),
+('root', 'projecte_evalis', 'ras', '{\"sorted_col\":\"`ras`.`codi_assignatura` ASC\"}', '2026-05-06 10:55:13'),
+('root', 'projecte_evalis', 'sessions', '{\"sorted_col\":\"`sessions`.`data_inici` DESC\"}', '2026-05-06 08:43:35');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__tracking`
+--
+
+DROP TABLE IF EXISTS `pma__tracking`;
+CREATE TABLE `pma__tracking` (
+  `db_name` varchar(64) NOT NULL,
+  `table_name` varchar(64) NOT NULL,
+  `version` int(10) UNSIGNED NOT NULL,
+  `date_created` datetime NOT NULL,
+  `date_updated` datetime NOT NULL,
+  `schema_snapshot` text NOT NULL,
+  `schema_sql` text DEFAULT NULL,
+  `data_sql` longtext DEFAULT NULL,
+  `tracking` set('UPDATE','REPLACE','INSERT','DELETE','TRUNCATE','CREATE DATABASE','ALTER DATABASE','DROP DATABASE','CREATE TABLE','ALTER TABLE','RENAME TABLE','DROP TABLE','CREATE INDEX','DROP INDEX','CREATE VIEW','ALTER VIEW','DROP VIEW') DEFAULT NULL,
+  `tracking_active` int(1) UNSIGNED NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Database changes tracking for phpMyAdmin';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__userconfig`
+--
+
+DROP TABLE IF EXISTS `pma__userconfig`;
+CREATE TABLE `pma__userconfig` (
+  `username` varchar(64) NOT NULL,
+  `timevalue` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `config_data` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='User preferences storage for phpMyAdmin';
+
+--
+-- Volcado de datos para la tabla `pma__userconfig`
+--
+
+INSERT INTO `pma__userconfig` (`username`, `timevalue`, `config_data`) VALUES
+('root', '2026-05-06 14:10:36', '{\"Console\\/Mode\":\"collapse\",\"lang\":\"es\",\"NavigationWidth\":0}');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__usergroups`
+--
+
+DROP TABLE IF EXISTS `pma__usergroups`;
+CREATE TABLE `pma__usergroups` (
+  `usergroup` varchar(64) NOT NULL,
+  `tab` varchar(64) NOT NULL,
+  `allowed` enum('Y','N') NOT NULL DEFAULT 'N'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='User groups with configured menu items';
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pma__users`
+--
+
+DROP TABLE IF EXISTS `pma__users`;
+CREATE TABLE `pma__users` (
+  `username` varchar(64) NOT NULL,
+  `usergroup` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='Users and their assignments to user groups';
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `pma__bookmark`
+--
+ALTER TABLE `pma__bookmark`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `pma__central_columns`
+--
+ALTER TABLE `pma__central_columns`
+  ADD PRIMARY KEY (`db_name`,`col_name`);
+
+--
+-- Indices de la tabla `pma__column_info`
+--
+ALTER TABLE `pma__column_info`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `db_name` (`db_name`,`table_name`,`column_name`);
+
+--
+-- Indices de la tabla `pma__designer_settings`
+--
+ALTER TABLE `pma__designer_settings`
+  ADD PRIMARY KEY (`username`);
+
+--
+-- Indices de la tabla `pma__export_templates`
+--
+ALTER TABLE `pma__export_templates`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `u_user_type_template` (`username`,`export_type`,`template_name`);
+
+--
+-- Indices de la tabla `pma__favorite`
+--
+ALTER TABLE `pma__favorite`
+  ADD PRIMARY KEY (`username`);
+
+--
+-- Indices de la tabla `pma__history`
+--
+ALTER TABLE `pma__history`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `username` (`username`,`db`,`table`,`timevalue`);
+
+--
+-- Indices de la tabla `pma__navigationhiding`
+--
+ALTER TABLE `pma__navigationhiding`
+  ADD PRIMARY KEY (`username`,`item_name`,`item_type`,`db_name`,`table_name`);
+
+--
+-- Indices de la tabla `pma__pdf_pages`
+--
+ALTER TABLE `pma__pdf_pages`
+  ADD PRIMARY KEY (`page_nr`),
+  ADD KEY `db_name` (`db_name`);
+
+--
+-- Indices de la tabla `pma__recent`
+--
+ALTER TABLE `pma__recent`
+  ADD PRIMARY KEY (`username`);
+
+--
+-- Indices de la tabla `pma__relation`
+--
+ALTER TABLE `pma__relation`
+  ADD PRIMARY KEY (`master_db`,`master_table`,`master_field`),
+  ADD KEY `foreign_field` (`foreign_db`,`foreign_table`);
+
+--
+-- Indices de la tabla `pma__savedsearches`
+--
+ALTER TABLE `pma__savedsearches`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `u_savedsearches_username_dbname` (`username`,`db_name`,`search_name`);
+
+--
+-- Indices de la tabla `pma__table_coords`
+--
+ALTER TABLE `pma__table_coords`
+  ADD PRIMARY KEY (`db_name`,`table_name`,`pdf_page_number`);
+
+--
+-- Indices de la tabla `pma__table_info`
+--
+ALTER TABLE `pma__table_info`
+  ADD PRIMARY KEY (`db_name`,`table_name`);
+
+--
+-- Indices de la tabla `pma__table_uiprefs`
+--
+ALTER TABLE `pma__table_uiprefs`
+  ADD PRIMARY KEY (`username`,`db_name`,`table_name`);
+
+--
+-- Indices de la tabla `pma__tracking`
+--
+ALTER TABLE `pma__tracking`
+  ADD PRIMARY KEY (`db_name`,`table_name`,`version`);
+
+--
+-- Indices de la tabla `pma__userconfig`
+--
+ALTER TABLE `pma__userconfig`
+  ADD PRIMARY KEY (`username`);
+
+--
+-- Indices de la tabla `pma__usergroups`
+--
+ALTER TABLE `pma__usergroups`
+  ADD PRIMARY KEY (`usergroup`,`tab`,`allowed`);
+
+--
+-- Indices de la tabla `pma__users`
+--
+ALTER TABLE `pma__users`
+  ADD PRIMARY KEY (`username`,`usergroup`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `pma__bookmark`
+--
+ALTER TABLE `pma__bookmark`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `pma__column_info`
+--
+ALTER TABLE `pma__column_info`
+  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `pma__export_templates`
+--
+ALTER TABLE `pma__export_templates`
+  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `pma__history`
+--
+ALTER TABLE `pma__history`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `pma__pdf_pages`
+--
+ALTER TABLE `pma__pdf_pages`
+  MODIFY `page_nr` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `pma__savedsearches`
+--
+ALTER TABLE `pma__savedsearches`
+  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- Base de datos: `projecte_evalis`
+--
+DROP DATABASE IF EXISTS `projecte_evalis`;
+CREATE DATABASE IF NOT EXISTS `projecte_evalis` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `projecte_evalis`;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `acta_avaluacio`
+--
+
+DROP TABLE IF EXISTS `acta_avaluacio`;
 CREATE TABLE `acta_avaluacio` (
   `id` int(11) NOT NULL,
   `id_assignatura` varchar(20) NOT NULL,
@@ -90,7 +524,7 @@ CREATE TABLE `acta_avaluacio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `acta_avaluacio`
+-- Volcado de datos para la tabla `acta_avaluacio`
 --
 
 INSERT INTO `acta_avaluacio` (`id`, `id_assignatura`, `nom_grup`, `trimestre`, `curs`, `obert_per`, `data_obertura`, `data_tancament`, `corregida`) VALUES
@@ -103,14 +537,17 @@ INSERT INTO `acta_avaluacio` (`id`, `id_assignatura`, `nom_grup`, `trimestre`, `
 (7, 'MP06', 'DAM1A', 1, '2026-2027', '12345678A', '2026-05-05 23:36:08', '2026-05-05 23:36:08', 0),
 (8, 'MP14', 'CI2A', 2, '2026-2027', '11223344K', '2026-05-05 23:46:46', '2026-05-05 23:46:46', 0),
 (9, 'MP07', 'DAW1A', 1, '2026-2027', '11223344K', '2026-05-05 23:47:15', '2026-05-05 23:47:15', 1),
-(10, 'MP04', 'DAW2A', 1, '2026-2027', '11223344K', '2026-05-06 00:22:59', '2026-05-06 00:22:59', 0);
+(10, 'MP04', 'DAW2A', 1, '2026-2027', '11223344K', '2026-05-06 00:22:59', '2026-05-06 00:22:59', 0),
+(11, 'MP07', 'DAM2A', 2, '2026-2027', '11223344K', '2026-05-06 01:41:26', '2026-05-06 01:41:26', 0),
+(12, 'MP04', 'DAW2A', 2, '2026-2027', '11223344K', '2026-05-06 01:44:32', '2026-05-06 01:44:32', 0);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `acta_notes`
+-- Estructura de tabla para la tabla `acta_notes`
 --
 
+DROP TABLE IF EXISTS `acta_notes`;
 CREATE TABLE `acta_notes` (
   `id` int(11) NOT NULL,
   `id_acta` int(11) NOT NULL,
@@ -121,7 +558,7 @@ CREATE TABLE `acta_notes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `acta_notes`
+-- Volcado de datos para la tabla `acta_notes`
 --
 
 INSERT INTO `acta_notes` (`id`, `id_acta`, `nia`, `nota_final`, `repetidor`, `treballant`) VALUES
@@ -164,9 +601,10 @@ INSERT INTO `acta_notes` (`id`, `id_acta`, `nia`, `nota_final`, `repetidor`, `tr
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `administradors`
+-- Estructura de tabla para la tabla `administradors`
 --
 
+DROP TABLE IF EXISTS `administradors`;
 CREATE TABLE `administradors` (
   `id` int(11) NOT NULL,
   `dni` varchar(9) NOT NULL,
@@ -176,7 +614,7 @@ CREATE TABLE `administradors` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `administradors`
+-- Volcado de datos para la tabla `administradors`
 --
 
 INSERT INTO `administradors` (`id`, `dni`, `id_user`, `dades`, `superadmin`) VALUES
@@ -199,9 +637,10 @@ INSERT INTO `administradors` (`id`, `dni`, `id_user`, `dades`, `superadmin`) VAL
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `admin_centre`
+-- Estructura de tabla para la tabla `admin_centre`
 --
 
+DROP TABLE IF EXISTS `admin_centre`;
 CREATE TABLE `admin_centre` (
   `id` int(11) NOT NULL,
   `admin_id` int(11) NOT NULL,
@@ -210,7 +649,7 @@ CREATE TABLE `admin_centre` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `admin_centre`
+-- Volcado de datos para la tabla `admin_centre`
 --
 
 INSERT INTO `admin_centre` (`id`, `admin_id`, `codi_centre`, `backup`) VALUES
@@ -229,9 +668,10 @@ INSERT INTO `admin_centre` (`id`, `admin_id`, `codi_centre`, `backup`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `assignatures`
+-- Estructura de tabla para la tabla `assignatures`
 --
 
+DROP TABLE IF EXISTS `assignatures`;
 CREATE TABLE `assignatures` (
   `codi` varchar(25) NOT NULL,
   `nom` varchar(50) NOT NULL,
@@ -239,7 +679,7 @@ CREATE TABLE `assignatures` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `assignatures`
+-- Volcado de datos para la tabla `assignatures`
 --
 
 INSERT INTO `assignatures` (`codi`, `nom`, `departament`) VALUES
@@ -262,9 +702,10 @@ INSERT INTO `assignatures` (`codi`, `nom`, `departament`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `assignatures_cicle`
+-- Estructura de tabla para la tabla `assignatures_cicle`
 --
 
+DROP TABLE IF EXISTS `assignatures_cicle`;
 CREATE TABLE `assignatures_cicle` (
   `id` int(11) NOT NULL,
   `nom_cicle` varchar(256) NOT NULL,
@@ -272,7 +713,7 @@ CREATE TABLE `assignatures_cicle` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `assignatures_cicle`
+-- Volcado de datos para la tabla `assignatures_cicle`
 --
 
 INSERT INTO `assignatures_cicle` (`id`, `nom_cicle`, `id_assignatura`) VALUES
@@ -300,9 +741,10 @@ INSERT INTO `assignatures_cicle` (`id`, `nom_cicle`, `id_assignatura`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `assistencia`
+-- Estructura de tabla para la tabla `assistencia`
 --
 
+DROP TABLE IF EXISTS `assistencia`;
 CREATE TABLE `assistencia` (
   `id` int(11) NOT NULL,
   `codi_prof` varchar(20) NOT NULL,
@@ -314,7 +756,7 @@ CREATE TABLE `assistencia` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `assistencia`
+-- Volcado de datos para la tabla `assistencia`
 --
 
 INSERT INTO `assistencia` (`id`, `codi_prof`, `id_assignatura`, `nom_grup`, `hora_inici`, `hora_fin`, `observacio`) VALUES
@@ -350,9 +792,10 @@ INSERT INTO `assistencia` (`id`, `codi_prof`, `id_assignatura`, `nom_grup`, `hor
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `centres`
+-- Estructura de tabla para la tabla `centres`
 --
 
+DROP TABLE IF EXISTS `centres`;
 CREATE TABLE `centres` (
   `codi` int(11) NOT NULL,
   `nom` varchar(256) NOT NULL,
@@ -360,7 +803,7 @@ CREATE TABLE `centres` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `centres`
+-- Volcado de datos para la tabla `centres`
 --
 
 INSERT INTO `centres` (`codi`, `nom`, `data_inaug`) VALUES
@@ -379,15 +822,16 @@ INSERT INTO `centres` (`codi`, `nom`, `data_inaug`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `cicles`
+-- Estructura de tabla para la tabla `cicles`
 --
 
+DROP TABLE IF EXISTS `cicles`;
 CREATE TABLE `cicles` (
   `nom` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `cicles`
+-- Volcado de datos para la tabla `cicles`
 --
 
 INSERT INTO `cicles` (`nom`) VALUES
@@ -412,9 +856,10 @@ INSERT INTO `cicles` (`nom`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `contractes`
+-- Estructura de tabla para la tabla `contractes`
 --
 
+DROP TABLE IF EXISTS `contractes`;
 CREATE TABLE `contractes` (
   `id` int(11) NOT NULL,
   `codi_prof` varchar(20) NOT NULL,
@@ -425,7 +870,7 @@ CREATE TABLE `contractes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `contractes`
+-- Volcado de datos para la tabla `contractes`
 --
 
 INSERT INTO `contractes` (`id`, `codi_prof`, `codi_centre`, `data_alta`, `data_baix`, `vinculacio_laboral`) VALUES
@@ -448,9 +893,10 @@ INSERT INTO `contractes` (`id`, `codi_prof`, `codi_centre`, `data_alta`, `data_b
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `cursos_cicle`
+-- Estructura de tabla para la tabla `cursos_cicle`
 --
 
+DROP TABLE IF EXISTS `cursos_cicle`;
 CREATE TABLE `cursos_cicle` (
   `id` int(11) NOT NULL,
   `nom_cicle` varchar(256) NOT NULL,
@@ -460,7 +906,7 @@ CREATE TABLE `cursos_cicle` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `cursos_cicle`
+-- Volcado de datos para la tabla `cursos_cicle`
 --
 
 INSERT INTO `cursos_cicle` (`id`, `nom_cicle`, `curs`, `hores_total`, `any_inici_referencia`) VALUES
@@ -474,16 +920,17 @@ INSERT INTO `cursos_cicle` (`id`, `nom_cicle`, `curs`, `hores_total`, `any_inici
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `directiva`
+-- Estructura de tabla para la tabla `directiva`
 --
 
+DROP TABLE IF EXISTS `directiva`;
 CREATE TABLE `directiva` (
   `rol` varchar(25) NOT NULL,
   `codi_prof` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `directiva`
+-- Volcado de datos para la tabla `directiva`
 --
 
 INSERT INTO `directiva` (`rol`, `codi_prof`) VALUES
@@ -504,9 +951,10 @@ INSERT INTO `directiva` (`rol`, `codi_prof`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `estudiants`
+-- Estructura de tabla para la tabla `estudiants`
 --
 
+DROP TABLE IF EXISTS `estudiants`;
 CREATE TABLE `estudiants` (
   `nia` int(11) NOT NULL,
   `dni` varchar(9) NOT NULL,
@@ -522,44 +970,45 @@ CREATE TABLE `estudiants` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `estudiants`
+-- Volcado de datos para la tabla `estudiants`
 --
 
 INSERT INTO `estudiants` (`nia`, `dni`, `nom_grup`, `grado`, `nom_cicle`, `cursant`, `repetidor`, `treballant`, `empresa`, `actiu`, `data_inici`) VALUES
-(1001, '11111111A', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2024-09-01'),
-(1002, '22222222B', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2023-09-01'),
-(1003, '33333333C', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2024-09-01'),
-(1004, '44444444D', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 1, 'WebCorp Lleida', 1, '2023-09-01'),
-(1005, '55555555E', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 0, '', 1, '2024-09-01'),
-(1006, '66666666F', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 1, 'NetSystems SL', 1, '2023-09-01'),
-(1007, '77777777G', 'SMX2A', '2n', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 0, '', 1, '2024-09-01'),
-(1008, '88888888H', 'GA2A', '2n', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2024-09-01'),
-(1009, '99999999I', 'FPB2A', '2n', 'FP Basica Informatica', 1, 0, 0, '', 1, '2024-09-01'),
-(1010, '10101010J', 'CI2A', '2n', 'CFGS Comerce Internacional', 1, 0, 0, '', 1, '2024-09-01'),
-(1011, '12121212L', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 1, 0, '', 1, '2023-09-01'),
-(1012, '13131313M', 'DAW1A', '1r', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2024-09-01'),
-(1013, '14141414N', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 1, 'TechLleida SA', 1, '2023-09-01'),
-(1014, '15151515P', 'GA2A', '2n', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2023-09-01'),
-(1015, '16161616Q', 'SMX1A', '1r', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 0, '', 1, '2024-09-01'),
-(1016, '17171717R', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2024-09-01'),
-(1017, '18181818S', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2024-09-01'),
-(1018, '19191919T', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 0, '', 1, '2024-09-01'),
-(1019, '20202020U', 'GA2A', '2n', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2024-09-01'),
-(1020, '21212121V', 'SMX2A', '2n', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 1, 'InfoLleida SL', 1, '2023-09-01'),
-(1021, '22222223W', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 1, 'AppDev SL', 1, '2023-09-01'),
-(1022, '23232323X', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2023-09-01'),
-(1023, '24242424Y', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 1, 'SysAdmin SL', 1, '2023-09-01'),
-(1024, '25252525Z', 'CI2A', '2n', 'CFGS Comerce Internacional', 1, 0, 0, '', 1, '2024-09-01'),
-(1025, '26262626A', 'FPB2A', '2n', 'FP Basica Informatica', 1, 0, 0, '', 1, '2024-09-01'),
-(1026, '27272727B', 'GA2A', '2n', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2023-09-01'),
-(1027, '28282828C', 'SMX2A', '2n', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 0, '', 1, '2024-09-01'),
-(1028, '29292929D', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2024-09-01'),
-(1029, '30303030E', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 1, 0, '', 1, '2024-09-01'),
-(1030, '31313131F', 'CI2A', '2n', 'CFGS Comerce Internacional', 1, 0, 1, 'ComercGlobal', 1, '2023-09-01');
+(1001, '11111111A', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2025-09-01'),
+(1002, '22222222B', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2025-09-01'),
+(1003, '33333333C', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2025-09-01'),
+(1004, '44444444D', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 1, 'WebCorp Lleida', 1, '2025-09-01'),
+(1005, '55555555E', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 0, '', 1, '2025-09-01'),
+(1006, '66666666F', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 1, 'NetSystems SL', 1, '2025-09-01'),
+(1007, '77777777G', 'SMX2A', '2n', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 0, '', 1, '2025-09-01'),
+(1008, '88888888H', 'GA2A', '2n', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2025-09-01'),
+(1009, '99999999I', 'FPB2A', '2n', 'FP Basica Informatica', 1, 0, 0, '', 1, '2025-09-01'),
+(1010, '10101010J', 'CI2A', '2n', 'CFGS Comerce Internacional', 1, 0, 0, '', 1, '2025-09-01'),
+(1011, '12121212L', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 1, 0, '', 1, '2025-09-01'),
+(1012, '13131313M', 'DAW1A', '1r', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2025-09-01'),
+(1013, '14141414N', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 1, 'TechLleida SA', 1, '2025-09-01'),
+(1014, '15151515P', 'GA2A', '2n', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2025-09-01'),
+(1015, '16161616Q', 'SMX1A', '1r', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 0, '', 1, '2025-09-01'),
+(1016, '17171717R', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2025-09-01'),
+(1017, '18181818S', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2025-09-01'),
+(1018, '19191919T', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 0, '', 1, '2025-09-01'),
+(1019, '20202020U', 'GA2A', '2n', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2025-09-01'),
+(1020, '21212121V', 'SMX2A', '2n', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 1, 'InfoLleida SL', 1, '2025-09-01'),
+(1021, '22222223W', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 1, 'AppDev SL', 1, '2025-09-01'),
+(1022, '23232323X', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 0, 0, '', 1, '2025-09-01'),
+(1023, '24242424Y', 'ASIX2A', '2n', 'CFGS Administracio de Sistemes Informatics en Xarxa', 1, 0, 1, 'SysAdmin SL', 1, '2025-09-01'),
+(1024, '25252525Z', 'CI2A', '2n', 'CFGS Comerce Internacional', 1, 0, 0, '', 1, '2025-09-01'),
+(1025, '26262626A', 'FPB2A', '2n', 'FP Basica Informatica', 1, 0, 0, '', 1, '2025-09-01'),
+(1026, '27272727B', 'GA2A', '2n', 'CFGM Gestio Administrativa', 1, 0, 0, '', 1, '2025-09-01'),
+(1027, '28282828C', 'SMX2A', '2n', 'CFGM Sistemes Microinformatics i Xarxes', 1, 0, 0, '', 1, '2025-09-01'),
+(1028, '29292929D', 'DAM2A', '2n', 'CFGS Desenvolupament Aplicacions Multiplataforma', 1, 0, 0, '', 1, '2025-09-01'),
+(1029, '30303030E', 'DAW2A', '2n', 'CFGS Desenvolupament Aplicacions Web', 1, 1, 0, '', 1, '2025-09-01'),
+(1030, '31313131F', 'CI2A', '2n', 'CFGS Comerce Internacional', 1, 0, 1, 'ComercGlobal', 1, '2025-09-01');
 
 --
--- Disparadors `estudiants`
+-- Disparadores `estudiants`
 --
+DROP TRIGGER IF EXISTS `estudiantHistoric`;
 DELIMITER $$
 CREATE TRIGGER `estudiantHistoric` AFTER UPDATE ON `estudiants` FOR EACH ROW BEGIN
     DECLARE fin BOOLEAN DEFAULT FALSE;
@@ -582,9 +1031,10 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `estudiants_ras`
+-- Estructura de tabla para la tabla `estudiants_ras`
 --
 
+DROP TABLE IF EXISTS `estudiants_ras`;
 CREATE TABLE `estudiants_ras` (
   `id` int(11) NOT NULL,
   `id_ra` int(11) NOT NULL,
@@ -594,257 +1044,316 @@ CREATE TABLE `estudiants_ras` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `estudiants_ras`
+-- Volcado de datos para la tabla `estudiants_ras`
 --
 
 INSERT INTO `estudiants_ras` (`id`, `id_ra`, `nia`, `nota`, `data_inici`) VALUES
-(19, 28, 1003, 6, '2024-09-01'),
-(20, 28, 1004, 8, '2023-09-01'),
-(21, 29, 1004, 9, '2023-09-01'),
-(22, 24, 1005, 5, '2024-09-01'),
-(23, 24, 1006, 8, '2023-09-01'),
-(24, 25, 1006, 9, '2023-09-01'),
-(25, 22, 1007, 6, '2024-09-01'),
-(26, 26, 1008, 7, '2024-09-01'),
-(27, 30, 1009, 5, '2024-09-01'),
-(28, 32, 1010, 8, '2024-09-01'),
-(81, 18, 1022, 8, '2023-09-01'),
-(82, 19, 1022, 9, '2023-09-01'),
-(83, 28, 1017, 6, '2024-09-01'),
-(84, 28, 1022, 7, '2023-09-01'),
-(85, 29, 1022, 8, '2023-09-01'),
-(87, 22, 1018, 7, '2024-09-01'),
-(88, 22, 1023, 9, '2023-09-01'),
-(89, 23, 1023, 8, '2023-09-01'),
-(90, 22, 1027, 6, '2024-09-01'),
-(91, 24, 1018, 8, '2024-09-01'),
-(92, 24, 1023, 7, '2023-09-01'),
-(93, 25, 1023, 9, '2023-09-01'),
-(94, 26, 1019, 6, '2024-09-01'),
-(95, 26, 1026, 8, '2023-09-01'),
-(96, 27, 1026, 7, '2023-09-01'),
-(97, 30, 1025, 6, '2024-09-01'),
-(98, 30, 1027, 7, '2024-09-01'),
-(99, 32, 1024, 7, '2024-09-01'),
-(100, 32, 1030, 8, '2023-09-01'),
-(101, 33, 1030, 9, '2023-09-01'),
-(105, 23, 1007, 7, '2024-09-01'),
-(106, 23, 1027, 5, '2024-09-01'),
-(107, 31, 1009, 7, '2024-09-01'),
-(108, 31, 1025, 6, '2024-09-01'),
-(118, 28, 1029, 5, '2024-09-01'),
-(119, 29, 1029, 6, '2025-01-08'),
-(120, 30, 1029, 7, '2024-09-01'),
-(175, 15, 1001, 7, '2023-09-01'),
-(176, 16, 1001, 8, '2024-01-08'),
-(177, 17, 1001, 9, '2024-04-01'),
-(178, 18, 1001, 7, '2023-09-01'),
-(179, 19, 1001, 8, '2024-01-08'),
-(180, 20, 1001, 6, '2023-09-01'),
-(181, 21, 1001, 7, '2024-01-08'),
-(207, 23, 1001, 7, '2021-09-01'),
-(209, 25, 1001, 7, '2022-01-10'),
-(211, 22, 1001, 7, '2022-09-01'),
-(212, 24, 1001, 7, '2022-09-01'),
-(213, 30, 1001, 7, '2023-01-09'),
-(214, 15, 1001, 8, '2024-09-01'),
-(215, 15, 1002, 7, '2024-09-01'),
-(216, 15, 1011, 6, '2024-09-01'),
-(217, 15, 1016, 9, '2024-09-01'),
-(218, 15, 1021, 5, '2024-09-01'),
-(219, 15, 1028, 7, '2024-09-01'),
-(220, 16, 1001, 7, '2025-01-08'),
-(221, 16, 1002, 8, '2025-01-08'),
-(222, 16, 1011, 5, '2025-01-08'),
-(223, 16, 1016, 8, '2025-01-08'),
-(224, 16, 1021, 6, '2025-01-08'),
-(225, 16, 1028, 6, '2025-01-08'),
-(226, 18, 1001, 9, '2024-09-01'),
-(227, 18, 1002, 7, '2024-09-01'),
-(228, 18, 1011, 4, '2024-09-01'),
-(229, 18, 1016, 8, '2024-09-01'),
-(230, 18, 1021, 7, '2024-09-01'),
-(231, 18, 1028, 5, '2024-09-01'),
-(232, 19, 1001, 8, '2025-01-08'),
-(233, 19, 1002, 9, '2025-01-08'),
-(234, 19, 1011, 4, '2025-01-08'),
-(235, 19, 1016, 9, '2025-01-08'),
-(236, 19, 1021, 6, '2025-01-08'),
-(237, 19, 1028, 7, '2025-01-08'),
-(238, 17, 1001, 9, '2025-04-01'),
-(239, 17, 1002, 8, '2025-04-01'),
-(240, 17, 1016, 9, '2025-04-01'),
-(241, 17, 1021, 7, '2025-04-01'),
-(242, 20, 1001, 7, '2024-09-01'),
-(243, 20, 1002, 8, '2024-09-01'),
-(244, 20, 1011, 6, '2024-09-01'),
-(245, 20, 1016, 8, '2024-09-01'),
-(246, 20, 1021, 5, '2024-09-01'),
-(247, 20, 1028, 6, '2024-09-01'),
-(248, 17, 1011, 5, '2024-09-01'),
-(249, 15, 1029, 10, '2024-09-01'),
-(250, 16, 1029, 5, '2024-09-01'),
-(251, 18, 1011, 4, '2024-09-01'),
-(252, 19, 1011, 4, '2024-09-01'),
-(253, 18, 1029, 4, '2024-09-01'),
-(254, 18, 1022, 8, '2024-09-01'),
-(255, 19, 1022, 9, '2024-09-01'),
-(256, 18, 1028, 5, '2024-09-01'),
-(257, 19, 1028, 7, '2024-09-01'),
-(258, 18, 1001, 7, '2024-09-01'),
-(259, 19, 1001, 8, '2024-09-01'),
-(260, 18, 1021, 7, '2024-09-01'),
-(261, 19, 1021, 6, '2024-09-01'),
-(262, 18, 1002, 7, '2024-09-01'),
-(263, 19, 1002, 9, '2024-09-01'),
-(264, 18, 1016, 8, '2024-09-01'),
-(265, 19, 1016, 9, '2024-09-01'),
-(266, 18, 1011, 4, '2024-09-01'),
-(267, 19, 1011, 4, '2024-09-01'),
-(268, 18, 1029, 4, '2024-09-01'),
-(269, 19, 1029, 6, '2024-09-01'),
-(270, 18, 1022, 8, '2024-09-01'),
-(271, 19, 1022, 9, '2024-09-01'),
-(272, 18, 1028, 5, '2024-09-01'),
-(273, 19, 1028, 7, '2024-09-01'),
-(274, 18, 1001, 7, '2024-09-01'),
-(275, 19, 1001, 8, '2024-09-01'),
-(276, 18, 1021, 7, '2024-09-01'),
-(277, 19, 1021, 6, '2024-09-01'),
-(278, 18, 1002, 7, '2024-09-01'),
-(279, 19, 1002, 9, '2024-09-01'),
-(280, 18, 1016, 8, '2024-09-01'),
-(281, 19, 1016, 9, '2024-09-01'),
-(282, 15, 1011, 6, '2024-09-01'),
-(283, 16, 1011, 5, '2024-09-01'),
-(284, 17, 1011, 5, '2024-09-01'),
-(285, 15, 1029, 10, '2024-09-01'),
-(286, 16, 1029, 5, '2024-09-01'),
-(287, 17, 1029, 3, '2024-09-01'),
-(288, 15, 1028, 7, '2024-09-01'),
-(289, 16, 1028, 6, '2024-09-01'),
-(290, 15, 1001, 7, '2024-09-01'),
-(291, 16, 1001, 8, '2024-09-01'),
-(292, 17, 1001, 9, '2024-09-01'),
-(293, 15, 1021, 5, '2024-09-01'),
-(294, 16, 1021, 6, '2024-09-01'),
-(295, 17, 1021, 7, '2024-09-01'),
-(296, 15, 1002, 7, '2024-09-01'),
-(297, 16, 1002, 8, '2024-09-01'),
-(298, 17, 1002, 8, '2024-09-01'),
-(299, 15, 1016, 9, '2024-09-01'),
-(300, 16, 1016, 8, '2024-09-01'),
-(301, 17, 1016, 9, '2024-09-01'),
-(302, 15, 1011, 6, '2024-09-01'),
-(303, 16, 1011, 5, '2024-09-01'),
-(304, 17, 1011, 5, '2024-09-01'),
-(305, 15, 1029, 10, '2024-09-01'),
-(306, 16, 1029, 5, '2024-09-01'),
-(307, 17, 1029, 3, '2024-09-01'),
-(308, 17, 1003, 4, '2024-09-01'),
-(309, 15, 1028, 7, '2024-09-01'),
-(310, 16, 1028, 6, '2024-09-01'),
-(311, 15, 1001, 7, '2024-09-01'),
-(312, 16, 1001, 8, '2024-09-01'),
-(313, 17, 1001, 9, '2024-09-01'),
-(314, 15, 1021, 5, '2024-09-01'),
-(315, 16, 1021, 6, '2024-09-01'),
-(316, 17, 1021, 7, '2024-09-01'),
-(317, 15, 1002, 7, '2024-09-01'),
-(318, 16, 1002, 8, '2024-09-01'),
-(319, 17, 1002, 8, '2024-09-01'),
-(320, 15, 1016, 9, '2024-09-01'),
-(321, 16, 1016, 8, '2024-09-01'),
-(322, 17, 1016, 9, '2024-09-01'),
-(323, 15, 1011, 6, '2024-09-01'),
-(324, 16, 1011, 5, '2024-09-01'),
-(325, 17, 1011, 5, '2024-09-01'),
-(326, 15, 1029, 10, '2024-09-01'),
-(327, 16, 1029, 5, '2024-09-01'),
-(328, 17, 1029, 3, '2024-09-01'),
-(329, 17, 1003, 4, '2024-09-01'),
-(330, 15, 1028, 7, '2024-09-01'),
-(331, 16, 1028, 6, '2024-09-01'),
-(332, 15, 1001, 7, '2024-09-01'),
-(333, 16, 1001, 8, '2024-09-01'),
-(334, 17, 1001, 9, '2024-09-01'),
-(335, 15, 1021, 5, '2024-09-01'),
-(336, 16, 1021, 6, '2024-09-01'),
-(337, 17, 1021, 7, '2024-09-01'),
-(338, 15, 1002, 7, '2024-09-01'),
-(339, 16, 1002, 8, '2024-09-01'),
-(340, 17, 1002, 8, '2024-09-01'),
-(341, 15, 1016, 9, '2024-09-01'),
-(342, 16, 1016, 8, '2024-09-01'),
-(343, 17, 1016, 9, '2024-09-01');
+(1, 15, 1001, 6, '2024-09-01'),
+(2, 16, 1001, 7, '2025-01-08'),
+(3, 17, 1001, 8, '2025-04-01'),
+(4, 18, 1001, 7, '2024-09-01'),
+(5, 19, 1001, 6, '2025-01-08'),
+(6, 20, 1001, 8, '2024-09-01'),
+(7, 21, 1001, 7, '2025-01-08'),
+(8, 15, 1002, 7, '2024-09-01'),
+(9, 16, 1002, 8, '2025-01-08'),
+(10, 17, 1002, 9, '2025-04-01'),
+(11, 18, 1002, 8, '2024-09-01'),
+(12, 19, 1002, 7, '2025-01-08'),
+(13, 20, 1002, 9, '2024-09-01'),
+(14, 21, 1002, 8, '2025-01-08'),
+(15, 15, 1011, 5, '2024-09-01'),
+(16, 16, 1011, 5, '2025-01-08'),
+(17, 17, 1011, 6, '2025-04-01'),
+(18, 18, 1011, 5, '2024-09-01'),
+(19, 19, 1011, 5, '2025-01-08'),
+(20, 20, 1011, 6, '2024-09-01'),
+(21, 21, 1011, 5, '2025-01-08'),
+(22, 15, 1016, 6, '2024-09-01'),
+(23, 16, 1016, 7, '2025-01-08'),
+(24, 17, 1016, 8, '2025-04-01'),
+(25, 18, 1016, 7, '2024-09-01'),
+(26, 19, 1016, 6, '2025-01-08'),
+(27, 20, 1016, 8, '2024-09-01'),
+(28, 21, 1016, 7, '2025-01-08'),
+(29, 15, 1021, 6, '2024-09-01'),
+(30, 16, 1021, 7, '2025-01-08'),
+(31, 17, 1021, 8, '2025-04-01'),
+(32, 18, 1021, 7, '2024-09-01'),
+(33, 19, 1021, 6, '2025-01-08'),
+(34, 20, 1021, 8, '2024-09-01'),
+(35, 21, 1021, 7, '2025-01-08'),
+(36, 15, 1028, 5, '2024-09-01'),
+(37, 16, 1028, 6, '2025-01-08'),
+(38, 17, 1028, 7, '2025-04-01'),
+(39, 18, 1028, 6, '2024-09-01'),
+(40, 19, 1028, 5, '2025-01-08'),
+(41, 20, 1028, 7, '2024-09-01'),
+(42, 21, 1028, 6, '2025-01-08'),
+(43, 28, 1003, 7, '2024-09-01'),
+(44, 29, 1003, 8, '2025-01-08'),
+(45, 15, 1003, 9, '2024-09-01'),
+(46, 16, 1003, 8, '2025-01-08'),
+(47, 17, 1003, 7, '2025-04-01'),
+(48, 18, 1003, 9, '2024-09-01'),
+(49, 19, 1003, 8, '2025-01-08'),
+(50, 28, 1017, 7, '2024-09-01'),
+(51, 29, 1017, 8, '2025-01-08'),
+(52, 15, 1017, 9, '2024-09-01'),
+(53, 16, 1017, 8, '2025-01-08'),
+(54, 17, 1017, 7, '2025-04-01'),
+(55, 18, 1017, 9, '2024-09-01'),
+(56, 19, 1017, 8, '2025-01-08'),
+(57, 28, 1004, 6, '2023-09-01'),
+(58, 29, 1004, 7, '2024-01-08'),
+(59, 15, 1004, 8, '2023-09-01'),
+(60, 16, 1004, 7, '2024-01-08'),
+(61, 17, 1004, 6, '2024-04-01'),
+(62, 18, 1004, 8, '2023-09-01'),
+(63, 19, 1004, 7, '2024-01-08'),
+(64, 28, 1022, 6, '2023-09-01'),
+(65, 29, 1022, 7, '2024-01-08'),
+(66, 15, 1022, 8, '2023-09-01'),
+(67, 16, 1022, 7, '2024-01-08'),
+(68, 17, 1022, 6, '2024-04-01'),
+(69, 18, 1022, 8, '2023-09-01'),
+(70, 19, 1022, 7, '2024-01-08'),
+(71, 28, 1029, 6, '2023-09-01'),
+(72, 29, 1029, 6, '2024-01-08'),
+(73, 15, 1029, 8, '2023-09-01'),
+(74, 16, 1029, 6, '2024-01-08'),
+(75, 17, 1029, 6, '2024-04-01'),
+(76, 18, 1029, 8, '2023-09-01'),
+(77, 19, 1029, 6, '2024-01-08'),
+(78, 22, 1005, 6, '2024-09-01'),
+(79, 23, 1005, 7, '2025-01-08'),
+(80, 24, 1005, 8, '2024-09-01'),
+(81, 25, 1005, 7, '2025-01-08'),
+(82, 22, 1006, 6, '2023-09-01'),
+(83, 23, 1006, 7, '2024-01-08'),
+(84, 24, 1006, 8, '2023-09-01'),
+(85, 25, 1006, 7, '2024-01-08'),
+(86, 22, 1013, 7, '2023-09-01'),
+(87, 23, 1013, 8, '2024-01-08'),
+(88, 24, 1013, 9, '2023-09-01'),
+(89, 25, 1013, 8, '2024-01-08'),
+(90, 22, 1023, 7, '2023-09-01'),
+(91, 23, 1023, 8, '2024-01-08'),
+(92, 24, 1023, 9, '2023-09-01'),
+(93, 25, 1023, 8, '2024-01-08'),
+(94, 30, 1007, 6, '2024-09-01'),
+(95, 31, 1007, 7, '2025-01-08'),
+(96, 22, 1007, 8, '2024-09-01'),
+(97, 23, 1007, 7, '2025-01-08'),
+(98, 24, 1007, 6, '2024-09-01'),
+(99, 25, 1007, 8, '2025-01-08'),
+(100, 30, 1027, 5, '2024-09-01'),
+(101, 31, 1027, 6, '2025-01-08'),
+(102, 22, 1027, 7, '2024-09-01'),
+(103, 23, 1027, 6, '2025-01-08'),
+(104, 24, 1027, 5, '2024-09-01'),
+(105, 25, 1027, 7, '2025-01-08'),
+(106, 30, 1001, 6, '2023-09-01'),
+(107, 31, 1001, 7, '2024-01-08'),
+(108, 22, 1001, 8, '2023-09-01'),
+(109, 23, 1001, 7, '2024-01-08'),
+(110, 24, 1001, 6, '2023-09-01'),
+(111, 25, 1001, 8, '2024-01-08'),
+(112, 30, 1003, 6, '2023-09-01'),
+(113, 31, 1003, 7, '2024-01-08'),
+(114, 22, 1003, 8, '2023-09-01'),
+(115, 23, 1003, 7, '2024-01-08'),
+(116, 24, 1003, 6, '2023-09-01'),
+(117, 25, 1003, 8, '2024-01-08'),
+(118, 30, 1005, 6, '2023-09-01'),
+(119, 31, 1005, 7, '2024-01-08'),
+(120, 22, 1005, 8, '2023-09-01'),
+(121, 23, 1005, 7, '2024-01-08'),
+(122, 24, 1005, 6, '2023-09-01'),
+(123, 25, 1005, 8, '2024-01-08'),
+(124, 30, 1001, 6, '2022-09-01'),
+(125, 31, 1001, 7, '2023-01-08'),
+(126, 22, 1001, 8, '2022-09-01'),
+(127, 23, 1001, 7, '2023-01-08'),
+(128, 24, 1001, 6, '2022-09-01'),
+(129, 25, 1001, 8, '2023-01-08'),
+(130, 26, 1019, 6, '2024-09-01'),
+(131, 27, 1019, 7, '2025-01-08'),
+(132, 26, 1026, 6, '2024-09-01'),
+(133, 27, 1026, 7, '2025-01-08'),
+(134, 26, 1014, 5, '2023-09-01'),
+(135, 27, 1014, 6, '2024-01-08'),
+(136, 26, 1026, 3, '2023-09-01'),
+(137, 27, 1026, 4, '2024-01-08'),
+(138, 32, 1024, 6, '2024-09-01'),
+(139, 33, 1024, 7, '2025-01-08'),
+(140, 32, 1030, 6, '2023-09-01'),
+(141, 33, 1030, 7, '2024-01-08'),
+(142, 30, 1009, 5, '2024-09-01'),
+(143, 31, 1009, 6, '2025-01-08'),
+(144, 30, 1025, 5, '2024-09-01'),
+(145, 31, 1025, 6, '2025-01-08'),
+(146, 30, 1007, 6, '2022-09-01'),
+(147, 31, 1007, 7, '2023-01-08'),
+(148, 30, 1015, 5, '2023-09-01'),
+(149, 31, 1015, 6, '2024-01-08'),
+(150, 30, 1020, 6, '2022-09-01'),
+(151, 31, 1020, 8, '2023-01-08'),
+(152, 30, 1020, 7, '2023-09-01'),
+(153, 31, 1020, 8, '2024-01-08'),
+(154, 28, 1014, 3, '2022-09-01'),
+(155, 29, 1014, 4, '2023-01-08'),
+(156, 15, 1014, 3, '2022-09-01'),
+(157, 16, 1014, 4, '2023-01-08'),
+(158, 18, 1014, 3, '2022-09-01'),
+(159, 19, 1014, 4, '2023-01-08'),
+(160, 41, 1001, 7, '2024-09-01'),
+(161, 42, 1001, 8, '2025-01-08'),
+(162, 41, 1002, 8, '2024-09-01'),
+(163, 42, 1002, 8, '2025-01-08'),
+(164, 41, 1011, 5, '2024-09-01'),
+(165, 42, 1011, 5, '2025-01-08'),
+(166, 41, 1016, 7, '2024-09-01'),
+(167, 42, 1016, 7, '2025-01-08'),
+(168, 41, 1021, 7, '2024-09-01'),
+(169, 42, 1021, 7, '2025-01-08'),
+(170, 41, 1028, 6, '2024-09-01'),
+(171, 42, 1028, 6, '2025-01-08'),
+(172, 43, 1005, 7, '2024-09-01'),
+(173, 44, 1005, 7, '2025-01-08'),
+(174, 43, 1006, 7, '2023-09-01'),
+(175, 44, 1006, 7, '2024-01-08'),
+(176, 43, 1013, 8, '2023-09-01'),
+(177, 44, 1013, 8, '2024-01-08'),
+(178, 43, 1023, 8, '2023-09-01'),
+(179, 44, 1023, 9, '2024-01-08'),
+(180, 45, 1019, 7, '2024-09-01'),
+(181, 46, 1019, 7, '2025-01-08'),
+(182, 47, 1019, 7, '2024-09-01'),
+(183, 48, 1019, 7, '2025-01-08'),
+(184, 45, 1026, 6, '2024-09-01'),
+(185, 46, 1026, 7, '2025-01-08'),
+(186, 47, 1026, 6, '2024-09-01'),
+(187, 48, 1026, 7, '2025-01-08'),
+(188, 45, 1014, 6, '2023-09-01'),
+(189, 46, 1014, 6, '2024-01-08'),
+(190, 47, 1014, 6, '2023-09-01'),
+(191, 48, 1014, 6, '2024-01-08'),
+(192, 45, 1026, 3, '2023-09-01'),
+(193, 46, 1026, 4, '2024-01-08'),
+(194, 47, 1026, 3, '2023-09-01'),
+(195, 48, 1026, 4, '2024-01-08'),
+(196, 49, 1024, 7, '2024-09-01'),
+(197, 50, 1024, 7, '2025-01-08'),
+(198, 49, 1030, 7, '2023-09-01'),
+(199, 50, 1030, 8, '2024-01-08'),
+(200, 39, 1009, 6, '2024-09-01'),
+(201, 40, 1009, 6, '2025-01-08'),
+(202, 39, 1025, 6, '2024-09-01'),
+(203, 40, 1025, 6, '2025-01-08'),
+(204, 39, 1007, 7, '2022-09-01'),
+(205, 40, 1007, 7, '2023-01-08'),
+(208, 41, 1001, 7, '2024-09-01'),
+(209, 42, 1001, 8, '2025-01-08'),
+(210, 41, 1002, 8, '2024-09-01'),
+(211, 42, 1002, 8, '2025-01-08'),
+(212, 41, 1011, 5, '2024-09-01'),
+(213, 42, 1011, 5, '2025-01-08'),
+(214, 41, 1016, 7, '2024-09-01'),
+(215, 42, 1016, 7, '2025-01-08'),
+(216, 41, 1021, 7, '2024-09-01'),
+(217, 42, 1021, 7, '2025-01-08'),
+(218, 41, 1028, 6, '2024-09-01'),
+(219, 42, 1028, 6, '2025-01-08'),
+(220, 43, 1005, 7, '2024-09-01'),
+(221, 44, 1005, 7, '2025-01-08'),
+(222, 43, 1006, 7, '2023-09-01'),
+(223, 44, 1006, 7, '2024-01-08'),
+(224, 43, 1013, 8, '2023-09-01'),
+(225, 44, 1013, 8, '2024-01-08'),
+(226, 43, 1023, 8, '2023-09-01'),
+(227, 44, 1023, 9, '2024-01-08'),
+(228, 45, 1019, 7, '2024-09-01'),
+(229, 46, 1019, 7, '2025-01-08'),
+(230, 47, 1019, 7, '2024-09-01'),
+(231, 48, 1019, 7, '2025-01-08'),
+(232, 45, 1026, 6, '2024-09-01'),
+(233, 46, 1026, 7, '2025-01-08'),
+(234, 47, 1026, 6, '2024-09-01'),
+(235, 48, 1026, 7, '2025-01-08'),
+(236, 45, 1014, 6, '2023-09-01'),
+(237, 46, 1014, 6, '2024-01-08'),
+(238, 47, 1014, 6, '2023-09-01'),
+(239, 48, 1014, 6, '2024-01-08'),
+(240, 45, 1026, 3, '2023-09-01'),
+(241, 46, 1026, 4, '2024-01-08'),
+(242, 47, 1026, 3, '2023-09-01'),
+(243, 48, 1026, 4, '2024-01-08'),
+(244, 49, 1024, 7, '2024-09-01'),
+(245, 50, 1024, 7, '2025-01-08'),
+(246, 49, 1030, 7, '2023-09-01'),
+(247, 50, 1030, 8, '2024-01-08'),
+(248, 39, 1009, 6, '2024-09-01'),
+(249, 40, 1009, 6, '2025-01-08'),
+(250, 39, 1025, 6, '2024-09-01'),
+(251, 40, 1025, 6, '2025-01-08'),
+(252, 39, 1007, 7, '2022-09-01'),
+(253, 40, 1007, 7, '2023-01-08'),
+(254, 39, 1015, 6, '2023-09-01'),
+(255, 40, 1015, 6, '2024-01-08'),
+(256, 39, 1020, 7, '2022-09-01'),
+(257, 40, 1020, 8, '2023-01-08'),
+(258, 39, 1020, 7, '2023-09-01'),
+(259, 40, 1020, 8, '2024-01-08');
 
 --
--- Disparadors `estudiants_ras`
+-- Disparadores `estudiants_ras`
 --
+DROP TRIGGER IF EXISTS `promocio_fp_correcta`;
 DELIMITER $$
 CREATE TRIGGER `promocio_fp_correcta` AFTER INSERT ON `estudiants_ras` FOR EACH ROW BEGIN
     DECLARE total_ras INT;
     DECLARE aprovades INT;
     DECLARE curs_actual ENUM('1r','2n');
-    DECLARE nou_curs ENUM('1r','2n');
 
     SELECT COUNT(*), e.grado INTO total_ras, curs_actual
-    FROM estudiants_ras er 
-    JOIN estudiants e ON er.nia = e.nia 
+    FROM estudiants_ras er
+    JOIN estudiants e ON er.nia = e.nia
     WHERE er.nia = NEW.nia GROUP BY e.nia, e.grado;
 
-    SELECT COUNT(*) INTO aprovades
-    FROM estudiants_ras WHERE nia = NEW.nia AND nota >= 5;
+    SELECT COUNT(*) INTO aprovades FROM estudiants_ras WHERE nia = NEW.nia AND nota >= 5;
 
     IF total_ras = aprovades AND curs_actual = '1r' THEN
-        SET nou_curs = '2n';
-        
-        -- Promover
-        UPDATE estudiants 
-        SET nom_grup = REPLACE(nom_grup, '1', '2'),
-            grado = nou_curs,
-            data_inici = CURDATE()
+        UPDATE estudiants
+        SET nom_grup = REPLACE(nom_grup, '1', '2'), grado = '2n', data_inici = CURDATE()
         WHERE nia = NEW.nia;
-        
-        -- Histórico 1r curso
+
         INSERT INTO historic_estudiants (nia, nom_cicle, grado, finalitzat, nota_final, data_inici, data_fi)
-        SELECT nia, nom_cicle, '1r', 1, ROUND(AVG(nota),1), 
-               MIN(data_inici), CURDATE()
+        SELECT NEW.nia, e.nom_cicle, '1r', 1, ROUND(AVG(er.nota), 1), MIN(er.data_inici), CURDATE()
         FROM estudiants e JOIN estudiants_ras er ON e.nia = er.nia
         WHERE e.nia = NEW.nia AND e.grado = '1r';
     END IF;
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `promocio_fp_insert`;
 DELIMITER $$
 CREATE TRIGGER `promocio_fp_insert` AFTER INSERT ON `estudiants_ras` FOR EACH ROW BEGIN
     DECLARE total_ras INT;
     DECLARE aprovades INT;
-    DECLARE curs_actual VARCHAR(10);
 
-    SELECT COUNT(*) INTO total_ras
-    FROM estudiants_ras WHERE nia = NEW.nia;
+    SELECT COUNT(*) INTO total_ras FROM estudiants_ras WHERE nia = NEW.nia;
+    SELECT COUNT(*) INTO aprovades FROM estudiants_ras WHERE nia = NEW.nia AND nota >= 5;
 
-    SELECT COUNT(*) INTO aprovades
-    FROM estudiants_ras 
-    WHERE nia = NEW.nia AND nota >= 5;
-
-    -- Si aprueba TODO el curso 1º → promover a 2º Y crear histórico
     IF total_ras > 0 AND total_ras = aprovades AND NEW.nia IN (
         SELECT nia FROM estudiants WHERE nom_grup LIKE '%1%'
     ) THEN
-        -- Promover grupo
-        UPDATE estudiants 
-        SET nom_grup = REPLACE(nom_grup, '1', '2'),
-            data_inici = CURDATE()
+        UPDATE estudiants SET nom_grup = REPLACE(nom_grup, '1', '2'), data_inici = CURDATE()
         WHERE nia = NEW.nia;
-        
-        -- Crear histórico del curso finalizado
+
         INSERT INTO historic_estudiants (nia, nom_cicle, finalitzat, nota_final, data_inici, data_fi)
-        SELECT NEW.nia, nom_cicle, 1, ROUND(AVG(nota),1), 
-               MIN(data_inici), CURDATE()
-        FROM estudiants e 
-        JOIN estudiants_ras er ON e.nia = er.nia
+        SELECT NEW.nia, e.nom_cicle, 1, ROUND(AVG(er.nota), 1), MIN(er.data_inici), CURDATE()
+        FROM estudiants e JOIN estudiants_ras er ON e.nia = er.nia
         WHERE e.nia = NEW.nia;
     END IF;
 END
@@ -854,16 +1363,17 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `grup_classe`
+-- Estructura de tabla para la tabla `grup_classe`
 --
 
+DROP TABLE IF EXISTS `grup_classe`;
 CREATE TABLE `grup_classe` (
   `nom` varchar(25) NOT NULL,
   `aula` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `grup_classe`
+-- Volcado de datos para la tabla `grup_classe`
 --
 
 INSERT INTO `grup_classe` (`nom`, `aula`) VALUES
@@ -885,9 +1395,10 @@ INSERT INTO `grup_classe` (`nom`, `aula`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `historic_actes`
+-- Estructura de tabla para la tabla `historic_actes`
 --
 
+DROP TABLE IF EXISTS `historic_actes`;
 CREATE TABLE `historic_actes` (
   `id` int(11) NOT NULL,
   `id_acta` int(11) NOT NULL,
@@ -900,7 +1411,7 @@ CREATE TABLE `historic_actes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `historic_actes`
+-- Volcado de datos para la tabla `historic_actes`
 --
 
 INSERT INTO `historic_actes` (`id`, `id_acta`, `dni_professor`, `camp_mod`, `valor_anterior`, `valor_nou`, `motiu`, `data_mod`) VALUES
@@ -911,9 +1422,10 @@ INSERT INTO `historic_actes` (`id`, `id_acta`, `dni_professor`, `camp_mod`, `val
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `historic_estudiants`
+-- Estructura de tabla para la tabla `historic_estudiants`
 --
 
+DROP TABLE IF EXISTS `historic_estudiants`;
 CREATE TABLE `historic_estudiants` (
   `id` int(11) NOT NULL,
   `nia` int(11) NOT NULL,
@@ -926,50 +1438,53 @@ CREATE TABLE `historic_estudiants` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `historic_estudiants`
+-- Volcado de datos para la tabla `historic_estudiants`
 --
 
 INSERT INTO `historic_estudiants` (`id`, `nia`, `nom_cicle`, `grado`, `finalitzat`, `nota_final`, `data_inici`, `data_fi`) VALUES
-(153, 1001, 'CFGS Desenvolupament Aplicacions Multiplataforma', '1r', 1, 7.4, '2023-09-01', '2024-06-20'),
-(154, 1002, 'CFGS Desenvolupament Aplicacions Multiplataforma', NULL, 1, 8.0, '2022-09-01', '2023-06-20'),
-(155, 1011, 'CFGS Desenvolupament Aplicacions Multiplataforma', NULL, 1, 5.0, '2022-09-01', '2023-06-20'),
-(156, 1016, 'CFGS Desenvolupament Aplicacions Multiplataforma', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
-(157, 1021, 'CFGS Desenvolupament Aplicacions Multiplataforma', NULL, 1, 7.0, '2022-09-01', '2023-06-20'),
-(158, 1028, 'CFGS Desenvolupament Aplicacions Multiplataforma', NULL, 1, 6.0, '2023-09-01', '2024-06-20'),
-(159, 1003, 'CFGS Desenvolupament Aplicacions Web', NULL, 1, 8.0, '2023-09-01', '2024-06-20'),
-(160, 1004, 'CFGS Desenvolupament Aplicacions Web', NULL, 1, 7.0, '2022-09-01', '2023-06-20'),
-(161, 1017, 'CFGS Desenvolupament Aplicacions Web', NULL, 1, 8.0, '2023-09-01', '2024-06-20'),
-(162, 1022, 'CFGS Desenvolupament Aplicacions Web', NULL, 1, 7.0, '2022-09-01', '2023-06-20'),
-(163, 1005, 'CFGS Administracio de Sistemes Informatics en Xarxa', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
-(164, 1006, 'CFGS Administracio de Sistemes Informatics en Xarxa', NULL, 1, 7.0, '2022-09-01', '2023-06-20'),
-(165, 1013, 'CFGS Administracio de Sistemes Informatics en Xarxa', NULL, 1, 8.0, '2022-09-01', '2023-06-20'),
-(166, 1018, 'CFGS Administracio de Sistemes Informatics en Xarxa', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
-(167, 1023, 'CFGS Administracio de Sistemes Informatics en Xarxa', NULL, 1, 8.0, '2022-09-01', '2023-06-20'),
-(168, 1007, 'CFGM Sistemes Microinformatics i Xarxes', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
-(169, 1020, 'CFGM Sistemes Microinformatics i Xarxes', NULL, 1, 6.0, '2022-09-01', '2023-06-20'),
-(170, 1027, 'CFGM Sistemes Microinformatics i Xarxes', NULL, 1, 6.0, '2023-09-01', '2024-06-20'),
-(171, 1008, 'CFGM Gestio Administrativa', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
-(172, 1014, 'CFGM Gestio Administrativa', NULL, 1, 6.0, '2022-09-01', '2023-06-20'),
-(173, 1019, 'CFGM Gestio Administrativa', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
-(174, 1026, 'CFGM Gestio Administrativa', NULL, 1, 7.0, '2022-09-01', '2023-06-20'),
-(175, 1010, 'CFGS Comerce Internacional', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
-(176, 1024, 'CFGS Comerce Internacional', NULL, 1, 7.0, '2023-09-01', '2024-06-20'),
-(177, 1030, 'CFGS Comerce Internacional', NULL, 1, 7.0, '2022-09-01', '2023-06-20'),
-(178, 1009, 'FP Basica Informatica', NULL, 1, 6.0, '2023-09-01', '2024-06-20'),
-(179, 1025, 'FP Basica Informatica', NULL, 1, 6.0, '2023-09-01', '2024-06-20'),
-(180, 1029, 'CFGS Desenvolupament Aplicacions Web', NULL, 0, NULL, '2022-09-01', '2023-06-20'),
-(181, 1005, 'CFGM Sistemes Microinformatics i Xarxes', NULL, 1, 7.0, '2021-09-01', '2023-06-20'),
-(182, 1018, 'CFGM Sistemes Microinformatics i Xarxes', NULL, 1, 7.0, '2021-09-01', '2023-06-20'),
-(183, 1003, 'CFGM Sistemes Microinformatics i Xarxes', NULL, 1, 7.0, '2021-09-01', '2023-06-20'),
-(184, 1001, 'CFGM Sistemes Microinformatics i Xarxes', '2n', 1, 7.0, '2022-09-01', '2023-06-20'),
-(185, 1001, 'CFGM Sistemes Microinformatics i Xarxes', '1r', 1, 7.0, '2021-09-01', '2022-06-20');
+(153, 1001, 'CFGS Desenvolupament Aplicacions Multiplataforma', '1r', 1, 7.4, '2024-09-01', '2025-06-20'),
+(154, 1002, 'CFGS Desenvolupament Aplicacions Multiplataforma', '1r', 1, 8.0, '2024-09-01', '2025-06-20'),
+(155, 1011, 'CFGS Desenvolupament Aplicacions Multiplataforma', '1r', 1, 5.0, '2024-09-01', '2025-06-20'),
+(156, 1016, 'CFGS Desenvolupament Aplicacions Multiplataforma', '1r', 1, 7.0, '2024-09-01', '2025-06-20'),
+(157, 1021, 'CFGS Desenvolupament Aplicacions Multiplataforma', '1r', 1, 7.0, '2024-09-01', '2025-06-20'),
+(158, 1028, 'CFGS Desenvolupament Aplicacions Multiplataforma', '1r', 1, 6.0, '2024-09-01', '2025-06-20'),
+(159, 1003, 'CFGS Desenvolupament Aplicacions Web', '1r', 1, 8.0, '2024-09-01', '2025-06-20'),
+(160, 1004, 'CFGS Desenvolupament Aplicacions Web', '1r', 1, 7.0, '2023-09-01', '2024-06-20'),
+(161, 1017, 'CFGS Desenvolupament Aplicacions Web', '1r', 1, 8.0, '2024-09-01', '2025-06-20'),
+(162, 1022, 'CFGS Desenvolupament Aplicacions Web', '1r', 1, 7.0, '2023-09-01', '2024-06-20'),
+(163, 1005, 'CFGS Administracio de Sistemes Informatics en Xarxa', '1r', 1, 7.0, '2024-09-01', '2025-06-20'),
+(164, 1006, 'CFGS Administracio de Sistemes Informatics en Xarxa', '1r', 1, 7.0, '2023-09-01', '2024-06-20'),
+(165, 1013, 'CFGS Administracio de Sistemes Informatics en Xarxa', '1r', 1, 8.0, '2023-09-01', '2024-06-20'),
+(167, 1023, 'CFGS Administracio de Sistemes Informatics en Xarxa', '1r', 1, 8.0, '2023-09-01', '2024-06-20'),
+(168, 1007, 'CFGM Sistemes Microinformatics i Xarxes', '1r', 1, 7.0, '2024-09-01', '2025-06-20'),
+(169, 1020, 'CFGM Sistemes Microinformatics i Xarxes', '1r', 1, 6.0, '2023-09-01', '2024-06-20'),
+(170, 1027, 'CFGM Sistemes Microinformatics i Xarxes', '1r', 1, 6.0, '2024-09-01', '2025-06-20'),
+(172, 1014, 'CFGM Gestio Administrativa', '1r', 1, 6.0, '2023-09-01', '2024-06-20'),
+(173, 1019, 'CFGM Gestio Administrativa', '1r', 1, 7.0, '2024-09-01', '2025-06-20'),
+(174, 1026, 'CFGM Gestio Administrativa', '1r', 1, 7.0, '2024-09-01', '2025-06-20'),
+(176, 1024, 'CFGS Comerce Internacional', '1r', 1, 7.0, '2024-09-01', '2025-06-20'),
+(177, 1030, 'CFGS Comerce Internacional', '1r', 1, 7.0, '2023-09-01', '2024-06-20'),
+(178, 1009, 'FP Basica Informatica', '1r', 1, 6.0, '2024-09-01', '2025-06-20'),
+(179, 1025, 'FP Basica Informatica', '1r', 1, 6.0, '2024-09-01', '2025-06-20'),
+(180, 1029, 'CFGS Desenvolupament Aplicacions Web', '1r', 0, 6.5, '2023-09-01', '2024-06-20'),
+(181, 1005, 'CFGM Sistemes Microinformatics i Xarxes', '2n', 1, 7.0, '2023-09-01', '2024-06-20'),
+(183, 1003, 'CFGM Sistemes Microinformatics i Xarxes', '2n', 1, 7.0, '2023-09-01', '2024-06-20'),
+(184, 1001, 'CFGM Sistemes Microinformatics i Xarxes', '2n', 1, 7.0, '2023-09-01', '2024-06-20'),
+(185, 1001, 'CFGM Sistemes Microinformatics i Xarxes', '1r', 1, 7.0, '2022-09-01', '2023-06-20'),
+(186, 1007, 'FP Basica Informatica', '2n', 1, 7.0, '2022-09-01', '2024-06-20'),
+(187, 1015, 'FP Basica Informatica', '2n', 1, 6.0, '2023-09-01', '2025-06-20'),
+(188, 1014, 'CFGS Desenvolupament Aplicacions Web', '1r', 0, NULL, '2022-09-01', '2023-06-20'),
+(189, 1020, 'FP Basica Informatica', '1r', 1, 7.5, '2022-09-01', '2023-06-20'),
+(190, 1020, 'FP Basica Informatica', '2n', 1, 8.0, '2023-09-01', '2024-06-20'),
+(191, 1026, 'CFGM Gestio Administrativa', '1r', 0, NULL, '2023-09-01', '2024-06-20');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `historic_fct`
+-- Estructura de tabla para la tabla `historic_fct`
 --
 
+DROP TABLE IF EXISTS `historic_fct`;
 CREATE TABLE `historic_fct` (
   `id` int(11) NOT NULL,
   `nia` int(11) NOT NULL,
@@ -981,7 +1496,7 @@ CREATE TABLE `historic_fct` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `historic_fct`
+-- Volcado de datos para la tabla `historic_fct`
 --
 
 INSERT INTO `historic_fct` (`id`, `nia`, `empreses`, `hores`, `finalitzat`, `observacions`, `incidencies`) VALUES
@@ -1001,9 +1516,10 @@ INSERT INTO `historic_fct` (`id`, `nia`, `empreses`, `hores`, `finalitzat`, `obs
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `historic_professors`
+-- Estructura de tabla para la tabla `historic_professors`
 --
 
+DROP TABLE IF EXISTS `historic_professors`;
 CREATE TABLE `historic_professors` (
   `id` int(11) NOT NULL,
   `codi_prof` varchar(20) NOT NULL,
@@ -1014,7 +1530,7 @@ CREATE TABLE `historic_professors` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `historic_professors`
+-- Volcado de datos para la tabla `historic_professors`
 --
 
 INSERT INTO `historic_professors` (`id`, `codi_prof`, `tipus`, `motius`, `justificat`, `justificant`) VALUES
@@ -1052,9 +1568,10 @@ INSERT INTO `historic_professors` (`id`, `codi_prof`, `tipus`, `motius`, `justif
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `logs_consultes`
+-- Estructura de tabla para la tabla `logs_consultes`
 --
 
+DROP TABLE IF EXISTS `logs_consultes`;
 CREATE TABLE `logs_consultes` (
   `id` int(11) NOT NULL,
   `dni_user` varchar(20) NOT NULL,
@@ -1062,219 +1579,74 @@ CREATE TABLE `logs_consultes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `logs_consultes`
+-- Volcado de datos para la tabla `logs_consultes`
 --
 
 INSERT INTO `logs_consultes` (`id`, `dni_user`, `consulta`) VALUES
-(1, '11111111A', '/get_estudis.php?dni=11111111A&token=b2121697855da39afcaf7bfdcb21a56ca3b2cbb3281aafc363784f62ad8711df'),
-(2, '11111111A', '/get_profs.php?dni=11111111A&token=b2121697855da39afcaf7bfdcb21a56ca3b2cbb3281aafc363784f62ad8711df'),
-(3, '11111111A', '/get_estudis.php?dni=11111111A&token=b2121697855da39afcaf7bfdcb21a56ca3b2cbb3281aafc363784f62ad8711df'),
-(4, '11111111A', '/get_estudis.php?dni=11111111A&token=b2121697855da39afcaf7bfdcb21a56ca3b2cbb3281aafc363784f62ad8711df'),
-(5, '11111111A', '/get_estudis.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(6, '11111111A', '/get_profs.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(7, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF11&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(8, '11111111A', '/get_profs.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(9, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF10&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(10, '11111111A', '/get_profs.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(11, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF11&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(12, '11111111A', '/get_profs.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(13, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF06&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(14, '11111111A', '/get_profs.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(15, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF10&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(16, '11111111A', '/get_profs.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(17, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(18, '11111111A', '/get_profs.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(19, '11111111A', '/get_estudis.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(20, '11111111A', '/get_estudis.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(21, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(22, '11111111A', '/get_estudis.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(23, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(24, '11111111A', '/get_estudis.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(25, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(26, '11111111A', '/get_estudis.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(27, '11111111A', '/get_estudis.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(28, '11111111A', '/get_profs.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(29, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF10&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(30, '11111111A', '/get_profs.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(31, '11111111A', '/get_estudis.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(32, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(33, '11111111A', '/get_estudis.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(34, '11111111A', '/get_estudis.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(35, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(36, '11111111A', '/get_estudis.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(37, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(38, '11111111A', '/get_estudis.php?dni=11111111A&token=3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443'),
-(39, '11111111A', '/get_estudis.php?dni=11111111A&token=cf425b12e956c1329d170a83ffd6babf5df7cceb2045af17a01d38960378b309'),
-(40, '11111111A', '/get_estudis.php?dni=11111111A&token=b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0'),
-(41, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0'),
-(42, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0'),
-(43, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0'),
-(44, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0'),
-(45, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0'),
-(46, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0'),
-(47, '11111111A', '/get_estudis.php?dni=11111111A&token=b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0'),
-(48, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0'),
-(49, '11111111A', '/get_estudis.php?dni=11111111A&token=b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0'),
-(50, '11111111A', '/get_estudis.php?dni=11111111A&token=b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0'),
-(51, '11111111A', '/get_estudis.php?dni=11111111A&token=14b6d07fd0cac990a807d41bb08556382aec77937716642293888296cdf312c1'),
-(52, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=14b6d07fd0cac990a807d41bb08556382aec77937716642293888296cdf312c1'),
-(53, '11111111A', '/get_estudis.php?dni=11111111A&token=14b6d07fd0cac990a807d41bb08556382aec77937716642293888296cdf312c1'),
-(54, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=14b6d07fd0cac990a807d41bb08556382aec77937716642293888296cdf312c1'),
-(55, '11111111A', '/get_estudis.php?dni=11111111A&token=14b6d07fd0cac990a807d41bb08556382aec77937716642293888296cdf312c1'),
-(56, '11111111A', '/get_estudis.php?dni=11111111A&token=fa66ad05921947ab8d1573d2937f17bd3b64e55064ffd2d7d21ce6852040e858'),
-(57, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=fa66ad05921947ab8d1573d2937f17bd3b64e55064ffd2d7d21ce6852040e858'),
-(58, '11111111A', '/get_estudis.php?dni=11111111A&token=fa66ad05921947ab8d1573d2937f17bd3b64e55064ffd2d7d21ce6852040e858'),
-(59, '11111111A', '/get_estudis.php?dni=11111111A&token=438878390709ba53d83134e7908917aa19c6c12071631a9e9fc69a8c5be888c1'),
-(60, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=438878390709ba53d83134e7908917aa19c6c12071631a9e9fc69a8c5be888c1'),
-(61, '11111111A', '/get_estudis.php?dni=11111111A&token=438878390709ba53d83134e7908917aa19c6c12071631a9e9fc69a8c5be888c1'),
-(62, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=438878390709ba53d83134e7908917aa19c6c12071631a9e9fc69a8c5be888c1'),
-(63, '11111111A', '/get_estudis.php?dni=11111111A&token=438878390709ba53d83134e7908917aa19c6c12071631a9e9fc69a8c5be888c1'),
-(64, '11111111A', '/get_estudis.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(65, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(66, '11111111A', '/get_estudis.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(67, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(68, '11111111A', '/get_estudis.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(69, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(70, '11111111A', '/get_estudis.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(71, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(72, '11111111A', '/get_estudis.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(73, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(74, '11111111A', '/get_estudis.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(75, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(76, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(77, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(78, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(79, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(80, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF10&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(81, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(82, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF06&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(83, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(84, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(85, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(86, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(87, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(88, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF10&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(89, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(90, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(91, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(92, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF02&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(93, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(94, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF10&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(95, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(96, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF11&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(97, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(98, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF06&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(99, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(100, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(101, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(102, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF10&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(103, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(104, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF11&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(105, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(106, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(107, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(108, '11111111A', '/get_estudis.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(109, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(110, '11111111A', '/get_estudis.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(111, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(112, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(113, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(114, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(115, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(116, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF02&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(117, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(118, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF02&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(119, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(120, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(121, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(122, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF02&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(123, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(124, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(125, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(126, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(127, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(128, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(129, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF02&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(130, '11111111A', '/get_profs.php?dni=11111111A&token=9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd'),
-(131, '11111111A', '/get_profs.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
-(132, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
-(133, '11111111A', '/get_profs.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
-(134, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF02&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
-(135, '11111111A', '/get_profs.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
-(136, '11111111A', '/get_estudis.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
-(137, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
-(138, '11111111A', '/get_estudis.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
-(139, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
-(140, '11111111A', '/get_estudis.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
-(141, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
-(142, '11111111A', '/get_estudis.php?dni=11111111A&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
-(143, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&token=1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788'),
-(144, '11111111A', '/get_estudis.php?dni=11111111A&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
-(145, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
-(146, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&data_inici=2023-09-01&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
-(147, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
-(148, '11111111A', '/get_estudis.php?dni=11111111A&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
-(149, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
-(150, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&data_inici=2023-09-01&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
-(151, '11111111A', '/get_estudis.php?dni=11111111A&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
-(152, '11111111A', '/get_estudis.php?dni=11111111A&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
-(153, '11111111A', '/get_estudis.php?dni=11111111A&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
-(154, '11111111A', '/get_estudis.php?dni=11111111A&token=8d3722769d4c38dfa0607dd9f2618017685cecc7fbccb2b3eed5a34b02d0edcc'),
-(155, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=8d3722769d4c38dfa0607dd9f2618017685cecc7fbccb2b3eed5a34b02d0edcc'),
-(156, '11111111A', '/get_estudis.php?dni=11111111A&token=8d3722769d4c38dfa0607dd9f2618017685cecc7fbccb2b3eed5a34b02d0edcc'),
-(157, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=8d3722769d4c38dfa0607dd9f2618017685cecc7fbccb2b3eed5a34b02d0edcc'),
-(158, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGS%20Desenvolupament%20Aplicacions%20Multiplataforma&data_inici=2023-09-01&token=8d3722769d4c38dfa0607dd9f2618017685cecc7fbccb2b3eed5a34b02d0edcc'),
-(159, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=8d3722769d4c38dfa0607dd9f2618017685cecc7fbccb2b3eed5a34b02d0edcc'),
-(160, '11111111A', '/get_estudis.php?dni=11111111A&token=8d3722769d4c38dfa0607dd9f2618017685cecc7fbccb2b3eed5a34b02d0edcc'),
-(161, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&data_inici=2021-09-01&token=22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53'),
-(162, '11111111A', '/get_profs.php?dni=11111111A&token=9006d4e0bd8d682c862b54538b09d1ecdb9ccb2e5f6a534008621df951747cf6'),
-(163, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=9006d4e0bd8d682c862b54538b09d1ecdb9ccb2e5f6a534008621df951747cf6'),
-(164, '11111111A', '/get_profs.php?dni=11111111A&token=9006d4e0bd8d682c862b54538b09d1ecdb9ccb2e5f6a534008621df951747cf6'),
-(165, '11111111A', '/get_estudis.php?dni=11111111A&token=9006d4e0bd8d682c862b54538b09d1ecdb9ccb2e5f6a534008621df951747cf6'),
-(166, '11111111A', '/get_cursos.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=9006d4e0bd8d682c862b54538b09d1ecdb9ccb2e5f6a534008621df951747cf6'),
-(167, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&data_inici=2023-09-01&token=9006d4e0bd8d682c862b54538b09d1ecdb9ccb2e5f6a534008621df951747cf6'),
-(168, '11111111A', '/get_cursos.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=9006d4e0bd8d682c862b54538b09d1ecdb9ccb2e5f6a534008621df951747cf6'),
-(169, '11111111A', '/get_estudis.php?dni=11111111A&token=9006d4e0bd8d682c862b54538b09d1ecdb9ccb2e5f6a534008621df951747cf6'),
-(170, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=9006d4e0bd8d682c862b54538b09d1ecdb9ccb2e5f6a534008621df951747cf6'),
-(171, '11111111A', '/get_estudis.php?dni=11111111A&token=9006d4e0bd8d682c862b54538b09d1ecdb9ccb2e5f6a534008621df951747cf6'),
-(172, '11111111A', '/get_cursos.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=9006d4e0bd8d682c862b54538b09d1ecdb9ccb2e5f6a534008621df951747cf6'),
-(173, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&data_inici=2023-09-01&token=9006d4e0bd8d682c862b54538b09d1ecdb9ccb2e5f6a534008621df951747cf6'),
-(174, '11111111A', '/get_profs.php?dni=11111111A&token=6ea9d7bea859b041866fcd369b76de5746f22646d8831f0496eaf11cd19b9a2a'),
-(175, '11111111A', '/get_estudis.php?dni=11111111A&token=6ea9d7bea859b041866fcd369b76de5746f22646d8831f0496eaf11cd19b9a2a'),
-(176, '11111111A', '/get_profs.php?dni=11111111A&token=21677a78aa7f19d7370158b6aa13d0f4d19e7f9bc6d60edbc19cf667318a56e1'),
-(177, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF02&token=21677a78aa7f19d7370158b6aa13d0f4d19e7f9bc6d60edbc19cf667318a56e1'),
-(178, '11111111A', '/get_estudis.php?dni=11111111A&token=958de2cbcc8d8f7aee927e38b444739c785cf72b0b56333d5e47f5e17ba36ba0'),
-(179, '11111111A', '/get_profs.php?dni=11111111A&token=958de2cbcc8d8f7aee927e38b444739c785cf72b0b56333d5e47f5e17ba36ba0'),
-(180, '11111111A', '/get_estudis.php?dni=11111111A&token=8ac8065b179de613a351f6d336aa243d3a2b0016dca92bd9d65bf5238d672b62'),
-(181, '11111111A', '/get_estudis.php?dni=11111111A&token=7ee801f6268a6079e8ab5a831978998bcfa3df96c80d505ce3bfe60593479a19'),
-(182, '11111111A', '/get_profs.php?dni=11111111A&token=702cdc92fd5a6845f63c4548848e65c98ad4c3f0bd4079c59a94fe3b6e99e71e'),
-(183, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF02&token=702cdc92fd5a6845f63c4548848e65c98ad4c3f0bd4079c59a94fe3b6e99e71e'),
-(184, '11111111A', '/get_profs.php?dni=11111111A&token=702cdc92fd5a6845f63c4548848e65c98ad4c3f0bd4079c59a94fe3b6e99e71e'),
-(185, '11111111A', '/get_estudis.php?dni=11111111A&token=702cdc92fd5a6845f63c4548848e65c98ad4c3f0bd4079c59a94fe3b6e99e71e'),
-(186, '11111111A', '/get_cursos.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=702cdc92fd5a6845f63c4548848e65c98ad4c3f0bd4079c59a94fe3b6e99e71e'),
-(187, '11111111A', '/get_estudis.php?dni=11111111A&token=702cdc92fd5a6845f63c4548848e65c98ad4c3f0bd4079c59a94fe3b6e99e71e'),
-(188, '11111111A', '/get_profs.php?dni=11111111A&token=702cdc92fd5a6845f63c4548848e65c98ad4c3f0bd4079c59a94fe3b6e99e71e'),
-(189, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=702cdc92fd5a6845f63c4548848e65c98ad4c3f0bd4079c59a94fe3b6e99e71e'),
-(190, '11111111A', '/get_profs.php?dni=11111111A&token=3424043994479000585d270d4ed109265eaa4979997b7f770d620b5d437d56b9'),
-(191, '11111111A', '/get_profs.php?dni=11111111A&token=2cf8b4ef4283e418295dbdf18eee97a2c849c93e1a9c65620d977572ecef2851'),
-(192, '11111111A', '/get_profs.php?dni=11111111A&token=f4b8c39925b92097a5e176624d78805035006cf01e94744b6ed570c21959ebe5'),
-(193, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=f4b8c39925b92097a5e176624d78805035006cf01e94744b6ed570c21959ebe5'),
-(194, '11111111A', '/get_profs.php?dni=11111111A&token=f4b8c39925b92097a5e176624d78805035006cf01e94744b6ed570c21959ebe5'),
-(195, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF02&token=f4b8c39925b92097a5e176624d78805035006cf01e94744b6ed570c21959ebe5'),
-(196, '11111111A', '/get_profs.php?dni=11111111A&token=f4b8c39925b92097a5e176624d78805035006cf01e94744b6ed570c21959ebe5'),
-(197, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=f4b8c39925b92097a5e176624d78805035006cf01e94744b6ed570c21959ebe5'),
-(198, '11111111A', '/get_profs.php?dni=11111111A&token=f4b8c39925b92097a5e176624d78805035006cf01e94744b6ed570c21959ebe5'),
-(199, '11111111A', '/get_profs.php?dni=11111111A&token=ef0af51acfa7a8d2da65f1f1ddc9c03bcfe4665c46caf4b764c2b0baab005de2'),
-(200, '11111111A', '/get_profs.php?dni=11111111A&token=989e6e8753ec332815143546ebb6555adda50abca5828843e490a4b5f11b2b69'),
-(201, '11111111A', '/get_profs.php?dni=11111111A&token=5ed99ae6c7c1e0e89bce07e53b55a0c898e64cd827e1c0dbe6f57214b1e14155'),
-(202, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=5ed99ae6c7c1e0e89bce07e53b55a0c898e64cd827e1c0dbe6f57214b1e14155');
+(1, '11111111A', '/get_estudis.php?dni=11111111A&token=example'),
+(2, '11111111A', '/get_profs.php?dni=11111111A&token=example'),
+(3, '77777777G', '/get_estudis.php?dni=77777777G&token=example'),
+(4, '22222222B', '/get_estudis.php?dni=22222222B&token=example'),
+(5, '11111111A', '/get_perfil.php?dni=11111111A&token=example'),
+(6, '11111111A', '/get_cursos.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=c91a69dc585a36534c8bd23575edb2ca9218f47e77124bfaee242bba42bf44e0'),
+(7, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&data_inici=2024-09-01&token=c91a69dc585a36534c8bd23575edb2ca9218f47e77124bfaee242bba42bf44e0'),
+(8, '11111111A', '/get_cursos.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=c91a69dc585a36534c8bd23575edb2ca9218f47e77124bfaee242bba42bf44e0'),
+(9, '11111111A', '/get_estudis.php?dni=11111111A&token=c91a69dc585a36534c8bd23575edb2ca9218f47e77124bfaee242bba42bf44e0'),
+(10, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=c91a69dc585a36534c8bd23575edb2ca9218f47e77124bfaee242bba42bf44e0'),
+(11, '11111111A', '/get_estudis.php?dni=11111111A&token=c91a69dc585a36534c8bd23575edb2ca9218f47e77124bfaee242bba42bf44e0'),
+(12, '11111111A', '/get_cursos.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=c91a69dc585a36534c8bd23575edb2ca9218f47e77124bfaee242bba42bf44e0'),
+(13, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&data_inici=2024-09-01&token=c91a69dc585a36534c8bd23575edb2ca9218f47e77124bfaee242bba42bf44e0'),
+(14, '11111111A', '/get_estudis.php?dni=11111111A&token=c4ebbc922230e77a0fdb85acabdeac5b73d34fe41d919392f9e9add21e746d8f'),
+(15, '11111111A', '/get_expedient.php?dni=11111111A&cicle=CFGM%20Sistemes%20Microinformatics%20i%20Xarxes&token=c4ebbc922230e77a0fdb85acabdeac5b73d34fe41d919392f9e9add21e746d8f'),
+(16, '11111111A', '/get_estudis.php?dni=11111111A&token=c4ebbc922230e77a0fdb85acabdeac5b73d34fe41d919392f9e9add21e746d8f'),
+(17, '11111111A', '/get_cursos.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=c4ebbc922230e77a0fdb85acabdeac5b73d34fe41d919392f9e9add21e746d8f'),
+(18, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&data_inici=2024-09-01&token=c4ebbc922230e77a0fdb85acabdeac5b73d34fe41d919392f9e9add21e746d8f'),
+(19, '11111111A', '/get_butlleti.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&data_inici=2024-09-01&token=c4ebbc922230e77a0fdb85acabdeac5b73d34fe41d919392f9e9add21e746d8f'),
+(20, '11111111A', '/get_cursos.php?dni=11111111A&cicle=CFGS+Desenvolupament+Aplicacions+Multiplataforma&token=c4ebbc922230e77a0fdb85acabdeac5b73d34fe41d919392f9e9add21e746d8f'),
+(21, '11111111A', '/get_estudis.php?dni=11111111A&token=c4ebbc922230e77a0fdb85acabdeac5b73d34fe41d919392f9e9add21e746d8f'),
+(22, '11111111A', '/get_profs.php?dni=11111111A&token=4546839308749199f40ca9408091f6e59563e385996af46da8a49d1d4e2fae8b'),
+(23, '11111111A', '/get_profs.php?dni=11111111A&token=4546839308749199f40ca9408091f6e59563e385996af46da8a49d1d4e2fae8b'),
+(24, '11111111A', '/get_estudis.php?dni=11111111A&token=4546839308749199f40ca9408091f6e59563e385996af46da8a49d1d4e2fae8b'),
+(25, '11111111A', '/get_estudis.php?dni=11111111A&token=3fbd2383aa53ad67d4d49e64a11e9e5b3c6df8678ea46e6a513de0d07d29590d'),
+(26, '11111111A', '/get_estudis.php?dni=11111111A&token=d217b14c83675197f4458c24f9b342a8648524b4b1022be4a01c1dc72ee0a331'),
+(27, '11111111A', '/get_perfil.php?dni=11111111A&token=d217b14c83675197f4458c24f9b342a8648524b4b1022be4a01c1dc72ee0a331'),
+(28, '11111111A', '/get_estadistiques.php?token=d217b14c83675197f4458c24f9b342a8648524b4b1022be4a01c1dc72ee0a331'),
+(29, '11111111A', '/get_estudis.php?dni=11111111A&token=d217b14c83675197f4458c24f9b342a8648524b4b1022be4a01c1dc72ee0a331'),
+(30, '11111111A', '/get_perfil.php?dni=11111111A&token=a908d0d45ab52447f565bff38e0dcfbafa8a80885be62332b57eb3de1f60b409'),
+(31, '11111111A', '/get_estadistiques.php?token=a908d0d45ab52447f565bff38e0dcfbafa8a80885be62332b57eb3de1f60b409'),
+(32, '11111111A', '/get_estudis.php?dni=11111111A&token=dc0842397266d78f59d662614adaf80cab757529356c3689d76a9f6a79103e5e'),
+(33, '11111111A', '/get_profs.php?dni=11111111A&token=dc0842397266d78f59d662614adaf80cab757529356c3689d76a9f6a79103e5e'),
+(34, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=dc0842397266d78f59d662614adaf80cab757529356c3689d76a9f6a79103e5e'),
+(35, '11111111A', '/get_perfil.php?dni=11111111A&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(36, '11111111A', '/get_estadistiques.php?token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(37, '11111111A', '/get_estudis.php?dni=11111111A&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(38, '11111111A', '/get_profs.php?dni=11111111A&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(39, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(40, '11111111A', '/get_profs.php?dni=11111111A&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(41, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF02&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(42, '11111111A', '/get_profs.php?dni=11111111A&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(43, '11111111A', '/get_profs.php?dni=11111111A&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(44, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(45, '11111111A', '/get_profs.php?dni=11111111A&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(46, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(47, '11111111A', '/get_profs.php?dni=11111111A&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(48, '11111111A', '/get_profs.php?dni=11111111A&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(49, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(50, '11111111A', '/get_profs.php?dni=11111111A&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(51, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF02&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(52, '11111111A', '/get_profs.php?dni=11111111A&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(53, '11111111A', '/get_prof.php?dni=11111111A&codi_prof=PROF01&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(54, '11111111A', '/get_profs.php?dni=11111111A&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(55, '11111111A', '/get_profs.php?dni=11111111A&token=bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c'),
+(56, '11111111A', '/get_profs.php?dni=11111111A&token=e54bdb4d9e93ba248f8c9cd7455015b76c07f4b1455680028092edf2fb2f8bb7');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `logs_login`
+-- Estructura de tabla para la tabla `logs_login`
 --
 
+DROP TABLE IF EXISTS `logs_login`;
 CREATE TABLE `logs_login` (
   `id` int(11) NOT NULL,
   `dni_user` varchar(20) NOT NULL,
@@ -1284,87 +1656,42 @@ CREATE TABLE `logs_login` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `logs_login`
+-- Volcado de datos para la tabla `logs_login`
 --
 
 INSERT INTO `logs_login` (`id`, `dni_user`, `ip`, `exito`, `data`) VALUES
 (1, '11223344K', 2147483647, 1, '2026-05-04 22:45:28'),
-(2, '11223344K', 2147483647, 1, '2026-05-04 22:46:18'),
-(3, '12345678A', 2147483647, 1, '2026-05-04 22:47:09'),
-(4, '11223344K', 2147483647, 1, '2026-05-04 22:48:14'),
-(5, '11223344K', 2147483647, 0, '2026-05-04 22:49:34'),
-(6, '11223344K', 2147483647, 1, '2026-05-04 22:49:42'),
-(7, '11223344K', 2147483647, 1, '2026-05-04 22:59:18'),
-(8, '12345678A', 2147483647, 1, '2026-05-04 22:59:51'),
-(9, '12345678A', 2147483647, 1, '2026-05-05 16:26:19'),
-(10, '11223344K', 2147483647, 1, '2026-05-05 16:27:31'),
-(11, '12345678A', 2147483647, 1, '2026-05-05 16:29:53'),
-(12, '11223344K', 2147483647, 1, '2026-05-05 16:34:20'),
-(13, '12345678A', 2147483647, 1, '2026-05-05 16:36:46'),
-(14, '12345678A', 2147483647, 1, '2026-05-05 16:45:12'),
-(15, '12345678A', 2147483647, 1, '2026-05-05 16:47:08'),
-(16, '12345678A', 2147483647, 1, '2026-05-05 16:48:00'),
-(17, '12345678A', 2147483647, 1, '2026-05-05 16:49:54'),
-(18, '12345678A', 2147483647, 1, '2026-05-05 16:51:19'),
-(19, '12345678A', 2147483647, 1, '2026-05-05 16:52:03'),
-(20, '12345678A', 2147483647, 1, '2026-05-05 19:19:51'),
-(21, '12345678A', 2147483647, 1, '2026-05-05 19:24:36'),
-(22, '12345678A', 2147483647, 1, '2026-05-05 19:26:53'),
-(23, '12345678A', 2147483647, 1, '2026-05-05 19:29:49'),
-(24, '11223344K', 2147483647, 1, '2026-05-05 19:30:17'),
-(25, '12345678A', 2147483647, 1, '2026-05-05 19:51:01'),
-(26, '12345678A', 2147483647, 1, '2026-05-05 19:53:46'),
-(27, '12345678A', 2147483647, 1, '2026-05-05 19:56:34'),
-(28, '11223344K', 2147483647, 1, '2026-05-05 20:11:40'),
-(29, '11223344K', 2147483647, 1, '2026-05-05 20:17:35'),
-(30, '11223344K', 2147483647, 1, '2026-05-05 20:36:58'),
-(31, '11223344K', 2147483647, 1, '2026-05-05 20:38:21'),
-(32, '11223344K', 2147483647, 1, '2026-05-05 21:07:35'),
-(33, '11223344K', 2147483647, 1, '2026-05-05 21:10:07'),
-(34, '11223344K', 2147483647, 1, '2026-05-05 21:13:17'),
-(35, '11223344K', 2147483647, 1, '2026-05-05 21:15:02'),
-(36, '11223344K', 2147483647, 1, '2026-05-05 21:15:46'),
-(37, '11223344K', 2147483647, 1, '2026-05-05 21:19:42'),
-(38, '11223344K', 2147483647, 1, '2026-05-05 21:21:32'),
-(39, '11223344K', 2147483647, 1, '2026-05-05 23:08:39'),
-(40, '11223344K', 2147483647, 1, '2026-05-05 23:09:43'),
-(41, '11223344K', 2147483647, 1, '2026-05-05 23:13:53'),
-(42, '11223344K', 2147483647, 1, '2026-05-05 23:15:23'),
-(43, '11223344K', 2147483647, 1, '2026-05-05 23:17:05'),
-(44, '11223344K', 2147483647, 1, '2026-05-05 23:21:13'),
-(45, '11223344K', 2147483647, 1, '2026-05-05 23:23:51'),
-(46, '11223344K', 2147483647, 1, '2026-05-05 23:24:58'),
-(47, '12345678A', 2147483647, 1, '2026-05-05 23:25:25'),
-(48, '11223344K', 2147483647, 1, '2026-05-05 23:26:50'),
-(49, '12345678A', 2147483647, 1, '2026-05-05 23:35:40'),
-(50, '11223344K', 2147483647, 1, '2026-05-05 23:37:13'),
-(51, '12345678A', 2147483647, 1, '2026-05-05 23:38:02'),
-(52, '11223344K', 2147483647, 1, '2026-05-05 23:46:38'),
-(53, '11223344K', 2147483647, 1, '2026-05-06 00:02:45'),
-(54, '11223344K', 2147483647, 1, '2026-05-06 00:05:15'),
-(55, '11223344K', 2147483647, 1, '2026-05-06 00:07:05'),
-(56, '12345678A', 2147483647, 1, '2026-05-06 00:10:01'),
-(57, '11223344K', 2147483647, 1, '2026-05-06 00:10:17'),
-(58, '11223344K', 2147483647, 1, '2026-05-06 00:13:37'),
-(59, '11223344K', 2147483647, 1, '2026-05-06 00:16:05'),
-(60, '11223344K', 2147483647, 1, '2026-05-06 00:18:12'),
-(61, '11223344K', 2147483647, 1, '2026-05-06 00:19:33'),
-(62, '11223344K', 2147483647, 1, '2026-05-06 00:22:30'),
-(63, '11223344K', 2147483647, 1, '2026-05-06 00:26:33'),
-(64, '11223344K', 2147483647, 1, '2026-05-06 00:30:36'),
-(65, '11223344K', 2147483647, 1, '2026-05-06 00:34:34'),
-(66, '11223344K', 2147483647, 1, '2026-05-06 00:39:26'),
-(67, '11223344K', 2147483647, 1, '2026-05-06 00:49:42'),
-(68, '11223344K', 2147483647, 1, '2026-05-06 00:52:06'),
-(69, '11223344K', 2147483647, 1, '2026-05-06 01:27:40'),
-(70, '11223344K', 2147483647, 1, '2026-05-06 01:29:31');
+(2, '12345678A', 2147483647, 1, '2026-05-04 22:47:09'),
+(3, '11223344K', 2147483647, 0, '2026-05-04 22:49:34'),
+(4, '11223344K', 2147483647, 1, '2026-05-04 22:49:42'),
+(5, '11111111A', 2147483647, 1, '2026-05-06 02:58:34'),
+(6, '22222222B', 184305510, 1, '2026-05-06 10:39:08'),
+(7, '77777777G', 184305510, 1, '2026-05-06 10:25:47'),
+(8, '11111111A', 184305510, 1, '2026-05-06 10:08:14'),
+(9, '11223344K', 184305510, 1, '2026-05-06 10:24:29'),
+(10, '12345678A', 184305510, 1, '2026-05-06 10:24:57'),
+(11, '11111111A', 2147483647, 1, '2026-05-06 14:32:32'),
+(12, '11111111A', 2147483647, 1, '2026-05-06 14:44:19'),
+(13, '11111111A', 2147483647, 1, '2026-05-06 14:49:34'),
+(14, '11111111A', 2147483647, 1, '2026-05-06 14:49:48'),
+(15, '11111111A', 2147483647, 1, '2026-05-06 14:50:09'),
+(16, '11111111A', 2147483647, 1, '2026-05-06 14:52:47'),
+(17, '11111111A', 2147483647, 1, '2026-05-06 14:56:21'),
+(18, '11111111A', 2147483647, 1, '2026-05-06 15:26:05'),
+(19, '11111111A', 2147483647, 1, '2026-05-06 15:46:15'),
+(20, '11111111A', 2147483647, 1, '2026-05-06 15:47:51'),
+(21, '11111111A', 2147483647, 1, '2026-05-06 15:55:47'),
+(22, '11111111A', 2147483647, 1, '2026-05-06 16:02:07'),
+(23, '11111111A', 2147483647, 1, '2026-05-06 16:05:38'),
+(24, '11111111A', 2147483647, 1, '2026-05-06 16:12:06');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `periodes_avaluacio`
+-- Estructura de tabla para la tabla `periodes_avaluacio`
 --
 
+DROP TABLE IF EXISTS `periodes_avaluacio`;
 CREATE TABLE `periodes_avaluacio` (
   `id` int(11) NOT NULL,
   `trimestre` tinyint(1) NOT NULL COMMENT '1, 2 o 3',
@@ -1376,7 +1703,7 @@ CREATE TABLE `periodes_avaluacio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `periodes_avaluacio`
+-- Volcado de datos para la tabla `periodes_avaluacio`
 --
 
 INSERT INTO `periodes_avaluacio` (`id`, `trimestre`, `curs`, `obert`, `data_obertura`, `data_tancament`, `obert_per`) VALUES
@@ -1387,9 +1714,10 @@ INSERT INTO `periodes_avaluacio` (`id`, `trimestre`, `curs`, `obert`, `data_ober
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `persones`
+-- Estructura de tabla para la tabla `persones`
 --
 
+DROP TABLE IF EXISTS `persones`;
 CREATE TABLE `persones` (
   `dni` varchar(9) NOT NULL,
   `nom` varchar(25) NOT NULL,
@@ -1407,59 +1735,60 @@ CREATE TABLE `persones` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `persones`
+-- Volcado de datos para la tabla `persones`
 --
 
 INSERT INTO `persones` (`dni`, `nom`, `cognom`, `data_naix`, `poblacio`, `codi_postal`, `nacionalitat`, `municipi_naix`, `telf_mob`, `telf_fix`, `email`, `ruta_foto`, `rol`) VALUES
-('10101010J', 'Emma', 'Vidal Torres', '2006-01-30', 'Lleida', 25005, 'Espanyola', 'Lleida', 610101010, 973101010, 'emma.vidal@alumne.cat', 'img/alumns/alum10.png', 'alumne'),
-('11111111A', 'Pol', 'Gómez Ruiz', '2005-02-18', 'Lleida', 25001, 'Espanyola', 'Lleida', 611111111, 973111111, 'pol.gomez@alumne.cat', 'img/alumns/alum01.png', 'alumne'),
+('10101010J', 'Emma', 'Vidal Torres', '2006-01-30', 'Lleida', 25005, 'Espanyola', 'Lleida', 610101010, 973101010, 'emma.vidal@alumne.cat', '/img/alumns/alum10.png', 'alumne'),
+('11111111A', 'Pol', 'Gómez Ruiz', '2005-02-18', 'Lleida', 25001, 'Espanyola', 'Lleida', 611111111, 973111111, 'pol.gomez@alumne.cat', '/img/alumns/perfil_11111111A.jpg', 'alumne'),
 ('11223344K', 'Eva', 'Torres Prat', '1974-12-05', 'Lleida', 25005, 'Espanyola', 'Lleida', 611223344, 973223344, 'eva.torres@institut.cat', 'img/profs/prof10.png', 'administrador'),
-('12121212L', 'Arnau', 'Bosch Camps', '2005-06-15', 'Lleida', 25001, 'Espanyola', 'Lleida', 612121212, 973121212, 'arnau.bosch@alumne.cat', 'img/alumns/alum11.png', 'alumne'),
+('12121212L', 'Arnau', 'Bosch Camps', '2005-06-15', 'Lleida', 25001, 'Espanyola', 'Lleida', 612121212, 973121212, 'arnau.bosch@alumne.cat', '/img/alumns/alum11.png', 'alumne'),
 ('12345678A', 'Marc', 'Serra Puig', '1978-03-12', 'Lleida', 25001, 'Espanyola', 'Lleida', 612345678, 973345678, 'marc.serra@institut.cat', 'img/profs/prof01.png', 'professor'),
-('13131313M', 'Júlia', 'Ferrer Pons', '2006-02-28', 'Lleida', 25001, 'Espanyola', 'Lleida', 613131313, 973131313, 'julia.ferrer@alumne.cat', 'img/alumns/alum12.png', 'alumne'),
-('14141414N', 'Roger', 'Llopis Mas', '2004-11-09', 'Lleida', 25002, 'Espanyola', 'Lleida', 614141414, 973141414, 'roger.llopis@alumne.cat', 'img/alumns/alum13.png', 'alumne'),
-('15151515P', 'Carla', 'Mora Esteve', '2005-03-22', 'Lleida', 25002, 'Espanyola', 'Lleida', 615151515, 973151515, 'carla.mora@alumne.cat', 'img/alumns/alum14.png', 'alumne'),
-('16161616Q', 'Marc', 'Torrents Gil', '2004-07-04', 'Lleida', 25003, 'Espanyola', 'Lleida', 616161616, 973161616, 'marc.torrents@alumne.cat', 'img/alumns/alum15.png', 'alumne'),
-('17171717R', 'Sofia', 'Mas Vidal', '2005-05-12', 'Lleida', 25001, 'Espanyola', 'Lleida', 617171717, 973171717, 'sofia.mas@alumne.cat', 'img/alumns/alum16.png', 'alumne'),
-('18181818S', 'Pau', 'Roca Gimeno', '2006-03-18', 'Lleida', 25001, 'Espanyola', 'Lleida', 618181818, 973181818, 'pau.roca@alumne.cat', 'img/alumns/alum17.png', 'alumne'),
-('19191919T', 'Neus', 'Sala Pont', '2005-11-25', 'Lleida', 25002, 'Espanyola', 'Lleida', 619191919, 973191919, 'neus.sala@alumne.cat', 'img/alumns/alum18.png', 'alumne'),
-('20202020U', 'Oriol', 'Vila Camps', '2006-07-04', 'Lleida', 25002, 'Espanyola', 'Lleida', 620202020, 973202020, 'oriol.vila@alumne.cat', 'img/alumns/alum19.png', 'alumne'),
-('21212121V', 'Marina', 'Pons Esteve', '2005-09-30', 'Lleida', 25003, 'Espanyola', 'Lleida', 621212121, 973212121, 'marina.pons@alumne.cat', 'img/alumns/alum20.png', 'alumne'),
-('22222222B', 'Aina', 'Martí Soler', '2006-11-05', 'Lleida', 25001, 'Espanyola', 'Lleida', 622222222, 973222222, 'aina.marti@alumne.cat', 'img/alumns/alum02.png', 'alumne'),
-('22222223W', 'Gerard', 'Llopis Tort', '2004-12-15', 'Lleida', 25003, 'Espanyola', 'Lleida', 622222223, 973222223, 'gerard.llopis@alumne.cat', 'img/alumns/alum21.png', 'alumne'),
-('23232323X', 'Mireia', 'Ferrer Mas', '2005-06-08', 'Lleida', 25004, 'Espanyola', 'Lleida', 623232323, 973232323, 'mireia.ferrer@alumne.cat', 'img/alumns/alum22.png', 'alumne'),
+('13131313M', 'Júlia', 'Ferrer Pons', '2006-02-28', 'Lleida', 25001, 'Espanyola', 'Lleida', 613131313, 973131313, 'julia.ferrer@alumne.cat', '/img/alumns/alum12.png', 'alumne'),
+('14141414N', 'Roger', 'Llopis Mas', '2004-11-09', 'Lleida', 25002, 'Espanyola', 'Lleida', 614141414, 973141414, 'roger.llopis@alumne.cat', '/img/alumns/alum13.png', 'alumne'),
+('15151515P', 'Carla', 'Mora Esteve', '2005-03-22', 'Lleida', 25002, 'Espanyola', 'Lleida', 615151515, 973151515, 'carla.mora@alumne.cat', '/img/alumns/alum14.png', 'alumne'),
+('16161616Q', 'Marc', 'Torrents Gil', '2004-07-04', 'Lleida', 25003, 'Espanyola', 'Lleida', 616161616, 973161616, 'marc.torrents@alumne.cat', '/img/alumns/alum15.png', 'alumne'),
+('17171717R', 'Sofia', 'Mas Vidal', '2005-05-12', 'Lleida', 25001, 'Espanyola', 'Lleida', 617171717, 973171717, 'sofia.mas@alumne.cat', '/img/alumns/alum16.png', 'alumne'),
+('18181818S', 'Pau', 'Roca Gimeno', '2006-03-18', 'Lleida', 25001, 'Espanyola', 'Lleida', 618181818, 973181818, 'pau.roca@alumne.cat', '/img/alumns/alum17.png', 'alumne'),
+('19191919T', 'Neus', 'Sala Pont', '2005-11-25', 'Lleida', 25002, 'Espanyola', 'Lleida', 619191919, 973191919, 'neus.sala@alumne.cat', '/img/alumns/alum18.png', 'alumne'),
+('20202020U', 'Oriol', 'Vila Camps', '2006-07-04', 'Lleida', 25002, 'Espanyola', 'Lleida', 620202020, 973202020, 'oriol.vila@alumne.cat', '/img/alumns/alum19.png', 'alumne'),
+('21212121V', 'Marina', 'Pons Esteve', '2005-09-30', 'Lleida', 25003, 'Espanyola', 'Lleida', 621212121, 973212121, 'marina.pons@alumne.cat', '/img/alumns/alum20.png', 'alumne'),
+('22222222B', 'Aina', 'Martí Soler', '2006-11-05', 'Lleida', 25001, 'Espanyola', 'Lleida', 622222222, 973222222, 'aina.marti@alumne.cat', '/img/alumns/alum02.png', 'alumne'),
+('22222223W', 'Gerard', 'Llopis Tort', '2004-12-15', 'Lleida', 25003, 'Espanyola', 'Lleida', 622222223, 973222223, 'gerard.llopis@alumne.cat', '/img/alumns/alum21.png', 'alumne'),
+('23232323X', 'Mireia', 'Ferrer Mas', '2005-06-08', 'Lleida', 25004, 'Espanyola', 'Lleida', 623232323, 973232323, 'mireia.ferrer@alumne.cat', '/img/alumns/alum22.png', 'alumne'),
 ('23456789B', 'Anna', 'Ribas Soler', '1982-07-24', 'Lleida', 25001, 'Espanyola', 'Lleida', 623456789, 973456789, 'anna.ribas@institut.cat', 'img/profs/prof02.png', 'professor'),
-('24242424Y', 'Dani', 'Soler Riba', '2006-01-22', 'Lleida', 25004, 'Espanyola', 'Lleida', 624242424, 973242424, 'dani.soler@alumne.cat', 'img/alumns/alum23.png', 'alumne'),
-('25252525Z', 'Ona', 'Puig Tort', '2005-04-17', 'Lleida', 25005, 'Espanyola', 'Lleida', 625252525, 973252525, 'ona.puig@alumne.cat', 'img/alumns/alum24.png', 'alumne'),
-('26262626A', 'Bernat', 'Coma Valls', '2004-08-29', 'Lleida', 25005, 'Espanyola', 'Lleida', 626262626, 973262626, 'bernat.coma@alumne.cat', 'img/alumns/alum25.png', 'alumne'),
-('27272727B', 'Alba', 'Mir Prat', '2005-03-11', 'Lleida', 25001, 'Espanyola', 'Lleida', 627272727, 973272727, 'alba.mir@alumne.cat', 'img/alumns/alum26.png', 'alumne'),
-('28282828C', 'Guillem', 'Tort Bosch', '2006-10-03', 'Lleida', 25001, 'Espanyola', 'Lleida', 628282828, 973282828, 'guillem.tort@alumne.cat', 'img/alumns/alum27.png', 'alumne'),
-('29292929D', 'Laura', 'Font Sala', '2005-07-19', 'Lleida', 25002, 'Espanyola', 'Lleida', 629292929, 973292929, 'laura.font@alumne.cat', 'img/alumns/alum28.png', 'alumne'),
-('30303030E', 'Alex', 'Camps Mir', '2004-02-06', 'Lleida', 25002, 'Espanyola', 'Lleida', 630303030, 973303030, 'alex.camps@alumne.cat', 'img/alumns/alum29.png', 'alumne'),
-('31313131F', 'Claudia', 'Valls Roca', '2006-05-24', 'Lleida', 25003, 'Espanyola', 'Lleida', 631313131, 973313131, 'claudia.valls@alumne.cat', 'img/alumns/alum30.png', 'alumne'),
+('24242424Y', 'Dani', 'Soler Riba', '2006-01-22', 'Lleida', 25004, 'Espanyola', 'Lleida', 624242424, 973242424, 'dani.soler@alumne.cat', '/img/alumns/alum23.png', 'alumne'),
+('25252525Z', 'Ona', 'Puig Tort', '2005-04-17', 'Lleida', 25005, 'Espanyola', 'Lleida', 625252525, 973252525, 'ona.puig@alumne.cat', '/img/alumns/alum24.png', 'alumne'),
+('26262626A', 'Bernat', 'Coma Valls', '2004-08-29', 'Lleida', 25005, 'Espanyola', 'Lleida', 626262626, 973262626, 'bernat.coma@alumne.cat', '/img/alumns/alum25.png', 'alumne'),
+('27272727B', 'Alba', 'Mir Prat', '2005-03-11', 'Lleida', 25001, 'Espanyola', 'Lleida', 627272727, 973272727, 'alba.mir@alumne.cat', '/img/alumns/alum26.png', 'alumne'),
+('28282828C', 'Guillem', 'Tort Bosch', '2006-10-03', 'Lleida', 25001, 'Espanyola', 'Lleida', 628282828, 973282828, 'guillem.tort@alumne.cat', '/img/alumns/alum27.png', 'alumne'),
+('29292929D', 'Laura', 'Font Sala', '2005-07-19', 'Lleida', 25002, 'Espanyola', 'Lleida', 629292929, 973292929, 'laura.font@alumne.cat', '/img/alumns/alum28.png', 'alumne'),
+('30303030E', 'Alex', 'Camps Mir', '2004-02-06', 'Lleida', 25002, 'Espanyola', 'Lleida', 630303030, 973303030, 'alex.camps@alumne.cat', '/img/alumns/alum29.png', 'alumne'),
+('31313131F', 'Claudia', 'Valls Roca', '2006-05-24', 'Lleida', 25003, 'Espanyola', 'Lleida', 631313131, 973313131, 'claudia.valls@alumne.cat', '/img/alumns/alum30.png', 'alumne'),
 ('32323232G', 'Miquel', 'Aguilar Blasco', '1980-04-14', 'Lleida', 25003, 'Espanyola', 'Lleida', 632323232, 973323232, 'miquel.aguilar@institut.cat', 'img/profs/prof11.png', 'professor'),
 ('33323232H', 'Cristina', 'Beltran Vidal', '1977-09-21', 'Lleida', 25004, 'Espanyola', 'Lleida', 633323232, 973332323, 'cristina.beltran@institut.cat', 'img/profs/prof12.png', 'professor'),
-('33333333C', 'Nil', 'Costa Riba', '2005-07-23', 'Lleida', 25002, 'Espanyola', 'Lleida', 633333333, 973333333, 'nil.costa@alumne.cat', 'img/alumns/alum03.png', 'alumne'),
+('33333333C', 'Nil', 'Costa Riba', '2005-07-23', 'Lleida', 25002, 'Espanyola', 'Lleida', 633333333, 973333333, 'nil.costa@alumne.cat', '/img/alumns/alum03.png', 'alumne'),
 ('34323232I', 'Raul', 'Gimenez Pons', '1983-01-08', 'Lleida', 25004, 'Espanyola', 'Lleida', 634323232, 973342323, 'raul.gimenez@institut.cat', 'img/profs/prof13.png', 'professor'),
 ('34567890C', 'Jordi', 'Casas Vila', '1975-11-03', 'Lleida', 25002, 'Espanyola', 'Lleida', 634567890, 973567890, 'jordi.casas@institut.cat', 'img/profs/prof03.png', 'professor'),
 ('35323232J', 'Montse', 'Llopis Camps', '1979-06-30', 'Lleida', 25005, 'Espanyola', 'Lleida', 635323232, 973352323, 'montse.llopis@institut.cat', 'img/profs/prof14.png', 'professor'),
 ('36323232K', 'Toni', 'Rovira Soler', '1981-11-15', 'Lleida', 25005, 'Espanyola', 'Lleida', 636323232, 973362323, 'toni.rovira@institut.cat', 'img/profs/prof15.png', 'professor'),
-('44444444D', 'Laia', 'Romero Gil', '2005-09-14', 'Lleida', 25002, 'Espanyola', 'Lleida', 644444444, 973444444, 'laia.romero@alumne.cat', 'img/alumns/alum04.png', 'alumne'),
+('44444444D', 'Laia', 'Romero Gil', '2005-09-14', 'Lleida', 25002, 'Espanyola', 'Lleida', 644444444, 973444444, 'laia.romero@alumne.cat', '/img/alumns/alum04.png', 'alumne'),
 ('45678901D', 'Marta', 'Puig Ferrer', '1980-05-19', 'Lleida', 25002, 'Espanyola', 'Lleida', 645678901, 973678901, 'marta.puig@institut.cat', 'img/profs/prof04.png', 'professor'),
-('55555555E', 'Jan', 'Navarro Puig', '2006-03-09', 'Lleida', 25003, 'Espanyola', 'Lleida', 655555555, 973555555, 'jan.navarro@alumne.cat', 'img/alumns/alum05.png', 'alumne'),
+('55555555E', 'Jan', 'Navarro Puig', '2006-03-09', 'Lleida', 25003, 'Espanyola', 'Lleida', 655555555, 973555555, 'jan.navarro@alumne.cat', '/img/alumns/alum05.png', 'alumne'),
 ('56789012E', 'Pere', 'Anton López', '1979-09-08', 'Lleida', 25003, 'Espanyola', 'Lleida', 656789012, 973789012, 'pere.anton@institut.cat', 'img/profs/prof05.png', 'professor'),
-('66666666F', 'Clara', 'Ortiz Vila', '2005-12-27', 'Lleida', 25003, 'Espanyola', 'Lleida', 666666666, 973666666, 'clara.ortiz@alumne.cat', 'img/alumns/alum06.png', 'alumne'),
+('66666666F', 'Clara', 'Ortiz Vila', '2005-12-27', 'Lleida', 25003, 'Espanyola', 'Lleida', 666666666, 973666666, 'clara.ortiz@alumne.cat', '/img/alumns/alum06.png', 'alumne'),
 ('67890123F', 'Laura', 'Sánchez Mora', '1983-01-15', 'Lleida', 25003, 'Espanyola', 'Lleida', 667890123, 973890123, 'laura.sanchez@institut.cat', 'img/profs/prof06.png', 'professor'),
-('77777777G', 'Eric', 'Soler Llorens', '2005-04-11', 'Lleida', 25004, 'Espanyola', 'Lleida', 677777777, 973777777, 'eric.soler@alumne.cat', 'img/alumns/alum07.png', 'alumne'),
+('77777777G', 'Eric', 'Soler Llorens', '2005-04-11', 'Lleida', 25004, 'Espanyola', 'Lleida', 677777777, 973777777, 'eric.soler@alumne.cat', '/img/alumns/alum07.png', 'alumne'),
 ('78901234G', 'Carles', 'Domènech Roca', '1977-06-30', 'Lleida', 25004, 'Espanyola', 'Lleida', 678901234, 973901234, 'carles.domenech@institut.cat', 'img/profs/prof07.png', 'professor'),
-('88888888H', 'Iris', 'Reig Amat', '2006-10-21', 'Lleida', 25004, 'Espanyola', 'Lleida', 688888888, 973888888, 'iris.reig@alumne.cat', 'img/alumns/alum08.png', 'alumne'),
+('88888888H', 'Iris', 'Reig Amat', '2006-10-21', 'Lleida', 25004, 'Espanyola', 'Lleida', 688888888, 973888888, 'iris.reig@alumne.cat', '/img/alumns/alum08.png', 'alumne'),
 ('89012345H', 'Núria', 'Pérez Vidal', '1985-04-22', 'Lleida', 25004, 'Espanyola', 'Lleida', 689012345, 973012345, 'nuria.perez@institut.cat', 'img/profs/prof08.png', 'professor'),
 ('90123456I', 'Xavier', 'Font Mir', '1976-08-11', 'Lleida', 25005, 'Espanyola', 'Lleida', 690123456, 973123456, 'xavier.font@institut.cat', 'img/profs/prof09.png', 'professor'),
-('99999999I', 'Biel', 'Pascual Serra', '2005-08-02', 'Lleida', 25005, 'Espanyola', 'Lleida', 699999999, 973999999, 'biel.pascual@alumne.cat', 'img/alumns/alum09.png', 'alumne');
+('99999999I', 'Biel', 'Pascual Serra', '2005-08-02', 'Lleida', 25005, 'Espanyola', 'Lleida', 699999999, 973999999, 'biel.pascual@alumne.cat', '/img/alumns/alum09.png', 'alumne');
 
 --
--- Disparadors `persones`
+-- Disparadores `persones`
 --
+DROP TRIGGER IF EXISTS `generarUsuari`;
 DELIMITER $$
 CREATE TRIGGER `generarUsuari` AFTER INSERT ON `persones` FOR EACH ROW BEGIN
     DECLARE usernameBase VARCHAR(50);
@@ -1481,6 +1810,7 @@ CREATE TRIGGER `generarUsuari` AFTER INSERT ON `persones` FOR EACH ROW BEGIN
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `valid_email`;
 DELIMITER $$
 CREATE TRIGGER `valid_email` BEFORE INSERT ON `persones` FOR EACH ROW BEGIN
     IF NEW.email NOT REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}$' THEN
@@ -1494,9 +1824,10 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `professors`
+-- Estructura de tabla para la tabla `professors`
 --
 
+DROP TABLE IF EXISTS `professors`;
 CREATE TABLE `professors` (
   `codi_prof` varchar(20) NOT NULL,
   `dni` varchar(9) NOT NULL,
@@ -1504,7 +1835,7 @@ CREATE TABLE `professors` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `professors`
+-- Volcado de datos para la tabla `professors`
 --
 
 INSERT INTO `professors` (`codi_prof`, `dni`, `dedicacio`) VALUES
@@ -1527,9 +1858,10 @@ INSERT INTO `professors` (`codi_prof`, `dni`, `dedicacio`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `prof_assignatura`
+-- Estructura de tabla para la tabla `prof_assignatura`
 --
 
+DROP TABLE IF EXISTS `prof_assignatura`;
 CREATE TABLE `prof_assignatura` (
   `id` int(11) NOT NULL,
   `id_codiprof` varchar(20) NOT NULL,
@@ -1537,7 +1869,7 @@ CREATE TABLE `prof_assignatura` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `prof_assignatura`
+-- Volcado de datos para la tabla `prof_assignatura`
 --
 
 INSERT INTO `prof_assignatura` (`id`, `id_codiprof`, `id_assignatura`) VALUES
@@ -1560,9 +1892,10 @@ INSERT INTO `prof_assignatura` (`id`, `id_codiprof`, `id_assignatura`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `ras`
+-- Estructura de tabla para la tabla `ras`
 --
 
+DROP TABLE IF EXISTS `ras`;
 CREATE TABLE `ras` (
   `id` int(11) NOT NULL,
   `ra` int(11) NOT NULL,
@@ -1572,7 +1905,7 @@ CREATE TABLE `ras` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `ras`
+-- Volcado de datos para la tabla `ras`
 --
 
 INSERT INTO `ras` (`id`, `ra`, `codi_assignatura`, `data_inici`, `data_fin`) VALUES
@@ -1599,20 +1932,30 @@ INSERT INTO `ras` (`id`, `ra`, `codi_assignatura`, `data_inici`, `data_fin`) VAL
 (35, 3, 'MP02', '2025-04-01', '2025-06-13'),
 (36, 3, 'MP03', '2025-04-01', '2025-06-13'),
 (37, 3, 'MP04', '2025-04-01', '2025-06-13'),
-(38, 3, 'MP05', '2025-04-01', '2025-06-13');
+(38, 3, 'MP05', '2025-04-01', '2025-06-13'),
+(39, 1, 'MP02', '2024-09-01', '2024-12-20'),
+(40, 2, 'MP02', '2025-01-08', '2025-06-13'),
+(41, 1, 'MP09', '2024-09-01', '2024-12-20'),
+(42, 2, 'MP09', '2025-01-08', '2025-06-13'),
+(43, 1, 'MP10', '2024-09-01', '2024-12-20'),
+(44, 2, 'MP10', '2025-01-08', '2025-06-13'),
+(45, 1, 'MP12', '2024-09-01', '2024-12-20'),
+(46, 2, 'MP12', '2025-01-08', '2025-06-13'),
+(47, 1, 'MP13', '2024-09-01', '2024-12-20'),
+(48, 2, 'MP13', '2025-01-08', '2025-06-13'),
+(49, 1, 'MP15', '2024-09-01', '2024-12-20'),
+(50, 2, 'MP15', '2025-01-08', '2025-06-13');
 
 --
--- Disparadors `ras`
+-- Disparadores `ras`
 --
+DROP TRIGGER IF EXISTS `verificarRa`;
 DELIMITER $$
 CREATE TRIGGER `verificarRa` BEFORE INSERT ON `ras` FOR EACH ROW BEGIN
     DECLARE exist INT DEFAULT 0;
-
     SELECT COUNT(*) INTO exist
     FROM ras
-    WHERE ra = NEW.ra
-      AND codi_assignatura = NEW.codi_assignatura;
-
+    WHERE ra = NEW.ra AND codi_assignatura = NEW.codi_assignatura;
     IF exist > 0 THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'RA ja existent per a aquesta assignatura';
@@ -1624,9 +1967,10 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `sessions`
+-- Estructura de tabla para la tabla `sessions`
 --
 
+DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
   `id_session` int(11) NOT NULL,
   `dni_user` varchar(20) NOT NULL,
@@ -1636,133 +1980,45 @@ CREATE TABLE `sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `sessions`
+-- Volcado de datos para la tabla `sessions`
 --
 
 INSERT INTO `sessions` (`id_session`, `dni_user`, `token`, `data_inici`, `data_fin`) VALUES
-(40, '11111111A', 'b2121697855da39afcaf7bfdcb21a56ca3b2cbb3281aafc363784f62ad8711df', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
-(41, '11111111A', '3ab676f7a619c141397acf8a3ce7a1cb903797be1b4f20092d686b7da2235443', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
-(42, '11111111A', 'cf425b12e956c1329d170a83ffd6babf5df7cceb2045af17a01d38960378b309', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
-(43, '11111111A', 'b017fef2d5bb026ad7fad8119ac823241e482f70c0600edd3270fb501bd970c0', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
-(44, '11111111A', '14b6d07fd0cac990a807d41bb08556382aec77937716642293888296cdf312c1', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
-(45, '11111111A', 'fa66ad05921947ab8d1573d2937f17bd3b64e55064ffd2d7d21ce6852040e858', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
-(46, '11111111A', '438878390709ba53d83134e7908917aa19c6c12071631a9e9fc69a8c5be888c1', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
-(47, '11111111A', '9c76b4f7d8733c10738a6de1f29a2bf89ed7a9e8e09fe293decb3e232ceca3dd', '2026-05-03 00:00:00', '2026-05-04 00:00:00'),
-(48, '11111111A', 'ab8d980505d696a67e9e1fcdabd07f692601b9b57ea533f1565386bfeabf3e97', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(49, '11111111A', 'a625bb14c62e4b43e7ac1f4adcbe4d72363053e3c220770971fde1fabf7c9331', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(50, '11111111A', 'faf322f4f5d0254447f714ece90f0d7e77bbc35e89a62150d0f895ebff30e4ff', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(51, '11111111A', '6823f0edee710c361844ba85745af7d84141f40914564105b5c9e7c36ffc71b8', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(52, '11111111A', '3f360ad4a96d356e429cb1d72b8c0c55209ac6a45b7e41098635e72f8d1ad9a0', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(53, '11111111A', 'e2728607b62937b8d4c311f4f0d247612c899cd08907b13392d921ed0116a134', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(54, '11111111A', 'b3a9b7278f2f1ef0c6bec6185029db9c771e994c3f47407f67e208c9215989ca', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(55, '11111111A', 'c386b8ba5419aa74fb8b3e714d451d3fb318349962319f5297e77124dafa8c2d', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(56, '11111111A', 'da63389184cdf94e056d6b7fc52e3686eb2c8135cec510819e207743f302560e', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(57, '11111111A', '69ef853e591a56b62b5461a7542eeb62cf3eb95429b7aed5d7d18c3c91bb5ceb', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(58, '11111111A', '9692fb8cd7a49cbe54e3c19402042e36b0d3f2b5f697e69bf812d84275b1dfa7', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(59, '11111111A', '57659695cf433ea3811f6d9da0f5e2736bc3d50e69cc5d31ab09f67d395ee0da', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(60, '11111111A', '71483a21270f93fa292b560999ef0a82a2b934c0e0e199083c1d6223341b667b', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(61, '11111111A', '8a1510beda7cca50bd3bace12be5f5cebc57caf12e4ba60a1ce18177e757d9da', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(62, '11111111A', '598cc2182cf9fd15601419cc6ec2cdd8def6752a146515bda5c6dcde1a52de22', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(63, '11111111A', '8762861aacaff0e5649f10c4880a6992c2cb28cc519f287adc4cb6b372c11c93', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(64, '11111111A', 'f8708ce6d88377b0be29aa40be377f784aa13a4c15f20249579773b7c381adfc', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(65, '11111111A', '2fdd6b61ede0de1464fc2a8288ef0875adc5f000fc5a1f1114df5e52ff533e76', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(66, '11111111A', '1c8b32d9d9a099567478ee5037bd8f1310d511ce3a7e18423bf80131a6256607', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(67, '11111111A', '740895a3a522f30db682a71f21059c8dc7a5db2dab9f4f8d3b1e5e5482c90ce3', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(68, '11111111A', '4c00cfe94933e8183495390a884681a009b01b82c7467aa820fc3a8fc7bc69d3', '2026-05-04 00:00:00', '2026-05-04 00:00:00'),
-(69, '11111111A', '1e2d0929f8bcd5f07f2a79d08ed36341f47a7e239fc62c820fd655d46f99e788', '2026-05-04 11:07:47', '2026-05-04 21:07:47'),
-(70, '11111111A', '22e508131c896329defa6729eeab3cbc372797a5b415e63fbe1e4a260e8c3b53', '2026-05-04 12:10:22', '2026-05-04 22:10:22'),
-(71, '11111111A', '8d3722769d4c38dfa0607dd9f2618017685cecc7fbccb2b3eed5a34b02d0edcc', '2026-05-04 15:32:14', '2026-05-05 01:32:14'),
-(72, '11111111A', '9006d4e0bd8d682c862b54538b09d1ecdb9ccb2e5f6a534008621df951747cf6', '2026-05-04 15:54:27', '2026-05-05 01:54:27'),
-(73, '11111111A', '0937ba0b11df4000c5cd6bf1b9af90e4e9d7f519efaf4bdb0d463de5da90fa20', '2026-05-04 17:55:50', '2026-05-05 03:55:50'),
-(74, '11111111A', '6ea9d7bea859b041866fcd369b76de5746f22646d8831f0496eaf11cd19b9a2a', '2026-05-04 18:02:01', '2026-05-05 04:02:01'),
-(75, '11111111A', '21677a78aa7f19d7370158b6aa13d0f4d19e7f9bc6d60edbc19cf667318a56e1', '2026-05-04 18:08:52', '2026-05-05 04:08:52'),
-(76, '11111111A', '958de2cbcc8d8f7aee927e38b444739c785cf72b0b56333d5e47f5e17ba36ba0', '2026-05-04 18:09:41', '2026-05-05 04:09:41'),
-(77, '11111111A', '8ac8065b179de613a351f6d336aa243d3a2b0016dca92bd9d65bf5238d672b62', '2026-05-04 18:12:01', '2026-05-05 04:12:01'),
-(78, '11111111A', '7ee801f6268a6079e8ab5a831978998bcfa3df96c80d505ce3bfe60593479a19', '2026-05-04 18:18:53', '2026-05-05 04:18:53'),
-(79, '11111111A', '702cdc92fd5a6845f63c4548848e65c98ad4c3f0bd4079c59a94fe3b6e99e71e', '2026-05-04 20:47:34', '2026-05-05 06:47:34'),
-(80, '11111111A', '3424043994479000585d270d4ed109265eaa4979997b7f770d620b5d437d56b9', '2026-05-04 21:14:03', '2026-05-05 07:14:03'),
-(81, '11111111A', '2cf8b4ef4283e418295dbdf18eee97a2c849c93e1a9c65620d977572ecef2851', '2026-05-04 21:17:48', '2026-05-05 07:17:48'),
-(82, '11111111A', 'f4b8c39925b92097a5e176624d78805035006cf01e94744b6ed570c21959ebe5', '2026-05-04 22:22:22', '2026-05-05 08:22:22'),
-(83, '11111111A', 'ef0af51acfa7a8d2da65f1f1ddc9c03bcfe4665c46caf4b764c2b0baab005de2', '2026-05-04 22:28:38', '2026-05-05 08:28:38'),
-(84, '11111111A', '989e6e8753ec332815143546ebb6555adda50abca5828843e490a4b5f11b2b69', '2026-05-04 22:31:44', '2026-05-05 08:31:44'),
-(85, '11111111A', '5ed99ae6c7c1e0e89bce07e53b55a0c898e64cd827e1c0dbe6f57214b1e14155', '2026-05-04 22:32:24', '2026-05-05 08:32:24'),
-(86, '11223344K', 'b27aa2069edc6ef58360ae01b8e47996e4dcaed7e777c7dc9ef26b933a8210de', '2026-05-04 22:37:57', '2026-05-05 08:37:57'),
-(87, '11223344K', 'b457207a79c41cc6129b2b1aa2f8320cbc78bd0707d019f4b868ecbafcf8ca45', '2026-05-04 22:45:28', '2026-05-05 08:45:28'),
-(88, '11223344K', '2f28544d1d36799f86b51e8164ced245976bb5279342065cc04d30059b2c1726', '2026-05-04 22:46:18', '2026-05-05 08:46:18'),
-(89, '12345678A', '5af25425310df145579329a6fa96244d10625cbb8432c70a60d64b5aaf0eb4aa', '2026-05-04 22:47:09', '2026-05-05 08:47:09'),
-(90, '11223344K', 'c612d3dba1cb54a11af4dfc47f1915840a4b802a3752fb3513a804701f69ff36', '2026-05-04 22:48:14', '2026-05-05 08:48:14'),
-(91, '11223344K', '942160b433f1614d071fb1488d0c51a20f3cdc422ff30449ddf3efebfd038d2b', '2026-05-04 22:49:42', '2026-05-05 08:49:42'),
-(92, '11223344K', '89d7fc72c8b8e420c8f82491f67e2523c7b51dcc9259ec9287f7072afef34af7', '2026-05-04 22:59:18', '2026-05-05 08:59:18'),
-(93, '12345678A', '80dd6c786e8a722c8526eb37d1891b7fbdebc8ca4443ca74c63d36d39947d891', '2026-05-04 22:59:51', '2026-05-05 08:59:51'),
-(94, '12345678A', '4dc85c90e235c7999cc8cb4a6ad5d77fe7595a35f55234120f39877626574807', '2026-05-05 16:26:19', '2026-05-06 02:26:19'),
-(95, '11223344K', 'c6af8e692e2e81a669c1835606908bc96d2fa5dca8f6eb8d45cd894033a821e4', '2026-05-05 16:27:31', '2026-05-06 02:27:31'),
-(96, '12345678A', '47e909600e18cfc85c9b735d71e4e61db582fa26c553e8028ec31ab78bd68b8f', '2026-05-05 16:29:53', '2026-05-06 02:29:53'),
-(97, '11223344K', '74cf74b22d536fc88e5e278c9bd53cc0bfa442849eb45702c36315d91f6f9022', '2026-05-05 16:34:20', '2026-05-06 02:34:20'),
-(98, '12345678A', 'aa9aa2dbca78ed5cec15563d44f54d4c6dc8b43cf2cf7ce7ce7e91820a9e4563', '2026-05-05 16:36:46', '2026-05-06 02:36:46'),
-(99, '12345678A', 'bb372cf5ac1105a9a8326b6b3b8b2ad5d044501d1e248c56141e59635098cc0d', '2026-05-05 16:45:12', '2026-05-06 02:45:12'),
-(100, '12345678A', 'f2884a5476bb03b2ddf0c7f5099595b6a9db7832780264fb4d87df9d4111dbcc', '2026-05-05 16:47:08', '2026-05-06 02:47:08'),
-(101, '12345678A', '2bb428baf5bb73124b3ccc61927bd20e21ae6f388d3635b2e303b5e1380d9ec7', '2026-05-05 16:48:00', '2026-05-06 02:48:00'),
-(102, '12345678A', '0f7a97f7de8a0292afd1b966a7031fee050b8a4e91a2325ea1a9a94f64b63611', '2026-05-05 16:49:54', '2026-05-06 02:49:54'),
-(103, '12345678A', 'ac43a39e1665b771ab4472f56c37ad50606c63ee7fd38330c56c0b62c9f970a5', '2026-05-05 16:51:19', '2026-05-06 02:51:19'),
-(104, '12345678A', '1d26bf0a32880ec981f4932aae80f80d7342c42c27107d7a2f295cf98b002048', '2026-05-05 16:52:03', '2026-05-06 02:52:03'),
-(105, '12345678A', '227c5e2c1320bf0c2777655f17c2443783b82f93734ac6ff9ef15820cf21c452', '2026-05-05 19:19:51', '2026-05-06 05:19:51'),
-(106, '12345678A', 'aeeada283a8b55f9619fdf3396098527f127f3a19043dec9558137c2ccd2c15b', '2026-05-05 19:24:36', '2026-05-06 05:24:36'),
-(107, '12345678A', 'fe784636af3270e42373269b2b4d98a2f8f30843da880074d90f9fcfa8a0d464', '2026-05-05 19:26:53', '2026-05-06 05:26:53'),
-(108, '12345678A', '82934d3329e59a45435db4879c5a25cb230930c425e49d31efe8a262fef827d3', '2026-05-05 19:29:49', '2026-05-06 05:29:49'),
-(109, '11223344K', '3d661666a44300e36b73a0261824910386bc6c904ed22d17e8809636788b7b20', '2026-05-05 19:30:17', '2026-05-06 05:30:17'),
-(110, '12345678A', '910a52d14a695cb727d2aea965185145e1f200653c8cf1a3caa008f1a68983e6', '2026-05-05 19:51:01', '2026-05-06 05:51:01'),
-(111, '12345678A', '8e38a0a5d280bdeed9fcf91dc05879b85479a87c4af08a418f36f969cfcb4569', '2026-05-05 19:53:46', '2026-05-06 05:53:46'),
-(112, '12345678A', 'd94840846a452a7a17e614982b1067b380a7aa5a3a7ea13374296454331d74d7', '2026-05-05 19:56:34', '2026-05-06 05:56:34'),
-(113, '11223344K', '9aa29cbd8829911e78206dc4b8d4c4f35e6460fea22361cf71ca65ce9726b1c4', '2026-05-05 20:11:40', '2026-05-06 06:11:40'),
-(114, '11223344K', '61b20eed96035f7d87c01c325b718b651322c241c0ec829217f6f5ba26670ecf', '2026-05-05 20:17:35', '2026-05-06 06:17:35'),
-(115, '11223344K', 'f0ab1c9c857279417ecee7001c58079f95237a83d48479210106b35960fecb96', '2026-05-05 20:36:58', '2026-05-06 06:36:58'),
-(116, '11223344K', 'd807375d518ef75667a485eecb8e5bd9d2968b3a0125789c29f95523e7920899', '2026-05-05 20:38:21', '2026-05-06 06:38:21'),
-(117, '11223344K', 'ee7e9da5a271dde6e56177af4a11056b28737633b37448c0e9dd39a3acabe2ac', '2026-05-05 21:07:35', '2026-05-06 07:07:35'),
-(118, '11223344K', 'cc1bf52bac1b8fcaea7e0778c3f4cd0bec365649216fc6e4c2a855df25717077', '2026-05-05 21:10:07', '2026-05-06 07:10:07'),
-(119, '11223344K', '50b6e73019fa028f515b085c015e57bcbcef13519d0401afd2607595ca2eaf0d', '2026-05-05 21:13:17', '2026-05-06 07:13:17'),
-(120, '11223344K', 'f51b0ae5cc42d2596220091d3a130a6174c4d68bdeee6acc2553603a136009fd', '2026-05-05 21:15:02', '2026-05-06 07:15:02'),
-(121, '11223344K', '9dcd60405d7108fdfe8304919782d3cd6558ac6300522a32ed341d719b3d809f', '2026-05-05 21:15:46', '2026-05-06 07:15:46'),
-(122, '11223344K', 'a040b6ec1136b62a9e4421228d1eb0f3507b86844687eabbb5c82e2e6f7a7588', '2026-05-05 21:19:42', '2026-05-06 07:19:42'),
-(123, '11223344K', '07010bfa56d7bca3e1a6d4d54efde6b3c5213b9c372515d52f777e6c67476bb7', '2026-05-05 21:21:32', '2026-05-06 07:21:32'),
-(124, '11223344K', '1a2906219626592673f63791c653e7710d9c0f388d1d865ef26cefa72935267b', '2026-05-05 23:08:39', '2026-05-06 09:08:39'),
-(125, '11223344K', '439c399404433e06f3a5ce43abbe4d21cec89b99c5fe5a25247efa57158a6e0d', '2026-05-05 23:09:43', '2026-05-06 09:09:43'),
-(126, '11223344K', 'a06ac821d0721c9adcaa507ff7f3634d51ab3c9df0abda99e2bd1b00041b6ecb', '2026-05-05 23:13:53', '2026-05-06 09:13:53'),
-(127, '11223344K', '26ff921cd1d48cc09f9d1c839a20fb81f233879efa879beb2095e6c6a0f97eda', '2026-05-05 23:15:23', '2026-05-06 09:15:23'),
-(128, '11223344K', 'b3e429f6bd1d1e52430f6c37216e67eebe27d90d007f78f349e74b5a7be66c2b', '2026-05-05 23:17:05', '2026-05-06 09:17:05'),
-(129, '11223344K', '81652a34db893a6c3dd230f8de8241abf7722f14c73c22e7bfbb45309c5e1d4b', '2026-05-05 23:21:13', '2026-05-06 09:21:13'),
-(130, '11223344K', 'f01743b3d056080ce48be86ecf0c7ada983f0e984147bfc827ecec17321eed66', '2026-05-05 23:23:51', '2026-05-06 09:23:51'),
-(131, '11223344K', 'fb1c20de33d9a88c6c338a805cc2408d4bc4503032577ac44da55f146d97569f', '2026-05-05 23:24:58', '2026-05-06 09:24:58'),
-(132, '12345678A', '82b438afed137aaa1f47e5dbb4556e527bf6f74320181708a262d8a684498983', '2026-05-05 23:25:25', '2026-05-06 09:25:25'),
-(133, '11223344K', '536076c99602cc4153c16d8e63ee8e25597cfa049cb2da9f33e6555598dd6d9f', '2026-05-05 23:26:50', '2026-05-06 09:26:50'),
-(134, '12345678A', '5a1063f390f88de45e9aeca34f4c4338d807b6190ecd0868c2ff667c3be47d65', '2026-05-05 23:35:40', '2026-05-06 09:35:40'),
-(135, '11223344K', 'c073409decff1e70db137e3fd3a476302b9807ffeff65ada4cccaad72ef37e24', '2026-05-05 23:37:13', '2026-05-06 09:37:13'),
-(136, '12345678A', '56981994b9cb90791c21b60d85da2415cfe9d2bfe7d817a420f73f6fd105696b', '2026-05-05 23:38:02', '2026-05-06 09:38:02'),
-(137, '11223344K', '36150aee88a31e5e4ec08cac6a85db92f0e684b42c4d78a19cce381b092f71c7', '2026-05-05 23:46:38', '2026-05-06 09:46:38'),
-(138, '11223344K', '0a189ddb69755a2f17d364c36e64e4128fb0cd482504ff56338a2818efd4ee15', '2026-05-06 00:02:45', '2026-05-06 10:02:45'),
-(139, '11223344K', 'a9799ad7a90e77a5b1576e8681332ea20904eea88d108e842f92a4f227ee6735', '2026-05-06 00:05:15', '2026-05-06 10:05:15'),
-(140, '11223344K', 'e9fb5c0cf190ebe5b2c4be275fea908a86dfad80f96869a4a3b8feee786679aa', '2026-05-06 00:07:05', '2026-05-06 10:07:05'),
-(141, '12345678A', '1b76454daf5760e55f7728cf4c658e89d01d7b4f3b739c2ede78bcd56003239a', '2026-05-06 00:10:01', '2026-05-06 10:10:01'),
-(142, '11223344K', '9c77ef5990699d3cd3759f0512a8ab157520ec9889242821402bafe2a2270bb5', '2026-05-06 00:10:17', '2026-05-06 10:10:17'),
-(143, '11223344K', '0d2fde6b16faf2a4a0f6b9e0c685993292629539a395984b8b09c23160e36278', '2026-05-06 00:13:37', '2026-05-06 10:13:37'),
-(144, '11223344K', 'b30de5454e9bbe3b025770c1c28e3be2b215e8584e8171f7939aa7a6ba9baceb', '2026-05-06 00:16:05', '2026-05-06 10:16:05'),
-(145, '11223344K', '735b7e209c159c3e9941fc7c847f6e212890f8d28dbd65a77877cf933e7f1c01', '2026-05-06 00:18:12', '2026-05-06 10:18:12'),
-(146, '11223344K', 'c5ea8015050365649c6a358055232ec477e5da8101bf6f30163b3ea6f41e27e3', '2026-05-06 00:19:33', '2026-05-06 10:19:33'),
-(147, '11223344K', '987f5fb109377658bf162bac9127296bc432004df495b4cba62bc3509f44968b', '2026-05-06 00:22:30', '2026-05-06 10:22:30'),
-(148, '11223344K', '01fb0e7f1f0bbde9a6be38fe843f0098853e758ea21aa7e14d46334e102164a9', '2026-05-06 00:26:33', '2026-05-06 10:26:33'),
-(149, '11223344K', '6b121b37ab4ce37d5f0eccb885d2abcb3d5afa53140733bda1ea5995beea677f', '2026-05-06 00:30:36', '2026-05-06 10:30:36'),
-(150, '11223344K', '34aebf247152413b315f9b7a33fd974d2efa0fbee57e936da8b1e66d85e4920e', '2026-05-06 00:34:34', '2026-05-06 10:34:34'),
-(151, '11223344K', 'c03f97386f9d244dea76ee82766b35be80936d4c48f145413984321c15bc19ba', '2026-05-06 00:39:26', '2026-05-06 10:39:26'),
-(152, '11223344K', '0d8b3378ab1b0e2ebfadb24ed5c29f90d9d16abf2d56784e488448c80c638f3e', '2026-05-06 00:49:42', '2026-05-06 10:49:42'),
-(153, '11223344K', '7028467a9ba7a6b24ff5f6db86b5c1c82fbedd0fa9794ef213a7f62698f0ec2e', '2026-05-06 00:52:06', '2026-05-06 10:52:06'),
-(154, '11223344K', '1023dae88478d6c0f3bc66b575cb0392d26d3a67f8abfe7b30c44da8769fc21e', '2026-05-06 01:27:40', '2026-05-06 11:27:40'),
-(155, '11223344K', '0b90c8d279e9b817a011d2839d7b72be3beae1e790e3ee5ec1d81124533d85a9', '2026-05-06 01:29:31', '2026-05-06 11:29:31');
+(1, '11111111A', 'a4ea43e3d60a772ed94b2627bba7a7865afe05cab7050ecd3c257aba9e61f288', '2026-05-06 03:55:35', '2026-05-06 13:55:35'),
+(2, '11111111A', '42e34b0374260befeac8976375562c02d0a128901202216c009e0d64552f254c', '2026-05-06 04:19:17', '2026-05-06 14:19:17'),
+(3, '11111111A', '5dd351c5c5d994b03840c1432fc8dd3a469a5090eb126826e9a97202a532b622', '2026-05-06 04:26:07', '2026-05-06 14:26:07'),
+(4, '11111111A', '67833b830febbe281885185a51ed29deb1884bba0558c607c72865b8c9009896', '2026-05-06 04:26:48', '2026-05-06 14:26:48'),
+(5, '11111111A', '20faa202d5fbfd0079427eafc50ced2ff0a1a9dd77e6120c14172105094c8a08', '2026-05-06 10:08:14', '2026-05-06 20:08:14'),
+(6, '11223344K', 'f067682699bb90f0d11cbb4066499527410b6f66fea57ac80c5b1f2ba97cf8f4', '2026-05-06 10:24:29', '2026-05-06 20:24:29'),
+(7, '12345678A', 'a84c1bfaefff387fb30fc871d6ac6e2fceb98b9c3e33565551cf658976d66872', '2026-05-06 10:24:57', '2026-05-06 20:24:57'),
+(8, '77777777G', 'a2616b22769212952cc137d5c7df810da86b1ffed943c0885d0d087095d72d31', '2026-05-06 10:25:47', '2026-05-06 20:25:47'),
+(9, '22222222B', '6aea66589ad384544750eee901014f618aa4c6e6419907064b7973098a8b76f6', '2026-05-06 10:39:08', '2026-05-06 20:39:08'),
+(10, '77777777G', '3633e6483298f0cda851d3b4e1fcb341cad326270fc258cd3eafb1fa08fca473', '2026-05-06 10:40:07', '2026-05-06 20:40:07'),
+(11, '11111111A', 'be7cbe7c8aaa7747d22a50e46508deee06619048e252a38943d0e33e5fe68327', '2026-05-06 10:41:47', '2026-05-06 20:41:47'),
+(12, '11111111A', '6f791078894fdf05a7ea0bcd7225a4d63dc999f5ad5db855f83e5b1ccda1e966', '2026-05-06 10:49:52', '2026-05-06 20:49:52'),
+(13, '11111111A', 'c91a69dc585a36534c8bd23575edb2ca9218f47e77124bfaee242bba42bf44e0', '2026-05-06 10:59:35', '2026-05-06 20:59:35'),
+(14, '11111111A', 'c4ebbc922230e77a0fdb85acabdeac5b73d34fe41d919392f9e9add21e746d8f', '2026-05-06 14:32:32', '2026-05-07 00:32:32'),
+(15, '11111111A', 'da4756e8b1c5a450e86f9a82e0b5b9887090551fe009de5938230ec568a6d382', '2026-05-06 14:44:19', '2026-05-07 00:44:19'),
+(16, '11111111A', 'a56a7ab4ba224b14d9155617324554d9657a92dc9419ecb994e9035885e8d243', '2026-05-06 14:49:34', '2026-05-07 00:49:34'),
+(17, '11111111A', 'bba5416befcaac8f745d12966c58f2b2075300e53be96512c4cf8a0b8f50b23a', '2026-05-06 14:49:48', '2026-05-07 00:49:48'),
+(18, '11111111A', '4546839308749199f40ca9408091f6e59563e385996af46da8a49d1d4e2fae8b', '2026-05-06 14:50:09', '2026-05-07 00:50:09'),
+(19, '11111111A', '3fbd2383aa53ad67d4d49e64a11e9e5b3c6df8678ea46e6a513de0d07d29590d', '2026-05-06 14:52:47', '2026-05-07 00:52:47'),
+(20, '11111111A', '016bdf8a8c3e79d8b6375038da495de7d1acd4eafab8d8dee2e239f4ed1c8de1', '2026-05-06 14:56:21', '2026-05-07 00:56:21'),
+(21, '11111111A', '5cd9f7ffed2fb1ac0140cc9bbd8511fd0cea1098b0ee8057a9e3578d8651e0cc', '2026-05-06 15:26:05', '2026-05-07 01:26:05'),
+(22, '11111111A', 'd217b14c83675197f4458c24f9b342a8648524b4b1022be4a01c1dc72ee0a331', '2026-05-06 15:46:15', '2026-05-07 01:46:15'),
+(23, '11111111A', 'a908d0d45ab52447f565bff38e0dcfbafa8a80885be62332b57eb3de1f60b409', '2026-05-06 15:47:51', '2026-05-07 01:47:51'),
+(24, '11111111A', '9dfab29c7125dcc1d003b1ad51885d78aad89cf96248121617d309849ea11761', '2026-05-06 15:55:47', '2026-05-07 01:55:47'),
+(25, '11111111A', 'dc0842397266d78f59d662614adaf80cab757529356c3689d76a9f6a79103e5e', '2026-05-06 16:02:07', '2026-05-07 02:02:07'),
+(26, '11111111A', 'bba3f8eeb70b64874e9e06ba20799a480a25799e50ea3e7790befb107063dc4c', '2026-05-06 16:05:38', '2026-05-07 02:05:38'),
+(27, '11111111A', 'e54bdb4d9e93ba248f8c9cd7455015b76c07f4b1455680028092edf2fb2f8bb7', '2026-05-06 16:12:06', '2026-05-07 02:12:06');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de la taula `usuaris`
+-- Estructura de tabla para la tabla `usuaris`
 --
 
+DROP TABLE IF EXISTS `usuaris`;
 CREATE TABLE `usuaris` (
   `id_user` int(11) NOT NULL,
   `dni` varchar(9) NOT NULL,
@@ -1771,7 +2027,7 @@ CREATE TABLE `usuaris` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Bolcament de dades per a la taula `usuaris`
+-- Volcado de datos para la tabla `usuaris`
 --
 
 INSERT INTO `usuaris` (`id_user`, `dni`, `username`, `password`) VALUES
@@ -1786,12 +2042,12 @@ INSERT INTO `usuaris` (`id_user`, `dni`, `username`, `password`) VALUES
 (40, '90123456I', 'xfontmir', NULL),
 (41, '11223344K', 'etorresprat', '$2y$10$ll0uPllujPKOmPBDJ0NtsOKmgc5ccmIcW7YIlkkOQG7CKO/os3qWi'),
 (42, '11111111A', 'pgomezruiz', '$2y$10$/ZKL1KG4UBPb8szT/vTWcOoZp31I3f6vSv1b.QYF8GBoNgUbRhaUK'),
-(43, '22222222B', 'amartísoler', NULL),
-(44, '33333333C', 'ncostariba', NULL),
-(45, '44444444D', 'lromerogil', NULL),
-(46, '55555555E', 'jnavarropui', NULL),
+(43, '22222222B', 'amartísoler', '$2y$10$/ZKL1KG4UBPb8szT/vTWcOoZp31I3f6vSv1b.QYF8GBoNgUbRhaUK'),
+(44, '33333333C', 'ncostariba', '$2y$10$/ZKL1KG4UBPb8szT/vTWcOoZp31I3f6vSv1b.QYF8GBoNgUbRhaUK'),
+(45, '44444444D', 'lromerogil', '$2y$10$/ZKL1KG4UBPb8szT/vTWcOoZp31I3f6vSv1b.QYF8GBoNgUbRhaUK'),
+(46, '55555555E', 'jnavarropui', '$2y$10$/ZKL1KG4UBPb8szT/vTWcOoZp31I3f6vSv1b.QYF8GBoNgUbRhaUK'),
 (47, '66666666F', 'cortizvila', NULL),
-(48, '77777777G', 'esolerllore', NULL),
+(48, '77777777G', 'esolerllore', '$2y$10$/ZKL1KG4UBPb8szT/vTWcOoZp31I3f6vSv1b.QYF8GBoNgUbRhaUK'),
 (49, '88888888H', 'ireigamat', NULL),
 (50, '99999999I', 'bpascualser', NULL),
 (51, '10101010J', 'evidaltorre', NULL),
@@ -1822,11 +2078,11 @@ INSERT INTO `usuaris` (`id_user`, `dni`, `username`, `password`) VALUES
 (76, '36323232K', 'trovirasole', NULL);
 
 --
--- Índexs per a les taules bolcades
+-- Índices para tablas volcadas
 --
 
 --
--- Índexs per a la taula `acta_avaluacio`
+-- Indices de la tabla `acta_avaluacio`
 --
 ALTER TABLE `acta_avaluacio`
   ADD PRIMARY KEY (`id`),
@@ -1834,7 +2090,7 @@ ALTER TABLE `acta_avaluacio`
   ADD KEY `fk_acta_grup` (`nom_grup`);
 
 --
--- Índexs per a la taula `acta_notes`
+-- Indices de la tabla `acta_notes`
 --
 ALTER TABLE `acta_notes`
   ADD PRIMARY KEY (`id`),
@@ -1842,7 +2098,7 @@ ALTER TABLE `acta_notes`
   ADD KEY `fk_notes_estudiant` (`nia`);
 
 --
--- Índexs per a la taula `administradors`
+-- Indices de la tabla `administradors`
 --
 ALTER TABLE `administradors`
   ADD PRIMARY KEY (`id`),
@@ -1850,7 +2106,7 @@ ALTER TABLE `administradors`
   ADD KEY `fk_adminuser` (`id_user`);
 
 --
--- Índexs per a la taula `admin_centre`
+-- Indices de la tabla `admin_centre`
 --
 ALTER TABLE `admin_centre`
   ADD PRIMARY KEY (`id`),
@@ -1858,13 +2114,13 @@ ALTER TABLE `admin_centre`
   ADD KEY `fk_codicentre` (`codi_centre`);
 
 --
--- Índexs per a la taula `assignatures`
+-- Indices de la tabla `assignatures`
 --
 ALTER TABLE `assignatures`
   ADD PRIMARY KEY (`codi`);
 
 --
--- Índexs per a la taula `assignatures_cicle`
+-- Indices de la tabla `assignatures_cicle`
 --
 ALTER TABLE `assignatures_cicle`
   ADD PRIMARY KEY (`id`),
@@ -1872,7 +2128,7 @@ ALTER TABLE `assignatures_cicle`
   ADD KEY `fk_cicleassignatura` (`id_assignatura`);
 
 --
--- Índexs per a la taula `assistencia`
+-- Indices de la tabla `assistencia`
 --
 ALTER TABLE `assistencia`
   ADD PRIMARY KEY (`id`),
@@ -1881,19 +2137,19 @@ ALTER TABLE `assistencia`
   ADD KEY `fk_nomgrup` (`nom_grup`);
 
 --
--- Índexs per a la taula `centres`
+-- Indices de la tabla `centres`
 --
 ALTER TABLE `centres`
   ADD PRIMARY KEY (`codi`);
 
 --
--- Índexs per a la taula `cicles`
+-- Indices de la tabla `cicles`
 --
 ALTER TABLE `cicles`
   ADD PRIMARY KEY (`nom`);
 
 --
--- Índexs per a la taula `contractes`
+-- Indices de la tabla `contractes`
 --
 ALTER TABLE `contractes`
   ADD PRIMARY KEY (`id`),
@@ -1901,21 +2157,21 @@ ALTER TABLE `contractes`
   ADD KEY `fk_codic` (`codi_centre`);
 
 --
--- Índexs per a la taula `cursos_cicle`
+-- Indices de la tabla `cursos_cicle`
 --
 ALTER TABLE `cursos_cicle`
   ADD PRIMARY KEY (`id`),
   ADD KEY `nom_cicle` (`nom_cicle`);
 
 --
--- Índexs per a la taula `directiva`
+-- Indices de la tabla `directiva`
 --
 ALTER TABLE `directiva`
   ADD PRIMARY KEY (`rol`),
   ADD KEY `fk_codiprof` (`codi_prof`);
 
 --
--- Índexs per a la taula `estudiants`
+-- Indices de la tabla `estudiants`
 --
 ALTER TABLE `estudiants`
   ADD PRIMARY KEY (`nia`),
@@ -1924,7 +2180,7 @@ ALTER TABLE `estudiants`
   ADD KEY `fk_cicles` (`nom_cicle`) USING BTREE;
 
 --
--- Índexs per a la taula `estudiants_ras`
+-- Indices de la tabla `estudiants_ras`
 --
 ALTER TABLE `estudiants_ras`
   ADD PRIMARY KEY (`id`),
@@ -1932,13 +2188,13 @@ ALTER TABLE `estudiants_ras`
   ADD KEY `fk_niaa` (`nia`);
 
 --
--- Índexs per a la taula `grup_classe`
+-- Indices de la tabla `grup_classe`
 --
 ALTER TABLE `grup_classe`
   ADD PRIMARY KEY (`nom`);
 
 --
--- Índexs per a la taula `historic_actes`
+-- Indices de la tabla `historic_actes`
 --
 ALTER TABLE `historic_actes`
   ADD PRIMARY KEY (`id`),
@@ -1946,7 +2202,7 @@ ALTER TABLE `historic_actes`
   ADD KEY `fk_hist_professor` (`dni_professor`);
 
 --
--- Índexs per a la taula `historic_estudiants`
+-- Indices de la tabla `historic_estudiants`
 --
 ALTER TABLE `historic_estudiants`
   ADD PRIMARY KEY (`id`),
@@ -1954,35 +2210,35 @@ ALTER TABLE `historic_estudiants`
   ADD KEY `fk_nomciclee` (`nom_cicle`);
 
 --
--- Índexs per a la taula `historic_fct`
+-- Indices de la tabla `historic_fct`
 --
 ALTER TABLE `historic_fct`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_niah` (`nia`);
 
 --
--- Índexs per a la taula `historic_professors`
+-- Indices de la tabla `historic_professors`
 --
 ALTER TABLE `historic_professors`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_codipr` (`codi_prof`);
 
 --
--- Índexs per a la taula `logs_consultes`
+-- Indices de la tabla `logs_consultes`
 --
 ALTER TABLE `logs_consultes`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_logs_consultes_dni` (`dni_user`);
 
 --
--- Índexs per a la taula `logs_login`
+-- Indices de la tabla `logs_login`
 --
 ALTER TABLE `logs_login`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_logs_login_dni` (`dni_user`);
 
 --
--- Índexs per a la taula `periodes_avaluacio`
+-- Indices de la tabla `periodes_avaluacio`
 --
 ALTER TABLE `periodes_avaluacio`
   ADD PRIMARY KEY (`id`),
@@ -1990,21 +2246,21 @@ ALTER TABLE `periodes_avaluacio`
   ADD KEY `fk_periode_persona` (`obert_per`);
 
 --
--- Índexs per a la taula `persones`
+-- Indices de la tabla `persones`
 --
 ALTER TABLE `persones`
   ADD PRIMARY KEY (`dni`),
   ADD KEY `dni` (`dni`);
 
 --
--- Índexs per a la taula `professors`
+-- Indices de la tabla `professors`
 --
 ALTER TABLE `professors`
   ADD PRIMARY KEY (`codi_prof`),
   ADD KEY `fk_dniprof` (`dni`);
 
 --
--- Índexs per a la taula `prof_assignatura`
+-- Indices de la tabla `prof_assignatura`
 --
 ALTER TABLE `prof_assignatura`
   ADD PRIMARY KEY (`id`),
@@ -2012,20 +2268,20 @@ ALTER TABLE `prof_assignatura`
   ADD KEY `fk_idassignatura` (`id_assignatura`);
 
 --
--- Índexs per a la taula `ras`
+-- Indices de la tabla `ras`
 --
 ALTER TABLE `ras`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_assignaturaid` (`codi_assignatura`);
 
 --
--- Índexs per a la taula `sessions`
+-- Indices de la tabla `sessions`
 --
 ALTER TABLE `sessions`
   ADD PRIMARY KEY (`id_session`);
 
 --
--- Índexs per a la taula `usuaris`
+-- Indices de la tabla `usuaris`
 --
 ALTER TABLE `usuaris`
   ADD PRIMARY KEY (`id_user`),
@@ -2034,170 +2290,170 @@ ALTER TABLE `usuaris`
   ADD KEY `fk_usuaridni` (`dni`);
 
 --
--- AUTO_INCREMENT per les taules bolcades
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT per la taula `acta_avaluacio`
+-- AUTO_INCREMENT de la tabla `acta_avaluacio`
 --
 ALTER TABLE `acta_avaluacio`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT per la taula `acta_notes`
+-- AUTO_INCREMENT de la tabla `acta_notes`
 --
 ALTER TABLE `acta_notes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
--- AUTO_INCREMENT per la taula `administradors`
+-- AUTO_INCREMENT de la tabla `administradors`
 --
 ALTER TABLE `administradors`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
--- AUTO_INCREMENT per la taula `admin_centre`
+-- AUTO_INCREMENT de la tabla `admin_centre`
 --
 ALTER TABLE `admin_centre`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
--- AUTO_INCREMENT per la taula `assignatures_cicle`
+-- AUTO_INCREMENT de la tabla `assignatures_cicle`
 --
 ALTER TABLE `assignatures_cicle`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT per la taula `assistencia`
+-- AUTO_INCREMENT de la tabla `assistencia`
 --
 ALTER TABLE `assistencia`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
--- AUTO_INCREMENT per la taula `contractes`
+-- AUTO_INCREMENT de la tabla `contractes`
 --
 ALTER TABLE `contractes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT per la taula `cursos_cicle`
+-- AUTO_INCREMENT de la tabla `cursos_cicle`
 --
 ALTER TABLE `cursos_cicle`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT per la taula `estudiants_ras`
+-- AUTO_INCREMENT de la tabla `estudiants_ras`
 --
 ALTER TABLE `estudiants_ras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=344;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=260;
 
 --
--- AUTO_INCREMENT per la taula `historic_actes`
+-- AUTO_INCREMENT de la tabla `historic_actes`
 --
 ALTER TABLE `historic_actes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT per la taula `historic_estudiants`
+-- AUTO_INCREMENT de la tabla `historic_estudiants`
 --
 ALTER TABLE `historic_estudiants`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=197;
 
 --
--- AUTO_INCREMENT per la taula `historic_fct`
+-- AUTO_INCREMENT de la tabla `historic_fct`
 --
 ALTER TABLE `historic_fct`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
--- AUTO_INCREMENT per la taula `historic_professors`
+-- AUTO_INCREMENT de la tabla `historic_professors`
 --
 ALTER TABLE `historic_professors`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
--- AUTO_INCREMENT per la taula `logs_consultes`
+-- AUTO_INCREMENT de la tabla `logs_consultes`
 --
 ALTER TABLE `logs_consultes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=203;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
--- AUTO_INCREMENT per la taula `logs_login`
+-- AUTO_INCREMENT de la tabla `logs_login`
 --
 ALTER TABLE `logs_login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
--- AUTO_INCREMENT per la taula `periodes_avaluacio`
+-- AUTO_INCREMENT de la tabla `periodes_avaluacio`
 --
 ALTER TABLE `periodes_avaluacio`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT per la taula `prof_assignatura`
+-- AUTO_INCREMENT de la tabla `prof_assignatura`
 --
 ALTER TABLE `prof_assignatura`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
--- AUTO_INCREMENT per la taula `ras`
+-- AUTO_INCREMENT de la tabla `ras`
 --
 ALTER TABLE `ras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
--- AUTO_INCREMENT per la taula `sessions`
+-- AUTO_INCREMENT de la tabla `sessions`
 --
 ALTER TABLE `sessions`
-  MODIFY `id_session` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
+  MODIFY `id_session` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
--- AUTO_INCREMENT per la taula `usuaris`
+-- AUTO_INCREMENT de la tabla `usuaris`
 --
 ALTER TABLE `usuaris`
   MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
--- Restriccions per a les taules bolcades
+-- Restricciones para tablas volcadas
 --
 
 --
--- Restriccions per a la taula `acta_avaluacio`
+-- Filtros para la tabla `acta_avaluacio`
 --
 ALTER TABLE `acta_avaluacio`
   ADD CONSTRAINT `fk_acta_assignatura` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`),
   ADD CONSTRAINT `fk_acta_grup` FOREIGN KEY (`nom_grup`) REFERENCES `grup_classe` (`nom`);
 
 --
--- Restriccions per a la taula `acta_notes`
+-- Filtros para la tabla `acta_notes`
 --
 ALTER TABLE `acta_notes`
   ADD CONSTRAINT `fk_notes_acta` FOREIGN KEY (`id_acta`) REFERENCES `acta_avaluacio` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_notes_estudiant` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`);
 
 --
--- Restriccions per a la taula `administradors`
+-- Filtros para la tabla `administradors`
 --
 ALTER TABLE `administradors`
   ADD CONSTRAINT `fk_admindni` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_adminuser` FOREIGN KEY (`id_user`) REFERENCES `usuaris` (`id_user`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `admin_centre`
+-- Filtros para la tabla `admin_centre`
 --
 ALTER TABLE `admin_centre`
   ADD CONSTRAINT `fk_adminid` FOREIGN KEY (`admin_id`) REFERENCES `administradors` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_codicentre` FOREIGN KEY (`codi_centre`) REFERENCES `centres` (`codi`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `assignatures_cicle`
+-- Filtros para la tabla `assignatures_cicle`
 --
 ALTER TABLE `assignatures_cicle`
   ADD CONSTRAINT `fk_cicleassignatura` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_nomcicle` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `assistencia`
+-- Filtros para la tabla `assistencia`
 --
 ALTER TABLE `assistencia`
   ADD CONSTRAINT `fk_codiass` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE,
@@ -2205,26 +2461,26 @@ ALTER TABLE `assistencia`
   ADD CONSTRAINT `fk_nomgrup` FOREIGN KEY (`nom_grup`) REFERENCES `grup_classe` (`nom`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `contractes`
+-- Filtros para la tabla `contractes`
 --
 ALTER TABLE `contractes`
   ADD CONSTRAINT `fk_codic` FOREIGN KEY (`codi_centre`) REFERENCES `centres` (`codi`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_codip` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `cursos_cicle`
+-- Filtros para la tabla `cursos_cicle`
 --
 ALTER TABLE `cursos_cicle`
   ADD CONSTRAINT `cursos_cicle_ibfk_1` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `directiva`
+-- Filtros para la tabla `directiva`
 --
 ALTER TABLE `directiva`
   ADD CONSTRAINT `fk_codiprof` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `estudiants`
+-- Filtros para la tabla `estudiants`
 --
 ALTER TABLE `estudiants`
   ADD CONSTRAINT `fk_ciclees` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE,
@@ -2232,80 +2488,86 @@ ALTER TABLE `estudiants`
   ADD CONSTRAINT `fk_nomgrupes` FOREIGN KEY (`nom_grup`) REFERENCES `grup_classe` (`nom`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `estudiants_ras`
+-- Filtros para la tabla `estudiants_ras`
 --
 ALTER TABLE `estudiants_ras`
   ADD CONSTRAINT `fk_idra` FOREIGN KEY (`id_ra`) REFERENCES `ras` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_niaa` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `historic_actes`
+-- Filtros para la tabla `historic_actes`
 --
 ALTER TABLE `historic_actes`
   ADD CONSTRAINT `fk_hist_acta` FOREIGN KEY (`id_acta`) REFERENCES `acta_avaluacio` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_hist_professor` FOREIGN KEY (`dni_professor`) REFERENCES `persones` (`dni`);
 
 --
--- Restriccions per a la taula `historic_estudiants`
+-- Filtros para la tabla `historic_estudiants`
 --
 ALTER TABLE `historic_estudiants`
   ADD CONSTRAINT `fk_niaes` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_nomciclee` FOREIGN KEY (`nom_cicle`) REFERENCES `cicles` (`nom`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `historic_fct`
+-- Filtros para la tabla `historic_fct`
 --
 ALTER TABLE `historic_fct`
   ADD CONSTRAINT `fk_niah` FOREIGN KEY (`nia`) REFERENCES `estudiants` (`nia`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `historic_professors`
+-- Filtros para la tabla `historic_professors`
 --
 ALTER TABLE `historic_professors`
   ADD CONSTRAINT `fk_codipr` FOREIGN KEY (`codi_prof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `logs_consultes`
+-- Filtros para la tabla `logs_consultes`
 --
 ALTER TABLE `logs_consultes`
   ADD CONSTRAINT `fk_logs_consultes_dni` FOREIGN KEY (`dni_user`) REFERENCES `usuaris` (`dni`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `logs_login`
+-- Filtros para la tabla `logs_login`
 --
 ALTER TABLE `logs_login`
   ADD CONSTRAINT `fk_logs_login_dni` FOREIGN KEY (`dni_user`) REFERENCES `usuaris` (`dni`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `periodes_avaluacio`
+-- Filtros para la tabla `periodes_avaluacio`
 --
 ALTER TABLE `periodes_avaluacio`
   ADD CONSTRAINT `fk_periode_persona` FOREIGN KEY (`obert_per`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `professors`
+-- Filtros para la tabla `professors`
 --
 ALTER TABLE `professors`
   ADD CONSTRAINT `fk_dniprof` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `prof_assignatura`
+-- Filtros para la tabla `prof_assignatura`
 --
 ALTER TABLE `prof_assignatura`
   ADD CONSTRAINT `fk_codiprofe` FOREIGN KEY (`id_codiprof`) REFERENCES `professors` (`codi_prof`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_idassignatura` FOREIGN KEY (`id_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `ras`
+-- Filtros para la tabla `ras`
 --
 ALTER TABLE `ras`
   ADD CONSTRAINT `fk_assignaturaid` FOREIGN KEY (`codi_assignatura`) REFERENCES `assignatures` (`codi`) ON UPDATE CASCADE;
 
 --
--- Restriccions per a la taula `usuaris`
+-- Filtros para la tabla `usuaris`
 --
 ALTER TABLE `usuaris`
   ADD CONSTRAINT `fk_usuaridni` FOREIGN KEY (`dni`) REFERENCES `persones` (`dni`) ON UPDATE CASCADE;
+--
+-- Base de datos: `test`
+--
+DROP DATABASE IF EXISTS `test`;
+CREATE DATABASE IF NOT EXISTS `test` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `test`;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

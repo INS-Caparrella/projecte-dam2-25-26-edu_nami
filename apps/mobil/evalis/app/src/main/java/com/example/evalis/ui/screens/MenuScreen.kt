@@ -32,7 +32,9 @@ import com.example.expedient.CursosScreen
 import com.example.expedient.StudiesScreen
 import com.example.expedient.reports.DownloadScreen
 import kotlinx.coroutines.launch
-
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Settings
 
 //@PreviewScreenSizes
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,6 +51,7 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
         drawerContent = {
             ModalDrawerSheet {
                 NavigationDrawerItem(
+                    icon = { Icon(Icons.Default.Home, contentDescription = null) },
                     label = { Text("Home") },
                     selected = false,
                     onClick = {
@@ -57,6 +60,8 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
                     }
                 )
                 NavigationDrawerItem(
+                    icon = { Icon(Icons.Default.Settings, contentDescription = null) },
+
                     label = { Text("Apariencia") },
                     selected = false,
                     onClick = {
@@ -65,6 +70,7 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
                     }
                 )
                 NavigationDrawerItem(
+                    icon = { Icon(Icons.Default.AccountCircle, contentDescription = null) },
                     label = { Text("Profile") },
                     selected = false,
                     onClick = {
@@ -72,6 +78,7 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
                         scope.launch { drawerState.close() }
                     }
                 )
+
             }
         }
     ) {
@@ -98,7 +105,7 @@ fun MenuScreen(themeMode: ThemeMode, option: (List<Option>), onThemeChange: (The
                 modifier = Modifier.padding(padding)
             ) {
                 composable("home") { HomeScreen(themeMode, onThemeChange, options= option,navController)}
-                composable("profile") { Text("Profile") }
+                composable("profile") { ProfileScreen() }
                 composable("profs") { ProfsScreen(navController, onSessionExpired = onLogout) }
                 composable("profDetail/{profId}/{dni}") { backStackEntry ->
                     val profId = backStackEntry.arguments?.getString("profId") ?: ""

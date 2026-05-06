@@ -38,6 +38,8 @@ object OptionsList {
         return listOf(
             Option("Butlletí", R.drawable.prof_icon,"butlleti"),
             Option("Els meus professors", R.drawable.butlleti_icon,"profs"),
+            Option("Perfil", R.drawable.placeholder_pfp,"profile"),
+
         )
     }
 }

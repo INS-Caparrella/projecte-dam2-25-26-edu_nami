@@ -125,7 +125,7 @@ private fun carregarProfDesDeServidor(
                     val surname = obj.optString("cognom")
                     val email = obj.optString("email")
                     val rutaRel = obj.optString("ruta_foto")
-                    val urlFoto = if (rutaRel.startsWith("/")) "${BASE_URL}$rutaRel" else rutaRel
+                    val urlFoto = if (rutaRel.startsWith("http")) rutaRel else "${BASE_URL}/$rutaRel"
 
                     if (id != "") {
                         profState.add(Prof(id, name, surname, urlFoto, email))
