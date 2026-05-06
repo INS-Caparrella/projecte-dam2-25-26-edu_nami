@@ -1,9 +1,8 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class SeleccionarAsignatura
     Inherits System.Windows.Forms.Form
 
-    'Form reemplaza a Dispose para limpiar la lista de componentes.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -14,122 +13,100 @@ Partial Class SeleccionarAsignatura
         End Try
     End Sub
 
-    'Requerido por el Diseñador de Windows Forms
     Private components As System.ComponentModel.IContainer
 
-    'NOTA: el Diseñador de Windows Forms necesita el siguiente procedimiento
-    'Se puede modificar usando el Diseñador de Windows Forms.  
-    'No lo modifique con el editor de código.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        FlowLayoutPanel1 = New FlowLayoutPanel()
+        lblTitol = New Label()
         lblAsig = New Label()
         cbAsignaturas = New ComboBox()
         lblGrup = New Label()
         ComboBox1 = New ComboBox()
         btnAccept = New Button()
         btnCancel = New Button()
-        FlowLayoutPanel1.SuspendLayout()
         SuspendLayout()
-        ' 
-        ' FlowLayoutPanel1
-        ' 
-        FlowLayoutPanel1.Controls.Add(lblAsig)
-        FlowLayoutPanel1.Controls.Add(cbAsignaturas)
-        FlowLayoutPanel1.Controls.Add(lblGrup)
-        FlowLayoutPanel1.Controls.Add(ComboBox1)
-        FlowLayoutPanel1.Controls.Add(btnAccept)
-        FlowLayoutPanel1.Controls.Add(btnCancel)
-        FlowLayoutPanel1.Dock = DockStyle.Fill
-        FlowLayoutPanel1.Location = New Point(0, 0)
-        FlowLayoutPanel1.Name = "FlowLayoutPanel1"
-        FlowLayoutPanel1.Size = New Size(800, 450)
-        FlowLayoutPanel1.TabIndex = 0
-        ' 
+
+        ' lblTitol
+        lblTitol.AutoSize = True
+        lblTitol.Font = New Font("Segoe UI", 13.0F, FontStyle.Bold)
+        lblTitol.ForeColor = Color.FromArgb(50, 50, 50)
+        lblTitol.Location = New Point(220, 40)
+        lblTitol.Name = "lblTitol"
+        lblTitol.Text = "Selección de asignatura"
+
         ' lblAsig
-        ' 
         lblAsig.AutoSize = True
-        lblAsig.Dock = DockStyle.Top
-        lblAsig.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        lblAsig.ForeColor = Color.LightSlateGray
-        lblAsig.Location = New Point(3, 0)
+        lblAsig.Font = New Font("Segoe UI", 10.0F)
+        lblAsig.ForeColor = Color.DimGray
+        lblAsig.Location = New Point(180, 110)
         lblAsig.Name = "lblAsig"
-        lblAsig.Size = New Size(264, 28)
-        lblAsig.TabIndex = 0
-        lblAsig.Text = "Seleccione una asignatura:"
-        ' 
+        lblAsig.Text = "Asignatura:"
+
         ' cbAsignaturas
-        ' 
         cbAsignaturas.DropDownStyle = ComboBoxStyle.DropDownList
-        cbAsignaturas.FormattingEnabled = True
-        cbAsignaturas.Location = New Point(273, 3)
+        cbAsignaturas.Font = New Font("Segoe UI", 10.0F)
+        cbAsignaturas.Location = New Point(180, 138)
         cbAsignaturas.Name = "cbAsignaturas"
-        cbAsignaturas.Size = New Size(329, 28)
-        cbAsignaturas.TabIndex = 1
-        ' 
+        cbAsignaturas.Size = New Size(440, 28)
+
         ' lblGrup
-        ' 
         lblGrup.AutoSize = True
-        lblGrup.Dock = DockStyle.Top
-        lblGrup.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        lblGrup.ForeColor = Color.LightSlateGray
-        lblGrup.Location = New Point(3, 34)
+        lblGrup.Font = New Font("Segoe UI", 10.0F)
+        lblGrup.ForeColor = Color.DimGray
+        lblGrup.Location = New Point(180, 182)
         lblGrup.Name = "lblGrup"
-        lblGrup.Size = New Size(209, 28)
-        lblGrup.TabIndex = 6
-        lblGrup.Text = "Seleccione un grupo:"
-        ' 
+        lblGrup.Text = "Grupo:"
+        lblGrup.Visible = False
+
         ' ComboBox1
-        ' 
         ComboBox1.DropDownStyle = ComboBoxStyle.DropDownList
-        ComboBox1.FormattingEnabled = True
-        ComboBox1.Location = New Point(218, 37)
+        ComboBox1.Font = New Font("Segoe UI", 10.0F)
+        ComboBox1.Location = New Point(180, 210)
         ComboBox1.Name = "ComboBox1"
-        ComboBox1.Size = New Size(329, 28)
-        ComboBox1.TabIndex = 7
-        ' 
+        ComboBox1.Size = New Size(440, 28)
+        ComboBox1.Visible = False
+
         ' btnAccept
-        ' 
-        btnAccept.Location = New Point(100, 268)
-        btnAccept.Margin = New Padding(100, 200, 3, 3)
+        btnAccept.Font = New Font("Segoe UI", 10.0F)
+        btnAccept.Location = New Point(280, 310)
         btnAccept.Name = "btnAccept"
-        btnAccept.Size = New Size(247, 29)
-        btnAccept.TabIndex = 8
+        btnAccept.Size = New Size(130, 36)
         btnAccept.Text = "Aceptar"
+        btnAccept.Enabled = False
         btnAccept.UseVisualStyleBackColor = True
-        ' 
+
         ' btnCancel
-        ' 
-        btnCancel.Location = New Point(450, 268)
-        btnCancel.Margin = New Padding(100, 200, 3, 3)
+        btnCancel.Font = New Font("Segoe UI", 10.0F)
+        btnCancel.Location = New Point(430, 310)
         btnCancel.Name = "btnCancel"
-        btnCancel.Size = New Size(247, 29)
-        btnCancel.TabIndex = 9
+        btnCancel.Size = New Size(130, 36)
         btnCancel.Text = "Cancelar"
         btnCancel.UseVisualStyleBackColor = True
-        ' 
-        ' SeleccionarAsignatura
-        ' 
-        AutoScaleDimensions = New SizeF(8F, 20F)
+
+        ' Form
+        AutoScaleDimensions = New SizeF(8.0F, 20.0F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(800, 450)
-        Controls.Add(FlowLayoutPanel1)
+        ClientSize = New Size(800, 400)
+        Controls.Add(btnCancel)
+        Controls.Add(btnAccept)
+        Controls.Add(ComboBox1)
+        Controls.Add(lblGrup)
+        Controls.Add(cbAsignaturas)
+        Controls.Add(lblAsig)
+        Controls.Add(lblTitol)
         FormBorderStyle = FormBorderStyle.FixedDialog
         MaximizeBox = False
         MinimizeBox = False
         Name = "SeleccionarAsignatura"
         StartPosition = FormStartPosition.CenterParent
         Text = "Selección de asignatura"
-        FlowLayoutPanel1.ResumeLayout(False)
-        FlowLayoutPanel1.PerformLayout()
         ResumeLayout(False)
+        PerformLayout()
     End Sub
 
-    Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
+    Friend WithEvents lblTitol As Label
     Friend WithEvents lblAsig As Label
     Friend WithEvents cbAsignaturas As ComboBox
-    Friend WithEvents Label1 As Label
-    Friend WithEvents cbGrups As ComboBox
     Friend WithEvents lblGrup As Label
     Friend WithEvents ComboBox1 As ComboBox
     Friend WithEvents btnAccept As Button
