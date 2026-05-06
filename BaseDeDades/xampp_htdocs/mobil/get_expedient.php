@@ -1,5 +1,4 @@
 <?php
-// Genera expedient pdf d'un estudi historic d'un alumne
 require_once 'vendor/autoload.php'; // x generar pdf
 use Dompdf\Dompdf;
 
@@ -52,12 +51,10 @@ if (!$historic) {
     exit;
 }
 
-//curs
 $anyInici = date('Y', strtotime($historic['data_inici']));
 $anyFi    = $historic['data_fi'] ? date('Y', strtotime($historic['data_fi'])) : ($anyInici + 1);
 $curs     = $anyInici . '-' . $anyFi;
 
-// 3. RAs I NOTES - VERSIÓN FINAL CORREGIDA
 $sql3 = "SELECT DISTINCT
                 a.codi AS codi_assignatura, 
                 a.nom AS nom_assignatura,
@@ -78,7 +75,7 @@ $dataInici = $historic['data_inici'];
 $dataFi    = $historic['data_fi'] ?: date('Y-m-d', strtotime($historic['data_inici'] . ' +1 year'));
 
 $stmt3 = $mysqli->prepare($sql3);
-$stmt3->bind_param("isss", $alumne['nia'], $cicle, $dataInici, $dataFi);  // ✅ 4 params: i s s s
+$stmt3->bind_param("isss", $alumne['nia'], $cicle, $dataInici, $dataFi);
 $stmt3->execute();
 $res3 = $stmt3->get_result();
 
@@ -89,8 +86,23 @@ while ($row = $res3->fetch_assoc()) {
 
 $mysqli->close();
 
+$assignatures = [];
+foreach ($ras as $ra) {
+    $codi = $ra['codi_assignatura'];
+    if (!isset($assignatures[$codi])) {
+        $assignatures[$codi] = ['nom' => $ra['nom_assignatura'], 'ras' => []];
+    }
+    $assignatures[$codi]['ras'][] = $ra;
+}
+foreach ($assignatures as $codi => &$assig) {
+    $notes = array_filter(array_column($assig['ras'], 'nota'), fn($n) => $n !== null);
+    $assig['nota_final'] = count($notes) > 0 ? round(array_sum($notes) / count($notes), 1) : null;
+}
+unset($assig);
+
 $finalitzatText = $historic['finalitzat'] ? 'Sí' : 'No';
 $notaFinal      = $historic['nota_final'] !== null ? $historic['nota_final'] : '-';
+
 $html = '<!DOCTYPE html>
 <html>
 <head>
@@ -109,11 +121,12 @@ $html = '<!DOCTYPE html>
   table.dades { width: 100%; border-collapse: collapse; margin-top: 16px; }
   table.dades th { background-color: #2c5f9e; color: white; padding: 7px 8px; text-align: left; font-size: 11px; }
   table.dades td { border: 1px solid #ccc; padding: 6px 8px; }
-  table.dades tr:nth-child(even) { background-color: #f4f7fb; }
   .nota-ok    { color: #1a7a1a; font-weight: bold; }
   .nota-fail  { color: #c0392b; font-weight: bold; }
   .info-box   { border: 1px solid #aaa; border-radius: 4px; padding: 8px 12px; margin: 10px 0; }
   .peu        { margin-top: 30px; font-size: 10px; color: #888; text-align: center; }
+  .assig-cap  { background-color: #e8f0fb; font-weight: bold; }
+  .nota-modul { background-color: #f9f9f9; border-top: 2px solid #ccc; font-style: italic; }
 </style>
 </head>
 <body>
@@ -129,124 +142,93 @@ $html = '<!DOCTYPE html>
 
 <hr>
 
-<!-- DADES CENTRE -->
 <h3>Dades del centre</h3>
 <table class="layout">
   <tr>
-    <td style="width: 25%;">
-      <h4>Codi</h4>
-      <p>12345678</p>
-    </td>
-    <td style="width: 40%;">
-      <h4>Nom</h4>
-      <p>Institut Tècnic de Ponent</p>
-    </td>
-    <td style="width: 35%;">
-      <h4>Adreça</h4>
-      <p>Plaça de Sta. Anna, 4, 25003 Lleida</p>
-    </td>
+    <td style="width: 25%;"><h4>Codi</h4><p>12345678</p></td>
+    <td style="width: 40%;"><h4>Nom</h4><p>Institut Tècnic de Ponent</p></td>
+    <td style="width: 35%;"><h4>Adreça</h4><p>Plaça de Sta. Anna, 4, 25003 Lleida</p></td>
   </tr>
 </table>
 
 <hr>
 
-<!-- DADES ALUMNE -->
 <h3>El centre certifica que l\'alumne/a</h3>
 <table class="layout">
   <tr>
-    <td style="width: 40%;">
-      <h4>Nom i cognoms</h4>
-      <p>' . htmlspecialchars($alumne['nom'] . ' ' . $alumne['cognom']) . '</p>
-    </td>
-    <td style="width: 25%;">
-      <h4>DNI</h4>
-      <p>' . htmlspecialchars($alumne['dni']) . '</p>
-    </td>
-    <td style="width: 25%;">
-      <h4>NIA</h4>
-      <p>' . $alumne['nia'] . '</p>
-    </td>
+    <td style="width: 40%;"><h4>Nom i cognoms</h4><p>' . htmlspecialchars($alumne['nom'] . ' ' . $alumne['cognom']) . '</p></td>
+    <td style="width: 25%;"><h4>DNI</h4><p>' . htmlspecialchars($alumne['dni']) . '</p></td>
+    <td style="width: 25%;"><h4>NIA</h4><p>' . $alumne['nia'] . '</p></td>
   </tr>
 </table>
 
 <hr>
 
-<!-- DADES DEL CICLE -->
 <h3>Matriculat/a al cicle formatiu</h3>
 <table class="layout">
   <tr>
-    <td style="width: 20%;">
-      <h4>Codi</h4>
-      <p>777</p>
-    </td>
-    <td style="width: 40%;">
-      <h4>Nom</h4>
-      <p>' . htmlspecialchars($cicle) . '</p>
-    </td>
-    <td style="width: 20%;">
-      <h4>Estudi finalitzat</h4>
-      <p>' . $finalitzatText . '</p>
-    </td>
+    <td style="width: 20%;"><h4>Codi</h4><p>777</p></td>
+    <td style="width: 40%;"><h4>Nom</h4><p>' . htmlspecialchars($cicle) . '</p></td>
+    <td style="width: 20%;"><h4>Estudi finalitzat</h4><p>' . $finalitzatText . '</p></td>
   </tr>
 </table>
 
 <div class="info-box">
   <table class="layout">
-    <tr>
-      <td style="width: 50%;"><b>Nota final:</b> ' . $notaFinal . '</td>
-    </tr>
+    <tr><td><b>Nota final:</b> ' . $notaFinal . '</td></tr>
   </table>
 </div>
 
-<!-- TAULA DE RAs -->
 <h3>Qualificacions</h3>
 <table class="dades">
   <thead>
     <tr>
-      <th>Assignatura</th>
-      <th>Codi</th>
-      <th>Núm. RA</th>
-      <th>Nota</th>
+      <th style="width:55%">Assignatura / RA</th>
+      <th style="width:20%">Núm. RA</th>
+      <th style="width:25%">Nota</th>
     </tr>
   </thead>
   <tbody>';
 
-foreach ($ras as $ra) {
-    $nota      = $ra['nota'] !== null ? $ra['nota'] : '-';
-    $notaClass = '';
-    if ($ra['nota'] !== null) {
-        $notaClass = $ra['nota'] >= 5 ? 'nota-ok' : 'nota-fail';
+foreach ($assignatures as $codi => $assig) {
+    $html .= '<tr class="assig-cap">
+        <td colspan="3">' . htmlspecialchars($codi . ' — ' . $assig['nom']) . '</td>
+    </tr>';
+
+    foreach ($assig['ras'] as $ra) {
+        $nota      = $ra['nota'] !== null ? $ra['nota'] : '-';
+        $notaClass = $ra['nota'] !== null ? ($ra['nota'] >= 5 ? 'nota-ok' : 'nota-fail') : '';
+        $html .= '<tr>
+            <td style="padding-left:20px;">Resultat d\'aprenentatge ' . $ra['num_ra'] . '</td>
+            <td>RA' . $ra['num_ra'] . '</td>
+            <td class="' . $notaClass . '">' . $nota . '</td>
+        </tr>';
     }
-    $html .= '<tr>
-      <td>' . htmlspecialchars($ra['nom_assignatura']) . '</td>
-      <td>' . htmlspecialchars($ra['codi_assignatura']) . '</td>
-      <td>RA' . $ra['num_ra'] . '</td>
-      <td class="' . $notaClass . '">' . $nota . '</td>
+
+    $notaModul      = $assig['nota_final'] !== null ? $assig['nota_final'] : '-';
+    $notaModulClass = $assig['nota_final'] !== null ? ($assig['nota_final'] >= 5 ? 'nota-ok' : 'nota-fail') : '';
+    $html .= '<tr class="nota-modul">
+        <td colspan="2" style="text-align:right;">Nota final del mòdul</td>
+        <td class="' . $notaModulClass . '"><strong>' . $notaModul . '</strong></td>
     </tr>';
 }
 
-$html .= '
-  </tbody>
-</table>
-
+$html .= '</tbody></table>
 <p class="peu">Document generat el ' . date('d/m/Y H:i') . '</p>
 </body>
 </html>';
 
-// 5. GENERAR PDF AMB DOMPDF
 use Dompdf\Options;
-
 $options = new Options();
-$options->set('defaultFont', 'Google Sans');
+$options->set('defaultFont', 'DejaVu Sans');
 $options->set('isRemoteEnabled', true);
-$options->set('chroot', 'C:/xampp/htdocs');  // <-- añadido
+$options->set('chroot', 'C:/xampp/htdocs');
 $dompdf = new Dompdf($options);
 $dompdf->loadHtml($html, 'UTF-8');
 $dompdf->setPaper('A4', 'portrait');
 $dompdf->render();
 
 $nomFitxer = 'expedient_' . $dni . '_' . preg_replace('/\s+/', '_', $cicle) . '.pdf';
-
 header('Content-Type: application/pdf');
 header('Content-Disposition: attachment; filename="' . $nomFitxer . '"');
 echo $dompdf->output();

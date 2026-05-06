@@ -1,226 +1,94 @@
 # EVALIS — Backend API (PHP)
 
-API REST en PHP per al sistema de gestió acadèmica **EVALIS**. Tots els endpoints retornen JSON i es connecten a una base de dades MariaDB via XAMPP.
+Backend en PHP para la plataforma académica **EVALIS**, utilizada por las aplicaciones Android y Desktop. Proporciona una API REST que devuelve datos en formato JSON y se conecta a una base de datos MariaDB mediante XAMPP.
 
 ---
 
-## Configuració
+## Configuración del entorno
 
-- **Servidor:** XAMPP (Apache + MariaDB)
-- **Port BD:** 3307
-- **Base de dades:** `projecte_evalis`
-- **Usuari BD:** `root` (sense contrasenya)
-- **Ruta base:** `https://<IP_SERVIDOR>/`
-
----
-
-## Endpoints
-
-### `login.php`
-Autenticació d'usuaris.
-
-| Mètode | Paràmetres | Descripció |
-|--------|-----------|------------|
-| POST | `username`, `password` | Valida credencials, crea sessió i registra el log |
-
-**Resposta OK:**
-```json
-{
-  "pot_entrar": true,
-  "dni": "12345678A",
-  "rol": "professor",
-  "nom": "Marc",
-  "cognom": "Serra Puig",
-  "ruta_foto": "img/profs/prof01.png",
-  "token": "abc123...",
-  "expires": "2026-05-06 10:00:00",
-  "grup": "DAM2A",
-  "grups": ["DAM2A"],
-  "rol_directiva": "Cap d'estudis"
-}
-```
+- Servidor: XAMPP (Apache + MariaDB)
+- Puerto BD: 3307
+- Base de datos: `projecte_evalis`
+- Usuario BD: `root` (sin contraseña)
+- URL base del backend: `https://<IP_SERVIDOR>/`
 
 ---
 
-### `notes.php`
-Gestió de notes dels alumnes per RA.
+## Funciones principales del backend
 
-| Mètode | `accio` | Paràmetres | Descripció |
-|--------|---------|-----------|------------|
-| GET | `assignatures` | `dni` | Assignatures del professor |
-| GET | `assignatures_all` | — | Totes les assignatures (admin/director) |
-| GET | `vista_notes_all` | `id_assignatura`, `nom_grup` | Alumnes i notes de tots els RAs |
-| GET | `grups_assignatura` | `id_assignatura` | Grups que cursen l'assignatura |
-| POST | `guardar` | `id_ra`, `nia`, `nota` | Desa una nota (INSERT o UPDATE) |
-| POST | `tancar_proces` | `id_assignatura`, `dni` | Tanca el procés d'avaluació |
-
----
-
-### `periode.php`
-Gestió dels períodes d'avaluació (trimestres).
-
-| Mètode | Paràmetres | Descripció |
-|--------|-----------|------------|
-| GET | `curs` | Llista els 3 trimestres del curs |
-| POST | `id_periode`, `accio` (`obrir`/`tancar`), `dni` | Obre o tanca un trimestre |
-
-> Només poden obrir/tancar períodes els usuaris amb rol `director`, `administrador` o `Cap d'estudis`.
+- Autenticación de usuarios con roles (alumno, profesor, tutor, directiva, administrador).
+- Gestión de notas por RA/UF.
+- Creación y cierre de períodos de evaluación.
+- Generación y consulta de actas.
+- Corrección de notas con registro histórico.
+- Exportación de datos (CSV, logs).
+- Consulta de expedientes, profesores y estudios.
+- Seguridad mediante tokens de sesión y contraseñas con bcrypt.
 
 ---
 
-### `crear_acta.php`
-Crea o recupera una acta d'avaluació.
+## Endpoints principales (resumen)
 
-| Mètode | Paràmetres | Descripció |
-|--------|-----------|------------|
-| POST | `id_assignatura`, `dni_prof`, `curs`, `trimestre`, `grup` | Crea l'acta si no existeix, o retorna la existent |
+### Autenticación
+`login.php`  
+Valida credenciales, genera token y devuelve datos del usuario.
 
-> Si `trimestre = 0` (període tancat), cerca l'acta existent per curs i grup.
+### Notas
+`notes.php`  
+Consultar asignaturas, ver notas por grupo y guardar notas.
 
----
+### Períodos
+`periode.php`  
+Abrir o cerrar trimestres (solo directiva/administración).
 
-### `nota_final.php`
-Desa la nota final d'un alumne a una acta.
+### Actas
+`crear_acta.php`, `acta.php`, `nota_final.php`, `dades_acta.php`  
+Crear actas, consultar notas, aplicar correcciones y obtener datos para PDF.
 
-| Mètode | Paràmetres | Descripció |
-|--------|-----------|------------|
-| POST | `id_acta`, `nia`, `nota` | INSERT o UPDATE de la nota final a `acta_notes` |
+### Profesores
+`fitxa_professor.php`, `lista_prof.php`, `orla.php`  
+Consultar fichas, listados y datos para la orla.
 
----
+### Exportaciones
+`exportar_csv.php`, `export_logs.php`  
+Exportación de alumnos y registros de login.
 
-### `acta.php`
-Consulta i correcció de notes d'una acta tancada.
-
-| Mètode | Paràmetres | Descripció |
-|--------|-----------|------------|
-| GET | `id_acta` | Notes de tots els alumnes d'una acta |
-| POST | `id_acta`, `dni_prof`, `nia`, `valor_nou`, `motiu` | Aplica una correcció (requereix permisos de director/cap d'estudis) |
-
-> Les correccions queden registrades a `historic_actes` i marquen l'acta com a `corregida = 1`.
-
----
-
-### `dades_acta.php`
-Retorna totes les dades necessàries per generar el PDF d'una acta.
-
-| Mètode | Paràmetres | Descripció |
-|--------|-----------|------------|
-| GET | `id_acta`, `dni` | Acta + RAs + alumnes + professors + historial de correccions |
-
-> Requereix que `dni` tingui rol `director`, `administrador` o `Cap d'estudis`.
+### Otros
+`graduar_alumne.php`, `crear_password.php`, `get_expedient.php`, etc.
 
 ---
 
-### `fitxa_professor.php`
-Fitxa d'un professor amb dades segons el nivell d'accés.
+## Seguridad
 
-| Mètode | Paràmetres | Descripció |
-|--------|-----------|------------|
-| GET | `dni_consultor`, `dni_professor` | Retorna dades bàsiques o completes segons el rol |
-
-**Nivells d'accés:**
-- **Nivell 1** (professor): nom, email, assignatures, dedicació
-- **Nivell 2** (directiva/director): + DNI, telèfon, data naix, contractes, absències
-- **Nivell 3** (administrador): igual que nivell 2 però de tots els centres
+- Contraseñas almacenadas con `password_hash()` (bcrypt).
+- Tokens generados con `random_bytes()` y validados en cada petición.
+- Consultas preparadas para evitar SQL injection.
+- Roles verificados en endpoints sensibles.
+- Recomendado usar HTTPS (certificado autofirmado en desarrollo).
 
 ---
 
-### `lista_prof.php`
-Llista de professors visibles per al consultant.
+## Cómo usar la aplicación (Android / Desktop)
 
-| Mètode | Paràmetres | Descripció |
-|--------|-----------|------------|
-| GET | `dni_consultor` | Professors del centre (o de tots si és admin) |
+### 1. Inicio de sesión
+El usuario introduce su **nombre de usuario y contraseña**.  
+El backend valida las credenciales y devuelve un **token de sesión**, que la app almacena para futuras peticiones.
 
----
+### 2. Navegación según el rol
+Cada usuario ve opciones distintas:
 
-### `orla.php`
-Dades per a l'orla de professors.
+- **Alumno:** boletín, expediente, profesores, notificaciones.
+- **Profesor:** grupos asignados, introducción de notas, actas.
+- **Tutor / Directiva:** apertura/cierre de períodos, correcciones, estadísticas.
+- **Administrador:** acceso ampliado a datos y exportaciones.
 
-| Mètode | Paràmetres | Descripció |
-|--------|-----------|------------|
-| GET | — | Tots els professors amb nom, foto, càrrec, email i departament |
+### 3. Consultas y acciones
+La app realiza peticiones al backend enviando el **token**.  
+Ejemplos:
+- Ver asignaturas → `notes.php?accio=assignatures`
+- Guardar nota → POST a `notes.php?accio=guardar`
+- Obtener expediente → `get_expedient.php?nia=...`
 
----
+### 4. Cierre de sesión
+La app elimina el token local y el backend marca la sesión como finalizada.
 
-### `exportar_csv.php`
-Exporta els alumnes d'un grup a CSV.
-
-| Mètode | Paràmetres | Descripció |
-|--------|-----------|------------|
-| GET | `nom_grup` | Retorna nom, cognoms, DNI, grup i cicle dels alumnes actius |
-
----
-
-### `export_logs.php`
-Exporta el registre de logins.
-
-| Mètode | Paràmetres | Descripció |
-|--------|-----------|------------|
-| GET | `dni_consultor`, `limit` (opcional, màx. 2000) | Últims N registres de login amb IP i resultat |
-
-> Requereix rol `director`, `administrador` o `Cap d'estudis`.
-
----
-
-### `graduar_alumne.php`
-Processa la graduació d'un alumne.
-
-| Mètode | `accio` | Paràmetres | Descripció |
-|--------|---------|-----------|------------|
-| POST/GET | `comprovar` | `nia` | Comprova si l'alumne ha aprovat tot el cicle |
-| POST | `graduar` | `nia` | Esborra les dades i mou l'alumne a l'historial |
-
----
-
-### `crear_password.php`
-Estableix la contrasenya d'un usuari nou (primer accés).
-
-| Mètode | Paràmetres | Descripció |
-|--------|-----------|------------|
-| POST | `dni`, `password` | Hash bcrypt i UPDATE a `usuaris` (només si `password IS NULL`) |
-
----
-
-### `get_estudis.php` · `get_prof.php` · `get_profs.php` · `get_expedient.php`
-Endpoints auxiliars que requereixen token de sessió (`validar_token.php`). S'usen des de l'app mòbil.
-
----
-
-## Estructura de carpetes
-
-```
-htdocs/
-├── login.php
-├── notes.php
-├── periode.php
-├── crear_acta.php
-├── nota_final.php
-├── acta.php
-├── dades_acta.php
-├── fitxa_professor.php
-├── lista_prof.php
-├── orla.php
-├── exportar_csv.php
-├── export_logs.php
-├── graduar_alumne.php
-├── crear_password.php
-├── get_estudis.php
-├── get_prof.php
-├── get_profs.php
-├── get_expedient.php
-└── img/
-    └── profs/
-        ├── prof01.png
-        └── ...
-```
-
----
-
-## Notes de seguretat
-
-- Les contrasenyes es guarden amb `password_hash()` (bcrypt).
-- Els tokens de sessió es generen amb `bin2hex(random_bytes(32))`.
-- Totes les queries usen `prepared statements` per evitar SQL injection.
-- El servidor usa HTTPS amb certificat autofirmat (entorn de desenvolupament).
-- Els endpoints sensibles (correccions, logs, graduació) verifiquen el rol abans d'executar.
